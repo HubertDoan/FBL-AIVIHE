@@ -1,65 +1,263 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import Link from 'next/link'
+import {
+  Upload, Sparkles, TrendingUp, FileText,
+  CheckCircle, ShieldAlert, ArrowRight, Lock, Camera, Brain,
+} from 'lucide-react'
+import { buttonVariants } from '@/components/ui/button'
+
+const FEATURES = [
+  {
+    icon: Upload,
+    title: 'Lưu trữ tập trung',
+    desc: 'Tải lên và quản lý toàn bộ tài liệu sức khỏe tại một nơi duy nhất, an toàn và dễ truy cập.',
+  },
+  {
+    icon: Sparkles,
+    title: 'AI trích xuất thông minh',
+    desc: 'AI đọc và trích xuất dữ liệu từ ảnh chụp tài liệu y tế, giúp bạn không cần nhập tay.',
+  },
+  {
+    icon: TrendingUp,
+    title: 'Theo dõi xu hướng',
+    desc: 'Xem biểu đồ và xu hướng sức khỏe theo thời gian, nhận biết thay đổi sớm.',
+  },
+  {
+    icon: FileText,
+    title: 'Chuẩn bị đi khám',
+    desc: 'Tạo gói hồ sơ chuẩn bị đi khám bác sĩ, gồm bệnh nền, thuốc đang dùng và câu hỏi gợi ý.',
+  },
+]
+
+const STEPS = [
+  {
+    icon: Camera,
+    label: 'Chụp ảnh tài liệu y tế',
+    desc: 'Chụp hoặc tải lên kết quả xét nghiệm, đơn thuốc, phiếu khám.',
+  },
+  {
+    icon: Brain,
+    label: 'AI đọc và trích xuất dữ liệu',
+    desc: 'AI tự động nhận dạng và trích xuất thông tin quan trọng từ tài liệu.',
+  },
+  {
+    icon: CheckCircle,
+    label: 'Bạn xác nhận thông tin',
+    desc: 'Kiểm tra và xác nhận dữ liệu AI trích xuất trước khi lưu vào hồ sơ.',
+  },
+  {
+    icon: TrendingUp,
+    label: 'Xem timeline và chuẩn bị đi khám',
+    desc: 'Theo dõi sức khỏe theo thời gian và tạo gói hồ sơ khi cần đi khám.',
+  },
+]
+
+const SENTENCES = [
+  'Trợ lý AI sức khỏe cá nhân giúp người dân hiểu và quản lý dữ liệu sức khỏe của mình.',
+  'AI chỉ hỗ trợ tổng hợp và giải thích thông tin từ dữ liệu người dùng cung cấp, không thay thế bác sĩ và không chẩn đoán bệnh.',
+  'Dữ liệu sức khỏe thuộc về người dùng và chỉ được chia sẻ khi có sự cho phép của chủ hồ sơ.',
+]
+
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/30">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-cyan-500/5" />
+        <div className="relative max-w-5xl mx-auto px-4 pt-20 pb-16 text-center">
+          {/* Logo Title */}
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4">
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              AIVIHE
+            </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+          <p className="text-xl md:text-2xl text-blue-700 font-semibold mb-8">
+            Trợ lý AI sức khỏe cá nhân
+          </p>
+
+          {/* 3 Mandatory Sentences */}
+          <div className="max-w-3xl mx-auto mb-10 bg-white/80 backdrop-blur border border-blue-100 rounded-2xl p-6 shadow-sm">
+            {SENTENCES.map((s, i) => (
+              <p
+                key={i}
+                className="flex items-start gap-3 text-left text-blue-900 mb-3 last:mb-0"
+                style={{ fontSize: '18px', lineHeight: '1.6' }}
+              >
+                <CheckCircle className="size-5 text-blue-500 shrink-0 mt-1" />
+                <span>{s}</span>
+              </p>
+            ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/login"
+              className={buttonVariants({ size: 'lg', className: 'text-lg px-8 py-6 rounded-xl min-h-[52px] gap-2' })}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Bắt đầu sử dụng
+              <ArrowRight className="size-5" />
+            </Link>
+            <Link
+              href="/login?demo=true"
+              className={buttonVariants({ variant: 'outline', size: 'lg', className: 'text-lg px-8 py-6 rounded-xl min-h-[52px]' })}
             >
-              Learning
-            </a>{" "}
-            center.
+              Xem demo
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="max-w-5xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-center mb-2 text-gray-900">
+          Tính năng chính
+        </h2>
+        <p className="text-center text-gray-500 mb-10" style={{ fontSize: '18px' }}>
+          Mọi thứ bạn cần để quản lý sức khỏe cho cả gia đình
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {FEATURES.map((f, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-2xl border border-gray-100 p-6 text-center hover:shadow-lg hover:border-blue-200 transition-all duration-300 group"
+            >
+              <div className="inline-flex items-center justify-center size-14 rounded-2xl bg-blue-50 text-blue-600 mb-4 group-hover:bg-blue-100 transition-colors">
+                <f.icon className="size-7" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2 text-gray-900">{f.title}</h3>
+              <p className="text-gray-600" style={{ fontSize: '16px', lineHeight: '1.6' }}>
+                {f.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="bg-gradient-to-b from-blue-50/50 to-white py-16">
+        <div className="max-w-5xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-2 text-gray-900">
+            Cách hoạt động
+          </h2>
+          <p className="text-center text-gray-500 mb-12" style={{ fontSize: '18px' }}>
+            Chỉ 4 bước đơn giản để bắt đầu
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {STEPS.map((s, i) => (
+              <div key={i} className="relative flex flex-col items-center text-center">
+                {/* Step number */}
+                <div className="absolute -top-2 -left-1 sm:left-auto size-8 rounded-full bg-blue-600 text-white text-sm font-bold flex items-center justify-center shadow-md">
+                  {i + 1}
+                </div>
+                <div className="size-16 rounded-2xl bg-white border-2 border-blue-200 text-blue-600 flex items-center justify-center mb-4 shadow-sm">
+                  <s.icon className="size-7" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1" style={{ fontSize: '17px' }}>
+                  {s.label}
+                </h3>
+                <p className="text-sm text-gray-500" style={{ fontSize: '15px', lineHeight: '1.5' }}>
+                  {s.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="max-w-4xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-center mb-10 text-gray-900">
+          Cam kết của AIVIHE
+        </h2>
+        <div className="space-y-6">
+          {/* Disclaimer Card */}
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 shadow-sm">
+            <div className="flex items-start gap-4">
+              <div className="size-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <ShieldAlert className="size-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-amber-800 mb-2">
+                  Đây KHÔNG phải hệ thống y tế
+                </h3>
+                <p className="text-amber-700" style={{ fontSize: '16px', lineHeight: '1.6' }}>
+                  AIVIHE là công cụ hỗ trợ quản lý dữ liệu sức khỏe cá nhân.
+                  AI không chẩn đoán bệnh, không kê đơn thuốc và không thay thế bác sĩ.
+                  Vui lòng tham khảo ý kiến bác sĩ để được tư vấn chuyên môn.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Data Ownership */}
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 shadow-sm">
+            <div className="flex items-start gap-4">
+              <div className="size-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                <Lock className="size-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-blue-800 mb-2">
+                  Dữ liệu thuộc về bạn
+                </h3>
+                <p className="text-blue-700" style={{ fontSize: '16px', lineHeight: '1.6' }}>
+                  Dữ liệu sức khỏe thuộc về người dùng và chỉ được chia sẻ khi có sự cho phép rõ ràng của chủ hồ sơ.
+                  Bạn có toàn quyền kiểm soát thông tin của mình.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* AI Limitations */}
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <div className="flex items-start gap-4">
+              <div className="size-12 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                <Brain className="size-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">
+                  AI có giới hạn
+                </h3>
+                <p className="text-slate-700" style={{ fontSize: '16px', lineHeight: '1.6' }}>
+                  AI chỉ hỗ trợ tổng hợp và giải thích thông tin từ dữ liệu bạn cung cấp.
+                  Kết quả trích xuất cần được bạn xác nhận trước khi lưu.
+                  Mọi thông tin AI tạo ra đều trích dẫn nguồn gốc từ tài liệu gốc.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="text-center py-16 bg-gradient-to-b from-white to-blue-50/50">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          Sẵn sàng quản lý sức khỏe tốt hơn?
+        </h2>
+        <p className="text-gray-500 mb-8" style={{ fontSize: '18px' }}>
+          Bắt đầu miễn phí, không cần thẻ tín dụng
+        </p>
+        <Link
+          href="/login"
+          className={buttonVariants({ size: 'lg', className: 'text-lg px-10 py-6 rounded-xl min-h-[52px] gap-2' })}
+        >
+          Bắt đầu sử dụng
+          <ArrowRight className="size-5" />
+        </Link>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-100 bg-white py-8">
+        <div className="max-w-5xl mx-auto px-4 text-center">
+          <p className="text-gray-500 mb-1" style={{ fontSize: '15px' }}>
+            &copy; 2024 AIVIHE - FBL (Family Better Life)
+          </p>
+          <p className="text-gray-400 text-sm">
+            Được phát triển bởi đội ngũ FBL
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
-  );
+  )
 }
