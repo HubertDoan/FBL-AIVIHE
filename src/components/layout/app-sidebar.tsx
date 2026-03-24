@@ -18,6 +18,7 @@ import {
   X,
   ClipboardList,
   Calendar,
+  HeartPulse,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -48,6 +49,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/timeline', label: 'Dòng thời gian', icon: Clock, memberOnly: true },
   { href: '/dashboard/summary', label: 'Tóm tắt sức khỏe', icon: FileText, memberOnly: true },
   { href: '/dashboard/visit-prep', label: 'Đăng ký khám bệnh', icon: Stethoscope, memberOnly: true },
+  { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, memberOnly: true },
   { href: '/dashboard/doctor-review', label: 'Xem xét khám', icon: Stethoscope, doctorOnly: true },
   { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, receptionOnly: true },
   { href: '/dashboard/exam-schedule', label: 'Lịch khám', icon: Calendar, examDoctorOnly: true },

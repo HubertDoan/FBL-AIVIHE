@@ -16,6 +16,7 @@ import {
 import { parsePrescriptionToReminders } from '@/lib/demo/demo-exam-prescription-parser'
 import { addNotification } from '@/lib/demo/demo-notification-data'
 import { DEMO_ACCOUNTS } from '@/lib/demo/demo-accounts'
+import { createTreatmentFromExam } from '@/lib/demo/demo-treatment-data'
 
 export async function GET(
   request: NextRequest,
@@ -112,8 +113,13 @@ export async function PATCH(
       }
       if (body.action === 'return_results') {
         const updated = updateRegistration(id, { status: 'results_returned' })
+        // Auto-create treatment episode from completed exam
+        const freshReg = getRegistrationById(id)
+        if (freshReg) createTreatmentFromExam(freshReg)
         addNotification(reg.citizen_id, 'Kết quả khám bệnh đã sẵn sàng',
           `Kết quả khám của bạn đã được trả. Vào mục "Đăng ký khám bệnh" để xem chi tiết và lịch uống thuốc.`)
+        addNotification(reg.citizen_id, 'Đợt điều trị mới đã được tạo',
+          `Đợt điều trị mới đã được tạo từ kết quả khám. Theo dõi tại mục Đang điều trị.`)
         return demoResponse({ registration: updated })
       }
       if (body.action === 'close') {

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { PersonalInfoForm } from '@/components/profile/personal-info-form'
 import { HealthProfileForm } from '@/components/profile/health-profile-form'
 import { EmergencyCard } from '@/components/profile/emergency-card'
+import { HealthExamHistoryList } from '@/components/profile/health-exam-history-list'
 import { useAuth } from '@/hooks/use-auth'
 import { Pencil, X } from 'lucide-react'
 import type { Citizen, HealthProfile } from '@/types/database'
@@ -94,7 +95,7 @@ export default function ProfilePage() {
       </div>
 
       <Tabs defaultValue={0}>
-        <TabsList className="w-full h-auto flex">
+        <TabsList className="w-full h-auto flex flex-wrap">
           <TabsTrigger value={0} className="flex-1 py-3 text-base">
             Thông tin cá nhân
           </TabsTrigger>
@@ -103,6 +104,9 @@ export default function ProfilePage() {
           </TabsTrigger>
           <TabsTrigger value={2} className="flex-1 py-3 text-base">
             Cấp cứu
+          </TabsTrigger>
+          <TabsTrigger value={3} className="flex-1 py-3 text-base">
+            Lịch sử khám
           </TabsTrigger>
         </TabsList>
 
@@ -124,6 +128,10 @@ export default function ProfilePage() {
 
         <TabsContent value={2} className="mt-4">
           <EmergencyCard citizen={citizen} healthProfile={healthProfile} />
+        </TabsContent>
+
+        <TabsContent value={3} className="mt-4">
+          <HealthExamHistoryList userId={user?.citizenId ?? user?.id ?? ''} />
         </TabsContent>
       </Tabs>
     </div>
