@@ -2,13 +2,25 @@ import { NextResponse } from 'next/server'
 import { isDemoMode } from '@/lib/demo/demo-api-helper'
 
 /**
+ * Bỏ dấu tiếng Việt: Nguyễn → Nguyen, Minh → Minh, Đức → Duc
+ */
+function removeDiacritics(str: string): string {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+}
+
+/**
  * Tạo username từ họ tên: tên + chữ cái đầu họ + chữ cái đầu đệm + năm
- * Viết thường toàn bộ, KHÔNG gạch dưới
+ * Viết thường, không dấu, không gạch dưới
  * Ví dụ: Nguyễn Văn Minh → minhnv2026
+ * Phạm Văn Đức → ducpv2026
  * Nếu trùng → minhnv12026, minhnv22026, ...
  */
 function generateUsername(fullName: string): string {
-  const parts = fullName.trim().split(/\s+/)
+  const parts = removeDiacritics(fullName).trim().split(/\s+/)
   const year = new Date().getFullYear()
 
   if (parts.length === 1) {

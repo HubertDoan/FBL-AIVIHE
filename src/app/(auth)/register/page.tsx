@@ -7,8 +7,12 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+function removeDiacritics(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
+}
+
 function previewUsername(fullName: string): string {
-  const parts = fullName.trim().split(/\s+/)
+  const parts = removeDiacritics(fullName).trim().split(/\s+/)
   if (parts.length < 2) return ''
   const year = new Date().getFullYear()
   const ten = parts[parts.length - 1]
