@@ -19,10 +19,23 @@ const VALID_ROLES = [
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { citizenId, gender, dateOfBirth, role, address, occupation } = body
+    const {
+      citizenId,
+      fullName,
+      gender,
+      dateOfBirth,
+      idNumber,
+      ethnicity,
+      occupation,
+      education,
+      province,
+      commune,
+      streetAddress,
+      role,
+    } = body
 
     // Validate required fields
-    if (!citizenId || !gender || !dateOfBirth || !role || !address) {
+    if (!citizenId || !gender || !dateOfBirth || !role || !province || !commune) {
       return NextResponse.json(
         { error: 'Vui lòng điền đầy đủ thông tin bắt buộc.' },
         { status: 400 }
@@ -36,6 +49,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate CCCD format if provided
+    if (idNumber && !/^\d{12}$/.test(idNumber)) {
+      return NextResponse.json(
+        { error: 'Số CCCD/CMND phải có đúng 12 chữ số.' },
+        { status: 400 }
+      )
+    }
+
     if (isDemoMode()) {
       // Demo mode: update the in-memory account role
       const cookie = request.cookies.get(DEMO_COOKIE_NAME)
@@ -43,9 +64,7 @@ export async function POST(request: NextRequest) {
         const session = JSON.parse(cookie.value)
         const account = findDemoAccountById(session.id)
         if (account) {
-          // Map role for demo: 'member' -> 'citizen', 'doctor' -> 'doctor'
           const demoRole = role === 'doctor' ? 'doctor' : 'citizen'
-          // Mutate in-memory for this session
           const idx = DEMO_ACCOUNTS.findIndex((a) => a.id === account.id)
           if (idx !== -1) {
             ;(DEMO_ACCOUNTS[idx] as { role: string }).role = demoRole
@@ -63,14 +82,25 @@ export async function POST(request: NextRequest) {
     const { createClient } = await import('@/lib/supabase/server')
     const supabase = await createClient()
 
+    // Build address string from components
+    const addressParts = [streetAddress, commune, province].filter(Boolean)
+    const fullAddress = addressParts.join(', ')
+
     const { error } = await supabase
       .from('citizens')
       .update({
+        full_name: fullName || undefined,
         role,
         gender,
         date_of_birth: dateOfBirth,
-        address,
+        id_number: idNumber || null,
+        ethnicity: ethnicity || null,
         occupation: occupation || null,
+        education: education || null,
+        province: province || null,
+        commune: commune || null,
+        street_address: streetAddress || null,
+        address: fullAddress,
       })
       .eq('id', citizenId)
 
