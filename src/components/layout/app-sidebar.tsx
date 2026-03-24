@@ -21,6 +21,8 @@ import {
   HeartPulse,
   UserPlus,
   Award,
+  CalendarDays,
+  CalendarCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -58,7 +60,9 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/doctor-register', label: 'Đăng ký BS', icon: UserPlus, doctorOnly: true, doctorNotRegistered: true },
   { href: '/dashboard/doctor-profile', label: 'Hồ sơ chuyên môn', icon: Award, doctorOnly: true, doctorApproved: true },
   { href: '/dashboard/doctor-review', label: 'Xem xét khám', icon: Stethoscope, doctorOnly: true },
+  { href: '/dashboard/doctor-schedule', label: 'Lịch khám', icon: CalendarDays, doctorOnly: true },
   { href: '/dashboard/choose-doctor', label: 'BS gia đình', icon: Stethoscope, memberOnly: true },
+  { href: '/dashboard/book-appointment', label: 'Đặt lịch khám', icon: CalendarCheck, memberOnly: true },
   { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, receptionOnly: true },
   { href: '/dashboard/exam-schedule', label: 'Lịch khám', icon: Calendar, examDoctorOnly: true },
   { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, memberOnly: true },

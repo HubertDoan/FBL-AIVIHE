@@ -1,6 +1,7 @@
 'use client'
 
 // Member page to browse available doctors and request a family doctor assignment
+// Also includes referral request section for when no suitable doctor is found
 
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/hooks/use-auth'
@@ -8,8 +9,23 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
-import { Stethoscope, CheckCircle, Users, RefreshCw } from 'lucide-react'
+import { Stethoscope, CheckCircle, Users, RefreshCw, HelpCircle, Send } from 'lucide-react'
 import type { DoctorProfile, FamilyDoctorAssignment } from '@/lib/demo/demo-doctor-profile-data'
+
+const SPECIALTY_OPTIONS = [
+  'Nội tổng quát',
+  'Y học gia đình',
+  'Tim mạch',
+  'Nội tiết',
+  'Hô hấp',
+  'Tiêu hoá',
+  'Thần kinh',
+  'Cơ xương khớp',
+  'Da liễu',
+  'Mắt',
+  'Tai mũi họng',
+  'Lão khoa',
+]
 
 export default function ChooseDoctorPage() {
   const { user, loading: authLoading } = useAuth()
@@ -18,6 +34,11 @@ export default function ChooseDoctorPage() {
   const [loading, setLoading] = useState(true)
   const [requestingId, setRequestingId] = useState<string | null>(null)
   const [showList, setShowList] = useState(false)
+  // Referral form state
+  const [showReferralForm, setShowReferralForm] = useState(false)
+  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([])
+  const [referralDesc, setReferralDesc] = useState('')
+  const [submittingReferral, setSubmittingReferral] = useState(false)
 
   const fetchData = useCallback(async () => {
     try {
@@ -41,6 +62,41 @@ export default function ChooseDoctorPage() {
     if (authLoading || !user) return
     fetchData()
   }, [authLoading, user, fetchData])
+
+  function toggleSpecialty(s: string) {
+    setSelectedSpecialties(prev =>
+      prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]
+    )
+  }
+
+  async function handleReferralSubmit() {
+    if (selectedSpecialties.length === 0) {
+      toast.error('Vui lòng chọn ít nhất một chuyên khoa.')
+      return
+    }
+    if (!referralDesc.trim()) {
+      toast.error('Vui lòng mô tả nhu cầu của bạn.')
+      return
+    }
+    setSubmittingReferral(true)
+    try {
+      const res = await fetch('/api/doctor-referral', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ specialties_needed: selectedSpecialties, description: referralDesc.trim() }),
+      })
+      if (res.ok) {
+        setShowReferralForm(false)
+        setSelectedSpecialties([])
+        setReferralDesc('')
+        toast.success('Đã gửi yêu cầu. Trung tâm sẽ liên hệ bạn sớm.')
+      } else {
+        const err = await res.json()
+        toast.error(err.error ?? 'Gửi yêu cầu thất bại.')
+      }
+    } catch { toast.error('Lỗi kết nối.') }
+    setSubmittingReferral(false)
+  }
 
   async function handleSelect(doctor: DoctorProfile) {
     setRequestingId(doctor.id)
@@ -152,6 +208,78 @@ export default function ChooseDoctorPage() {
           ))}
         </div>
       )}
+
+      {/* Referral section */}
+      <div className="pt-2 border-t border-border">
+        <div className="flex items-center gap-2 mb-3">
+          <HelpCircle className="size-5 text-muted-foreground" />
+          <p className="text-base text-muted-foreground">Không tìm được bác sĩ phù hợp?</p>
+        </div>
+        {!showReferralForm ? (
+          <Button
+            variant="outline"
+            className="h-11 text-base gap-2"
+            onClick={() => setShowReferralForm(true)}
+          >
+            <Send className="size-4" />
+            Nhờ trung tâm giới thiệu
+          </Button>
+        ) : (
+          <Card className="border-primary/40">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Yêu cầu trung tâm giới thiệu bác sĩ</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <p className="text-base font-medium">Chuyên khoa cần (chọn một hoặc nhiều)</p>
+                <div className="flex flex-wrap gap-2">
+                  {SPECIALTY_OPTIONS.map(s => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => toggleSpecialty(s)}
+                      className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
+                        selectedSpecialties.includes(s)
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-border bg-background hover:bg-accent'
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-base font-medium">Mô tả nhu cầu của bạn</label>
+                <textarea
+                  value={referralDesc}
+                  onChange={e => setReferralDesc(e.target.value)}
+                  rows={3}
+                  placeholder="Ví dụ: Tôi bị cao huyết áp lâu năm, cần bác sĩ có kinh nghiệm theo dõi mãn tính..."
+                  className="w-full px-3 py-2 rounded-md border border-input bg-background text-base resize-none"
+                />
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  className="h-11 text-base flex-1 gap-2"
+                  onClick={handleReferralSubmit}
+                  disabled={submittingReferral}
+                >
+                  <Send className="size-4" />
+                  {submittingReferral ? 'Đang gửi...' : 'Gửi yêu cầu'}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-11 text-base"
+                  onClick={() => setShowReferralForm(false)}
+                >
+                  Huỷ
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2, Bell, Crown, UserCheck } from 'lucide-react'
+import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2, Bell, Crown, UserCheck, Send } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -10,6 +10,7 @@ import { AuditLogTable } from '@/components/admin/audit-log-table'
 import { AnnouncementManager } from '@/components/admin/announcement-manager'
 import { ProgramManager } from '@/components/admin/program-manager'
 import { DoctorApprovalList } from '@/components/admin/doctor-approval-list'
+import { DoctorReferralList } from '@/components/admin/doctor-referral-list'
 import { useAuth } from '@/hooks/use-auth'
 
 interface Stats {
@@ -27,14 +28,14 @@ interface Stats {
 function getVisibleTabs(role: string): string[] {
   switch (role) {
     case 'super_admin':
-      return ['users', 'doctors', 'announcements', 'programs', 'audit', 'stats']
+      return ['users', 'doctors', 'referrals', 'announcements', 'programs', 'audit', 'stats']
     case 'director':
       return ['announcements', 'programs', 'stats']
     case 'branch_director':
       return ['announcements', 'stats']
     case 'admin':
     default:
-      return ['users', 'doctors', 'announcements', 'audit', 'stats']
+      return ['users', 'doctors', 'referrals', 'announcements', 'audit', 'stats']
   }
 }
 
@@ -121,6 +122,12 @@ export default function AdminPage() {
               Bác sĩ
             </TabsTrigger>
           )}
+          {visibleTabs.includes('referrals') && (
+            <TabsTrigger value="referrals" className="gap-1.5 text-base">
+              <Send className="size-4" />
+              Giới thiệu BS
+            </TabsTrigger>
+          )}
           {visibleTabs.includes('announcements') && (
             <TabsTrigger value="announcements" className="gap-1.5 text-base">
               <Bell className="size-4" />
@@ -170,6 +177,20 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent>
                 <DoctorApprovalList />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {/* Referrals Tab */}
+        {visibleTabs.includes('referrals') && (
+          <TabsContent value="referrals">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Giới thiệu bác sĩ gia đình</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DoctorReferralList />
               </CardContent>
             </Card>
           </TabsContent>
