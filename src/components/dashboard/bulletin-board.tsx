@@ -164,7 +164,7 @@ export function BulletinBoard() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-lg font-semibold text-amber-800 dark:text-amber-300">
-                  Phí hội viên tháng 03/2026: 50.000đ
+                  Phí hội viên 6 tháng: 1.800.000đ (300.000đ/tháng)
                 </p>
                 <p className="text-base text-amber-700/80 dark:text-amber-400/80 mt-1">
                   Vui lòng thanh toán để duy trì quyền lợi thành viên.

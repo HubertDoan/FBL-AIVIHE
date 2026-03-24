@@ -33,7 +33,8 @@ const BANK_INFO = {
   holder: 'CONG TY FBL',
 }
 
-const PLAN_PRICE = '50.000đ/tháng'
+const PLAN_PRICE = '300.000đ/tháng'
+const PLAN_CYCLE = 'Đóng 6 tháng/lần: 1.800.000đ'
 
 interface Payment {
   id: string
@@ -47,22 +48,22 @@ const DEMO_PAYMENTS: Payment[] = [
   {
     id: 'p1',
     date: '24/03/2026',
-    amount: '50.000đ',
-    content: 'AIVIHE phí tháng 03/2026',
+    amount: '1.800.000đ',
+    content: 'AIVIHE phí 6 tháng (04-09/2026)',
     status: 'confirmed',
   },
   {
     id: 'p2',
-    date: '20/02/2026',
-    amount: '50.000đ',
-    content: 'AIVIHE phí tháng 02/2026',
+    date: '20/09/2025',
+    amount: '1.800.000đ',
+    content: 'AIVIHE phí 6 tháng (10/2025-03/2026)',
     status: 'confirmed',
   },
   {
     id: 'p3',
-    date: '15/01/2026',
-    amount: '50.000đ',
-    content: 'AIVIHE phí tháng 01/2026',
+    date: '15/03/2025',
+    amount: '1.800.000đ',
+    content: 'AIVIHE phí 6 tháng (04-09/2025)',
     status: 'pending',
   },
 ]
@@ -180,6 +181,7 @@ export default function MembershipPage() {
                   {PLAN_PRICE}
                 </span>
               </div>
+              <p className="text-base text-orange-600 font-semibold">{PLAN_CYCLE}</p>
               <div className="flex items-center justify-between">
                 <span className="text-base text-muted-foreground">
                   Trạng thái

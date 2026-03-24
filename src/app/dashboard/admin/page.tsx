@@ -5,7 +5,7 @@ import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2, B
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
-import { UserTable } from '@/components/admin/user-table'
+import { MemberManagement } from '@/components/admin/member-management'
 import { AuditLogTable } from '@/components/admin/audit-log-table'
 import { AnnouncementManager } from '@/components/admin/announcement-manager'
 import { ProgramManager } from '@/components/admin/program-manager'
@@ -105,10 +105,10 @@ export default function AdminPage() {
         <TabsContent value="users">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Danh sách người dùng</CardTitle>
+              <CardTitle className="text-lg">Quản lý thành viên</CardTitle>
             </CardHeader>
             <CardContent>
-              <UserTable />
+              <MemberManagement />
             </CardContent>
           </Card>
         </TabsContent>
