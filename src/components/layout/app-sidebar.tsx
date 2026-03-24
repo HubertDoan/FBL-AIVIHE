@@ -11,19 +11,21 @@ import {
   FileText,
   Stethoscope,
   MessageSquare,
+  Settings,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'T\u1ED5ng quan', icon: LayoutDashboard },
-  { href: '/dashboard/profile', label: 'H\u1ED3 s\u01A1 c\u00E1 nh\u00E2n', icon: User },
-  { href: '/dashboard/family', label: 'Gia \u0111\u00ECnh', icon: Users },
-  { href: '/dashboard/upload', label: 'T\u1EA3i t\u00E0i li\u1EC7u', icon: Upload },
-  { href: '/dashboard/timeline', label: 'D\u00F2ng th\u1EDDi gian', icon: Clock },
-  { href: '/dashboard/summary', label: 'T\u00F3m t\u1EAFt s\u1EE9c kh\u1ECFe', icon: FileText },
-  { href: '/dashboard/visit-prep', label: 'Chu\u1EA9n b\u1ECB \u0111i kh\u00E1m', icon: Stethoscope },
-  { href: '/dashboard/feedback', label: 'G\u00F3p \u00FD', icon: MessageSquare },
+  { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard },
+  { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User },
+  { href: '/dashboard/family', label: 'Gia đình', icon: Users },
+  { href: '/dashboard/upload', label: 'Tải tài liệu', icon: Upload },
+  { href: '/dashboard/timeline', label: 'Dòng thời gian', icon: Clock },
+  { href: '/dashboard/summary', label: 'Tóm tắt sức khỏe', icon: FileText },
+  { href: '/dashboard/visit-prep', label: 'Chuẩn bị đi khám', icon: Stethoscope },
+  { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare },
+  { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings },
 ]
 
 interface AppSidebarProps {
@@ -49,7 +51,7 @@ export function AppSidebar({ userName, userAvatar, open, onClose }: AppSidebarPr
             )}
           </div>
           <div className="min-w-0">
-            <p className="font-medium truncate">{userName ?? 'Ng\u01B0\u1EDDi d\u00F9ng'}</p>
+            <p className="font-medium truncate">{userName ?? 'Người dùng'}</p>
             <p className="text-sm text-muted-foreground">AIVIHE</p>
           </div>
         </div>
@@ -102,7 +104,7 @@ export function AppSidebar({ userName, userAvatar, open, onClose }: AppSidebarPr
               <button
                 onClick={onClose}
                 className="p-2 rounded-lg hover:bg-accent min-h-0"
-                aria-label="\u0110\u00F3ng menu"
+                aria-label="Đóng menu"
               >
                 <X className="size-5" />
               </button>

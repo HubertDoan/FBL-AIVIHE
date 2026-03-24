@@ -21,8 +21,8 @@ interface PersonalInfoFormProps {
 
 const GENDER_OPTIONS = [
   { value: 'male', label: 'Nam' },
-  { value: 'female', label: 'N\u1EEF' },
-  { value: 'other', label: 'Kh\u00E1c' },
+  { value: 'female', label: 'Nữ' },
+  { value: 'other', label: 'Khác' },
 ]
 
 export function PersonalInfoForm({ citizen, editing, onSave }: PersonalInfoFormProps) {
@@ -69,18 +69,18 @@ export function PersonalInfoForm({ citizen, editing, onSave }: PersonalInfoFormP
 
   return (
     <div className="space-y-5">
-      {field('H\u1ECD v\u00E0 t\u00EAn', 'full_name')}
-      {field('Ng\u00E0y sinh', 'date_of_birth', 'date')}
+      {field('Họ và tên', 'full_name')}
+      {field('Ngày sinh', 'date_of_birth', 'date')}
 
       <div className="space-y-2">
-        <Label className="text-base font-medium">Gi\u1EDBi t\u00EDnh</Label>
+        <Label className="text-base font-medium">Giới tính</Label>
         {editing ? (
           <Select
             value={form.gender}
             onValueChange={(val) => setForm((p) => ({ ...p, gender: val as string }))}
           >
             <SelectTrigger className="h-12 text-lg w-full">
-              <SelectValue placeholder="Ch\u1ECDn gi\u1EDBi t\u00EDnh" />
+              <SelectValue placeholder="Chọn giới tính" />
             </SelectTrigger>
             <SelectContent>
               {GENDER_OPTIONS.map((g) => (
@@ -104,10 +104,10 @@ export function PersonalInfoForm({ citizen, editing, onSave }: PersonalInfoFormP
         <Label className="text-base font-medium">Số điện thoại</Label>
         <Input className="h-12 text-lg bg-gray-50" readOnly value={citizen?.phone ?? ""} />
       </div>
-      {field('\u0110\u1ECBa ch\u1EC9', 'address')}
-      {field('S\u1ED1 CMND/CCCD', 'national_id')}
-      {field('D\u00E2n t\u1ED9c', 'ethnicity')}
-      {field('Ngh\u1EC1 nghi\u1EC7p', 'occupation')}
+      {field('Địa chỉ', 'address')}
+      {field('Số CMND/CCCD', 'national_id')}
+      {field('Dân tộc', 'ethnicity')}
+      {field('Nghề nghiệp', 'occupation')}
 
       {editing && (
         <Button
@@ -115,7 +115,7 @@ export function PersonalInfoForm({ citizen, editing, onSave }: PersonalInfoFormP
           onClick={handleSave}
           disabled={saving}
         >
-          {saving ? '\u0110ang l\u01B0u...' : 'L\u01B0u th\u00F4ng tin'}
+          {saving ? 'Đang lưu...' : 'Lưu thông tin'}
         </Button>
       )}
     </div>

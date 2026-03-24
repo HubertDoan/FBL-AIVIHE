@@ -10,16 +10,16 @@ import { formatRelativeTime } from '@/lib/utils/format-date'
 import type { FamilyRole } from '@/types/database'
 
 const RELATIONSHIP_LABELS: Record<string, string> = {
-  father: 'B\u1ED1',
-  mother: 'M\u1EB9',
+  father: 'Bố',
+  mother: 'Mẹ',
   son: 'Con trai',
-  daughter: 'Con g\u00E1i',
-  grandfather: '\u00D4ng',
-  grandmother: 'B\u00E0',
-  wife: 'V\u1EE3',
-  husband: 'Ch\u1ED3ng',
-  sibling: 'Anh/Ch\u1ECB/Em',
-  other: 'Kh\u00E1c',
+  daughter: 'Con gái',
+  grandfather: 'Ông',
+  grandmother: 'Bà',
+  wife: 'Vợ',
+  husband: 'Chồng',
+  sibling: 'Anh/Chị/Em',
+  other: 'Khác',
 }
 
 interface FamilyMemberCardProps {
@@ -97,7 +97,7 @@ export function FamilyMemberCard({
             onClick={() => onViewProfile(citizenId)}
           >
             <Eye className="size-4 mr-1" />
-            Xem h\u1ED3 s\u01A1
+            Xem hồ sơ
           </Button>
           {canManage && (
             <Button
@@ -106,7 +106,7 @@ export function FamilyMemberCard({
               onClick={() => onActOnBehalf(citizenId, name)}
             >
               <UserCog className="size-4 mr-1" />
-              Thao t\u00E1c h\u1ED9
+              Thao tác hộ
             </Button>
           )}
         </div>

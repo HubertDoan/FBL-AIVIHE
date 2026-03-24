@@ -14,7 +14,7 @@ interface OverviewCardsProps {
 const CARDS = [
   {
     key: 'documents',
-    label: 'T\u00E0i li\u1EC7u',
+    label: 'Tài liệu',
     icon: FileText,
     color: 'text-blue-600 bg-blue-50',
     href: '/dashboard/upload',
@@ -22,7 +22,7 @@ const CARDS = [
   },
   {
     key: 'visits',
-    label: 'L\u1EA7n kh\u00E1m',
+    label: 'Lần khám',
     icon: Stethoscope,
     color: 'text-green-600 bg-green-50',
     href: '/dashboard/timeline',
@@ -30,7 +30,7 @@ const CARDS = [
   },
   {
     key: 'pending',
-    label: 'Ch\u1EDD x\u00E1c nh\u1EADn',
+    label: 'Chờ xác nhận',
     icon: Clock,
     color: 'text-amber-600 bg-amber-50',
     href: '/dashboard/extraction',
@@ -38,7 +38,7 @@ const CARDS = [
   },
   {
     key: 'family',
-    label: 'Gia \u0111\u00ECnh',
+    label: 'Gia đình',
     icon: Users,
     color: 'text-purple-600 bg-purple-50',
     href: '/dashboard/family',

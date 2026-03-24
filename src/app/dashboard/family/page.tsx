@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { FamilyMemberCard } from '@/components/family/family-member-card'
 import { InviteMemberDialog } from '@/components/family/invite-member-dialog'
-import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/hooks/use-auth'
 import { useActingAs } from '@/hooks/use-acting-as'
 import { UserPlus, Users } from 'lucide-react'
 import type { FamilyRole } from '@/types/database'
@@ -18,64 +18,68 @@ interface MemberRow {
   relationship: string | null
   joined_at: string
   citizens: { full_name: string }
+  citizen?: { full_name: string }
 }
 
 export default function FamilyPage() {
+  const { user, loading: authLoading } = useAuth()
   const [familyId, setFamilyId] = useState<string | null>(null)
   const [familyName, setFamilyName] = useState('')
   const [members, setMembers] = useState<MemberRow[]>([])
   const [myRole, setMyRole] = useState<FamilyRole>('member')
-  const [citizenId, setCitizenId] = useState<string | null>(null)
   const [inviteOpen, setInviteOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const { setActingAs } = useActingAs()
 
   const fetchFamily = useCallback(async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { router.push('/login'); return }
+    if (!user) return
 
-    const { data: citizen } = await supabase
-      .from('citizens').select('id').eq('auth_id', user.id).single()
-    if (!citizen) { setLoading(false); return }
-    setCitizenId(citizen.id)
+    try {
+      // Step 1: Get my family memberships
+      const famRes = await fetch('/api/family')
+      if (!famRes.ok) { setLoading(false); return }
+      const memberships = await famRes.json()
 
-    const { data: membership } = await supabase
-      .from('family_members')
-      .select('family_id, role')
-      .eq('citizen_id', citizen.id)
-      .limit(1)
-      .single()
+      if (!Array.isArray(memberships) || memberships.length === 0) {
+        setLoading(false)
+        return
+      }
 
-    if (!membership) { setLoading(false); return }
-    setFamilyId(membership.family_id)
-    setMyRole(membership.role as FamilyRole)
+      const first = memberships[0]
+      const fId = first.family_id
+      setFamilyId(fId)
+      setMyRole(first.role as FamilyRole)
+      setFamilyName(first.families?.name ?? '')
 
-    const { data: family } = await supabase
-      .from('families').select('name').eq('id', membership.family_id).single()
-    setFamilyName(family?.name ?? '')
-
-    const { data: mems } = await supabase
-      .from('family_members')
-      .select('id, citizen_id, role, relationship, joined_at, citizens(full_name)')
-      .eq('family_id', membership.family_id)
-
-    setMembers((mems as unknown as MemberRow[]) ?? [])
+      // Step 2: Get family members
+      const memRes = await fetch(`/api/family/members?familyId=${fId}`)
+      if (memRes.ok) {
+        const mems = await memRes.json()
+        // Normalize: demo data uses 'citizen' key, Supabase uses 'citizens'
+        const normalized = (mems as MemberRow[]).map((m) => ({
+          ...m,
+          citizens: m.citizens ?? m.citizen ?? { full_name: '' },
+        }))
+        setMembers(normalized)
+      }
+    } catch {
+      // Silently handle fetch errors
+    }
     setLoading(false)
-  }, [router])
+  }, [user])
 
-  useEffect(() => { fetchFamily() }, [fetchFamily])
+  useEffect(() => {
+    if (authLoading || !user) return
+    fetchFamily()
+  }, [authLoading, user, fetchFamily])
 
   const handleCreateFamily = async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user || !citizenId) return
-
+    if (!user) return
     const res = await fetch('/api/family', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: `Gia \u0111\u00ECnh` }),
+      body: JSON.stringify({ name: `Gia đình` }),
     })
     if (res.ok) fetchFamily()
   }
@@ -92,12 +96,12 @@ export default function FamilyPage() {
 
   const canManage = myRole === 'owner' || myRole === 'manager'
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center space-y-3">
           <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-lg text-muted-foreground">\u0110ang t\u1EA3i...</p>
+          <p className="text-lg text-muted-foreground">Đang tải...</p>
         </div>
       </div>
     )
@@ -107,12 +111,12 @@ export default function FamilyPage() {
     return (
       <div className="max-w-md mx-auto text-center py-12 space-y-6">
         <Users className="size-16 mx-auto text-muted-foreground" />
-        <h2 className="text-2xl font-bold">Qu\u1EA3n l\u00FD gia \u0111\u00ECnh</h2>
+        <h2 className="text-2xl font-bold">Quản lý gia đình</h2>
         <p className="text-lg text-muted-foreground">
-          B\u1EA1n ch\u01B0a thu\u1ED9c nh\u00F3m gia \u0111\u00ECnh n\u00E0o.
+          Bạn chưa thuộc nhóm gia đình nào.
         </p>
         <Button className="h-14 text-lg px-8" onClick={handleCreateFamily}>
-          T\u1EA1o nh\u00F3m gia \u0111\u00ECnh
+          Tạo nhóm gia đình
         </Button>
       </div>
     )
@@ -122,13 +126,13 @@ export default function FamilyPage() {
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Qu\u1EA3n l\u00FD gia \u0111\u00ECnh</h1>
+          <h1 className="text-2xl font-bold">Quản lý gia đình</h1>
           <p className="text-lg text-muted-foreground">{familyName}</p>
         </div>
         {canManage && (
           <Button className="h-12 text-base" onClick={() => setInviteOpen(true)}>
             <UserPlus className="size-5 mr-2" />
-            Th\u00EAm th\u00E0nh vi\u00EAn
+            Thêm thành viên
           </Button>
         )}
       </div>
@@ -143,7 +147,7 @@ export default function FamilyPage() {
             relationship={m.relationship}
             role={m.role}
             joinedAt={m.joined_at}
-            canManage={canManage && m.citizen_id !== citizenId}
+            canManage={canManage && m.citizen_id !== user?.citizenId}
             onViewProfile={(cid) => router.push(`/dashboard/profile?citizen=${cid}`)}
             onActOnBehalf={(cid, name) => setActingAs(cid, name)}
           />

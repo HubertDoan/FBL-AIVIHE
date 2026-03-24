@@ -65,6 +65,7 @@ export type FeedbackStatus = 'pending' | 'reviewing' | 'resolved' | 'closed'
 export interface Citizen {
   id: string
   full_name: string
+  username: string | null
   date_of_birth: string | null
   gender: 'male' | 'female' | 'other' | null
   national_id: string | null

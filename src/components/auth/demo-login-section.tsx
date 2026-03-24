@@ -10,9 +10,9 @@ import { DEMO_ACCOUNTS, type DemoAccount } from '@/lib/demo/demo-accounts'
 import { Loader2 } from 'lucide-react'
 
 const roleLabels: Record<string, string> = {
-  citizen: 'Ng\u01B0\u1EDDi d\u00E2n',
-  doctor: 'B\u00E1c s\u0129',
-  admin: 'Qu\u1EA3n tr\u1ECB',
+  citizen: 'Người dân',
+  doctor: 'Bác sĩ',
+  admin: 'Quản trị',
 }
 
 const roleBadgeColors: Record<string, string> = {
@@ -31,7 +31,7 @@ export function DemoLoginSection() {
   async function handleLogin(e?: React.FormEvent) {
     e?.preventDefault()
     if (!email || !password) {
-      setError('Vui l\u00F2ng nh\u1EADp email v\u00E0 m\u1EADt kh\u1EA9u')
+      setError('Vui lòng nhập email và mật khẩu')
       return
     }
 
@@ -47,14 +47,14 @@ export function DemoLoginSection() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || '\u0110\u0103ng nh\u1EADp th\u1EA5t b\u1EA1i')
+        setError(data.error || 'Đăng nhập thất bại')
         return
       }
 
       router.push('/dashboard')
       router.refresh()
     } catch {
-      setError('\u0110\u00E3 x\u1EA3y ra l\u1ED7i. Vui l\u00F2ng th\u1EED l\u1EA1i.')
+      setError('Đã xảy ra lỗi. Vui lòng thử lại.')
     } finally {
       setLoading(false)
     }
@@ -72,7 +72,7 @@ export function DemoLoginSection() {
       <Card>
         <CardHeader className="pb-3">
           <p className="text-sm font-medium text-center">
-            Ch\u1ECDn nhanh t\u00E0i kho\u1EA3n demo
+            Chọn nhanh tài khoản demo
           </p>
         </CardHeader>
         <CardContent className="space-y-2">
@@ -113,7 +113,7 @@ export function DemoLoginSection() {
       <Card>
         <CardHeader className="pb-3">
           <p className="text-sm font-medium text-center">
-            Ho\u1EB7c nh\u1EADp th\u00F4ng tin \u0111\u0103ng nh\u1EADp
+            Hoặc nhập thông tin đăng nhập
           </p>
         </CardHeader>
         <CardContent>
@@ -137,12 +137,12 @@ export function DemoLoginSection() {
 
             <div className="space-y-2">
               <Label htmlFor="demo-password" className="text-base font-medium">
-                M\u1EADt kh\u1EA9u
+                Mật khẩu
               </Label>
               <Input
                 id="demo-password"
                 type="password"
-                placeholder="M\u1EADt kh\u1EA9u"
+                placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value)
@@ -164,10 +164,10 @@ export function DemoLoginSection() {
               {loading ? (
                 <>
                   <Loader2 className="size-5 animate-spin mr-2" />
-                  \u0110ang \u0111\u0103ng nh\u1EADp...
+                  Đang đăng nhập...
                 </>
               ) : (
-                '\u0110\u0103ng nh\u1EADp Demo'
+                'Đăng nhập Demo'
               )}
             </Button>
           </form>
@@ -177,8 +177,8 @@ export function DemoLoginSection() {
       {/* Info banner */}
       <div className="rounded-lg bg-amber-50 border border-amber-200 p-3">
         <p className="text-sm text-amber-800 text-center">
-          Ch\u1EBF \u0111\u1ED9 demo &mdash; d\u1EEF li\u1EC7u m\u1EABu, kh\u00F4ng k\u1EBFt n\u1ED1i Supabase.
-          M\u1EADt kh\u1EA9u chung: <span className="font-mono font-bold">Demo@2024</span>
+          Chế độ demo &mdash; dữ liệu mẫu, không kết nối Supabase.
+          Mật khẩu chung: <span className="font-mono font-bold">Demo@2024</span>
         </p>
       </div>
     </div>

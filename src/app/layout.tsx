@@ -10,9 +10,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AIVIHE - Tr\u1EE3 l\u00FD AI s\u1EE9c kh\u1ECFe c\u00E1 nh\u00E2n",
+  title: "AIVIHE - Trợ lý AI sức khỏe cá nhân",
   description:
-    "Tr\u1EE3 l\u00FD AI s\u1EE9c kh\u1ECFe c\u00E1 nh\u00E2n gi\u00FAp ng\u01B0\u1EDDi d\u00E2n hi\u1EC3u v\u00E0 qu\u1EA3n l\u00FD d\u1EEF li\u1EC7u s\u1EE9c kh\u1ECFe c\u1EE7a m\u00ECnh.",
+    "Trợ lý AI sức khỏe cá nhân giúp người dân hiểu và quản lý dữ liệu sức khỏe của mình.",
 };
 
 export default function RootLayout({

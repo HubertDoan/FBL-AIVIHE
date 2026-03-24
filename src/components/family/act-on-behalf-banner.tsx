@@ -27,7 +27,7 @@ export function ActOnBehalfBanner() {
             </AvatarFallback>
           </Avatar>
           <p className="text-base font-medium text-amber-900">
-            \u0110ang thao t\u00E1c cho{' '}
+            Đang thao tác cho{' '}
             <span className="font-bold">{actingAs.citizenName}</span>
           </p>
         </div>
@@ -38,7 +38,7 @@ export function ActOnBehalfBanner() {
           onClick={clearActingAs}
         >
           <ArrowLeft className="size-4 mr-1" />
-          Quay v\u1EC1 t\u00E0i kho\u1EA3n c\u1EE7a t\u00F4i
+          Quay về tài khoản của tôi
         </Button>
       </div>
     </div>

@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Vui l\u00F2ng nh\u1EADp email v\u00E0 m\u1EADt kh\u1EA9u' },
+        { error: 'Vui lòng nhập email và mật khẩu' },
         { status: 400 }
       )
     }
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     if (!account) {
       return NextResponse.json(
-        { error: 'Email ho\u1EB7c m\u1EADt kh\u1EA9u kh\u00F4ng \u0111\u00FAng' },
+        { error: 'Email hoặc mật khẩu không đúng' },
         { status: 401 }
       )
     }
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     return response
   } catch {
     return NextResponse.json(
-      { error: '\u0110\u00E3 x\u1EA3y ra l\u1ED7i. Vui l\u00F2ng th\u1EED l\u1EA1i.' },
+      { error: 'Đã xảy ra lỗi. Vui lòng thử lại.' },
       { status: 500 }
     )
   }

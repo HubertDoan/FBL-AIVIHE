@@ -57,14 +57,14 @@ export function PhoneOtpForm() {
       })
 
       if (authError) {
-        setError('Kh\u00F4ng th\u1EC3 g\u1EEDi m\u00E3 x\u00E1c th\u1EF1c. Vui l\u00F2ng th\u1EED l\u1EA1i.')
+        setError('Không thể gửi mã xác thực. Vui lòng thử lại.')
         return
       }
 
       setStep('otp')
       setCountdown(60)
     } catch {
-      setError('\u0110\u00E3 x\u1EA3y ra l\u1ED7i. Vui l\u00F2ng th\u1EED l\u1EA1i.')
+      setError('Đã xảy ra lỗi. Vui lòng thử lại.')
     } finally {
       setLoading(false)
     }
@@ -90,14 +90,14 @@ export function PhoneOtpForm() {
       })
 
       if (authError) {
-        setError('M\u00E3 x\u00E1c th\u1EF1c kh\u00F4ng \u0111\u00FAng. Vui l\u00F2ng th\u1EED l\u1EA1i.')
+        setError('Mã xác thực không đúng. Vui lòng thử lại.')
         return
       }
 
       router.push('/dashboard')
       router.refresh()
     } catch {
-      setError('\u0110\u00E3 x\u1EA3y ra l\u1ED7i. Vui l\u00F2ng th\u1EED l\u1EA1i.')
+      setError('Đã xảy ra lỗi. Vui lòng thử lại.')
     } finally {
       setLoading(false)
     }
@@ -119,7 +119,7 @@ export function PhoneOtpForm() {
       >
         <div className="space-y-2">
           <Label htmlFor="phone" className="text-base font-medium">
-            S\u1ED1 \u0111i\u1EC7n tho\u1EA1i
+            Số điện thoại
           </Label>
           <Input
             id="phone"
@@ -145,10 +145,10 @@ export function PhoneOtpForm() {
           {loading ? (
             <>
               <Loader2 className="size-5 animate-spin mr-2" />
-              \u0110ang g\u1EEDi...
+              Đang gửi...
             </>
           ) : (
-            'G\u1EEDi m\u00E3 x\u00E1c th\u1EF1c'
+            'Gửi mã xác thực'
           )}
         </Button>
       </form>
@@ -164,7 +164,7 @@ export function PhoneOtpForm() {
       className="space-y-4"
     >
       <p className="text-center text-muted-foreground">
-        M\u00E3 x\u00E1c th\u1EF1c \u0111\u00E3 g\u1EEDi \u0111\u1EBFn{' '}
+        Mã xác thực đã gửi đến{' '}
         <span className="font-semibold text-foreground">
           {formatPhoneDisplay(phone)}
         </span>
@@ -172,7 +172,7 @@ export function PhoneOtpForm() {
 
       <div className="space-y-2">
         <Label htmlFor="otp" className="text-base font-medium">
-          M\u00E3 x\u00E1c th\u1EF1c (6 ch\u1EEF s\u1ED1)
+          Mã xác thực (6 chữ số)
         </Label>
         <Input
           id="otp"
@@ -202,10 +202,10 @@ export function PhoneOtpForm() {
         {loading ? (
           <>
             <Loader2 className="size-5 animate-spin mr-2" />
-            \u0110ang x\u00E1c nh\u1EADn...
+            Đang xác nhận...
           </>
         ) : (
-          'X\u00E1c nh\u1EADn'
+          'Xác nhận'
         )}
       </Button>
 
@@ -220,7 +220,7 @@ export function PhoneOtpForm() {
           className="text-primary hover:underline min-h-0"
           style={{ minHeight: 'auto' }}
         >
-          \u0110\u1ED5i s\u1ED1 \u0111i\u1EC7n tho\u1EA1i
+          Đổi số điện thoại
         </button>
         <button
           type="button"
@@ -230,8 +230,8 @@ export function PhoneOtpForm() {
           style={{ minHeight: 'auto' }}
         >
           {countdown > 0
-            ? `G\u1EEDi l\u1EA1i (${countdown}s)`
-            : 'G\u1EEDi l\u1EA1i m\u00E3'}
+            ? `Gửi lại (${countdown}s)`
+            : 'Gửi lại mã'}
         </button>
       </div>
     </form>

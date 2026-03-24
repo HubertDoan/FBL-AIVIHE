@@ -17,18 +17,18 @@ export function EmergencyCard({ citizen, healthProfile }: EmergencyCardProps) {
 
   const handleShare = async () => {
     const text = [
-      `H\u1ED2 S\u01A0 C\u1EA4P C\u1EE8U`,
-      `H\u1ECD t\u00EAn: ${citizen.full_name}`,
-      `Ng\u00E0y sinh: ${formatDate(citizen.date_of_birth)}`,
-      hp?.blood_type ? `Nh\u00F3m m\u00E1u: ${hp.blood_type}` : '',
-      hp?.allergies?.length ? `D\u1ECB \u1EE9ng: ${hp.allergies.join(', ')}` : '',
-      hp?.current_medications?.length ? `Thu\u1ED1c: ${hp.current_medications.join(', ')}` : '',
-      hp?.chronic_conditions?.length ? `B\u1EC7nh n\u1EC1n: ${hp.chronic_conditions.join(', ')}` : '',
-      hp?.emergency_contact_name ? `Li\u00EAn h\u1EC7: ${hp.emergency_contact_name} - ${hp.emergency_contact_phone}` : '',
+      `HỒ SƠ CẤP CỨU`,
+      `Họ tên: ${citizen.full_name}`,
+      `Ngày sinh: ${formatDate(citizen.date_of_birth)}`,
+      hp?.blood_type ? `Nhóm máu: ${hp.blood_type}` : '',
+      hp?.allergies?.length ? `Dị ứng: ${hp.allergies.join(', ')}` : '',
+      hp?.current_medications?.length ? `Thuốc: ${hp.current_medications.join(', ')}` : '',
+      hp?.chronic_conditions?.length ? `Bệnh nền: ${hp.chronic_conditions.join(', ')}` : '',
+      hp?.emergency_contact_name ? `Liên hệ: ${hp.emergency_contact_name} - ${hp.emergency_contact_phone}` : '',
     ].filter(Boolean).join('\n')
 
     if (navigator.share) {
-      await navigator.share({ title: 'H\u1ED3 s\u01A1 c\u1EA5p c\u1EE9u', text })
+      await navigator.share({ title: 'Hồ sơ cấp cứu', text })
     } else {
       await navigator.clipboard.writeText(text)
     }
@@ -38,30 +38,30 @@ export function EmergencyCard({ citizen, healthProfile }: EmergencyCardProps) {
     <Card className="border-2 border-red-500">
       <CardHeader className="bg-red-600 text-white rounded-t-xl -mt-4 pt-4">
         <CardTitle className="text-2xl font-bold text-center text-white">
-          H\u1ED2 S\u01A0 C\u1EA4P C\u1EE8U
+          HỒ SƠ CẤP CỨU
         </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4 pt-4">
         <div>
-          <p className="text-muted-foreground text-base">H\u1ECD v\u00E0 t\u00EAn</p>
+          <p className="text-muted-foreground text-base">Họ và tên</p>
           <p className="text-2xl font-bold">{citizen.full_name}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-muted-foreground text-base">Ng\u00E0y sinh</p>
+            <p className="text-muted-foreground text-base">Ngày sinh</p>
             <p className="text-xl font-semibold">{formatDate(citizen.date_of_birth)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground text-base">Nh\u00F3m m\u00E1u</p>
+            <p className="text-muted-foreground text-base">Nhóm máu</p>
             <p className="text-xl font-bold text-red-600">{hp?.blood_type ?? '--'}</p>
           </div>
         </div>
 
         {hp?.allergies && hp.allergies.length > 0 && (
           <div>
-            <p className="text-muted-foreground text-base mb-2">D\u1ECB \u1EE9ng</p>
+            <p className="text-muted-foreground text-base mb-2">Dị ứng</p>
             <div className="flex flex-wrap gap-2">
               {hp.allergies.map((a, i) => (
                 <Badge key={i} variant="destructive" className="text-base px-3 py-1 h-auto">
@@ -74,7 +74,7 @@ export function EmergencyCard({ citizen, healthProfile }: EmergencyCardProps) {
 
         {hp?.current_medications && hp.current_medications.length > 0 && (
           <div>
-            <p className="text-muted-foreground text-base mb-2">Thu\u1ED1c \u0111ang d\u00F9ng</p>
+            <p className="text-muted-foreground text-base mb-2">Thuốc đang dùng</p>
             <div className="flex flex-wrap gap-2">
               {hp.current_medications.map((m, i) => (
                 <Badge key={i} variant="secondary" className="text-base px-3 py-1 h-auto">
@@ -87,7 +87,7 @@ export function EmergencyCard({ citizen, healthProfile }: EmergencyCardProps) {
 
         {hp?.chronic_conditions && hp.chronic_conditions.length > 0 && (
           <div>
-            <p className="text-muted-foreground text-base mb-2">B\u1EC7nh n\u1EC1n</p>
+            <p className="text-muted-foreground text-base mb-2">Bệnh nền</p>
             <div className="flex flex-wrap gap-2">
               {hp.chronic_conditions.map((c, i) => (
                 <Badge key={i} variant="outline" className="text-base px-3 py-1 h-auto">
@@ -100,7 +100,7 @@ export function EmergencyCard({ citizen, healthProfile }: EmergencyCardProps) {
 
         {hp?.emergency_contact_name && (
           <div className="border-t pt-4">
-            <p className="text-muted-foreground text-base">Ng\u01B0\u1EDDi li\u00EAn h\u1EC7 kh\u1EA9n c\u1EA5p</p>
+            <p className="text-muted-foreground text-base">Người liên hệ khẩn cấp</p>
             <p className="text-xl font-semibold">{hp.emergency_contact_name}</p>
             <p className="text-muted-foreground">{hp.emergency_contact_relationship}</p>
             <a
@@ -119,7 +119,7 @@ export function EmergencyCard({ citizen, healthProfile }: EmergencyCardProps) {
           onClick={handleShare}
         >
           <Share2 className="size-5 mr-2" />
-          Chia s\u1EBB h\u1ED3 s\u01A1 c\u1EA5p c\u1EE9u
+          Chia sẻ hồ sơ cấp cứu
         </Button>
       </CardContent>
     </Card>

@@ -32,10 +32,10 @@ export function RecentActivity({ recentDocs, pendingExtractions }: RecentActivit
       <Card>
         <CardHeader>
           <CardTitle className="text-xl flex items-center justify-between">
-            T\u00E0i li\u1EC7u g\u1EA7n \u0111\u00E2y
+            Tài liệu gần đây
             <Link href="/dashboard/upload">
               <Button variant="ghost" className="text-base">
-                Xem t\u1EA5t c\u1EA3 <ArrowRight className="size-4 ml-1" />
+                Xem tất cả <ArrowRight className="size-4 ml-1" />
               </Button>
             </Link>
           </CardTitle>
@@ -43,7 +43,7 @@ export function RecentActivity({ recentDocs, pendingExtractions }: RecentActivit
         <CardContent>
           {recentDocs.length === 0 ? (
             <p className="text-lg text-muted-foreground text-center py-4">
-              Ch\u01B0a c\u00F3 t\u00E0i li\u1EC7u n\u00E0o
+              Chưa có tài liệu nào
             </p>
           ) : (
             <ul className="space-y-3">
@@ -52,7 +52,7 @@ export function RecentActivity({ recentDocs, pendingExtractions }: RecentActivit
                   <FileText className="size-5 text-blue-500 shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-base font-medium truncate">
-                      {doc.original_filename ?? 'T\u00E0i li\u1EC7u'}
+                      {doc.original_filename ?? 'Tài liệu'}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {formatRelativeTime(doc.created_at)}
@@ -71,10 +71,10 @@ export function RecentActivity({ recentDocs, pendingExtractions }: RecentActivit
       <Card>
         <CardHeader>
           <CardTitle className="text-xl flex items-center justify-between">
-            Ch\u1EDD x\u00E1c nh\u1EADn
+            Chờ xác nhận
             <Link href="/dashboard/extraction">
               <Button variant="ghost" className="text-base">
-                Xem t\u1EA5t c\u1EA3 <ArrowRight className="size-4 ml-1" />
+                Xem tất cả <ArrowRight className="size-4 ml-1" />
               </Button>
             </Link>
           </CardTitle>
@@ -82,7 +82,7 @@ export function RecentActivity({ recentDocs, pendingExtractions }: RecentActivit
         <CardContent>
           {pendingExtractions.length === 0 ? (
             <p className="text-lg text-muted-foreground text-center py-4">
-              Kh\u00F4ng c\u00F3 d\u1EEF li\u1EC7u ch\u1EDD x\u00E1c nh\u1EADn
+              Không có dữ liệu chờ xác nhận
             </p>
           ) : (
             <ul className="space-y-3">
@@ -97,7 +97,7 @@ export function RecentActivity({ recentDocs, pendingExtractions }: RecentActivit
                   </div>
                   <Link href={`/dashboard/extraction/${ext.document_id}`}>
                     <Button variant="outline" className="h-10 text-sm">
-                      Xem & x\u00E1c nh\u1EADn
+                      Xem & xác nhận
                     </Button>
                   </Link>
                 </li>

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/hooks/use-auth'
 import type { Citizen, ChronicDisease, Medication } from '@/types/database'
 
 interface PatientView {
@@ -17,79 +17,39 @@ interface PatientView {
 }
 
 export default function DoctorPage() {
+  const { user, loading: authLoading } = useAuth()
   const [isDoctor, setIsDoctor] = useState<boolean | null>(null)
   const [patients, setPatients] = useState<PatientView[]>([])
   const [loading, setLoading] = useState(true)
   const [noteText, setNoteText] = useState<Record<string, string>>({})
 
   useEffect(() => {
+    if (authLoading || !user) return
+
     async function load() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      // Check if this user has doctor role in any family
-      const { data: doctorMemberships } = await supabase
-        .from('family_members')
-        .select('family_id, citizen_id')
-        .eq('role', 'doctor')
-
-      // Check if current user's citizen_id matches
-      const { data: myCitizen } = await supabase
-        .from('citizens')
-        .select('id')
-        .eq('auth_id', user.id)
-        .single()
-
-      if (!myCitizen) { setIsDoctor(false); setLoading(false); return }
-
-      const myDoctorFamilies = (doctorMemberships ?? []).filter(
-        (m: any) => m.citizen_id === myCitizen.id
-      )
-
-      if (myDoctorFamilies.length === 0) {
+      try {
+        const res = await fetch('/api/doctor')
+        if (!res.ok) {
+          setIsDoctor(false)
+          setLoading(false)
+          return
+        }
+        const data = await res.json()
+        if (data.isDoctor === false) {
+          setIsDoctor(false)
+        } else {
+          setIsDoctor(true)
+          setPatients(data.patients ?? [])
+        }
+      } catch {
         setIsDoctor(false)
-        setLoading(false)
-        return
       }
-
-      setIsDoctor(true)
-
-      // Get all family members from families where I'm a doctor
-      const familyIds = myDoctorFamilies.map((f: any) => f.family_id)
-      const { data: members } = await supabase
-        .from('family_members')
-        .select('citizen_id')
-        .in('family_id', familyIds)
-        .neq('citizen_id', myCitizen.id)
-
-      const citizenIds = [...new Set((members ?? []).map((m: any) => m.citizen_id))]
-
-      const patientViews: PatientView[] = []
-      for (const cid of citizenIds) {
-        const { data: citizen } = await supabase
-          .from('citizens').select('*').eq('id', cid).single()
-        if (!citizen) continue
-
-        const { data: diseases } = await supabase
-          .from('chronic_diseases').select('*').eq('citizen_id', cid)
-        const { data: meds } = await supabase
-          .from('medications').select('*').eq('citizen_id', cid).eq('is_active', true)
-
-        patientViews.push({
-          citizen,
-          chronicDiseases: (diseases as ChronicDisease[]) ?? [],
-          medications: (meds as Medication[]) ?? [],
-        })
-      }
-
-      setPatients(patientViews)
       setLoading(false)
     }
     load()
-  }, [])
+  }, [authLoading, user])
 
-  if (loading) {
+  if (authLoading || loading) {
     return (<div className="space-y-4 max-w-4xl"><Skeleton className="h-8 w-48" />
       {[0, 1].map((i) => <Skeleton key={i} className="h-40 w-full" />)}</div>)
   }

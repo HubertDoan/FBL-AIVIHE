@@ -69,7 +69,7 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
         const data = await res.json()
 
         if (!res.ok) {
-          return { error: data.error || '\u0110\u0103ng nh\u1EADp th\u1EA5t b\u1EA1i' }
+          return { error: data.error || 'Đăng nhập thất bại' }
         }
 
         setState({
@@ -79,7 +79,7 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
         })
         return {}
       } catch {
-        return { error: '\u0110\u00E3 x\u1EA3y ra l\u1ED7i. Vui l\u00F2ng th\u1EED l\u1EA1i.' }
+        return { error: 'Đã xảy ra lỗi. Vui lòng thử lại.' }
       }
     },
     []

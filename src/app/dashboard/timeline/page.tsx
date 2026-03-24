@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { FileUp, TrendingUp } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -11,10 +11,11 @@ import { TrendSelector, TREND_INDICATORS } from '@/components/timeline/trend-sel
 import { TrendChart } from '@/components/timeline/trend-chart'
 import { useTimeline, type TimelineFilters } from '@/hooks/use-timeline'
 import { useTrendData } from '@/hooks/use-trend-data'
-import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function TimelinePage() {
-  const [citizenId, setCitizenId] = useState<string | null>(null)
+  const { user, loading: authLoading } = useAuth()
+  const citizenId = user?.citizenId ?? null
   const [filters, setFilters] = useState<TimelineFilters>({
     eventType: 'all',
     specialty: '',
@@ -22,21 +23,6 @@ export default function TimelinePage() {
     toDate: '',
   })
   const [selectedTrend, setSelectedTrend] = useState('HbA1c')
-
-  useEffect(() => {
-    async function loadCitizen() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      const { data } = await supabase
-        .from('citizens')
-        .select('id')
-        .eq('auth_id', user.id)
-        .single()
-      if (data) setCitizenId(data.id)
-    }
-    loadCitizen()
-  }, [])
 
   const { events, total, loading, error, loadMore, page, totalPages } = useTimeline(citizenId, filters)
 
@@ -46,12 +32,23 @@ export default function TimelinePage() {
     selectedTrend
   )
 
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center space-y-3">
+          <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-lg text-muted-foreground">Đang tải...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold">{`D\u00F2ng th\u1EDDi gian s\u1EE9c kh\u1ECFe`}</h1>
+        <h1 className="text-2xl font-bold">{`Dòng thời gian sức khỏe`}</h1>
         <p className="text-muted-foreground mt-1">
-          {`Theo d\u00F5i l\u1ECBch s\u1EED s\u1EE9c kh\u1ECFe theo th\u1EDDi gian`}
+          {`Theo dõi lịch sử sức khỏe theo thời gian`}
         </p>
       </div>
 
@@ -67,7 +64,7 @@ export default function TimelinePage() {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <TrendingUp className="size-5" />
-            {`Bi\u1EC3u \u0111\u1ED3 xu h\u01B0\u1EDBng`}
+            {`Biểu đồ xu hướng`}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -88,7 +85,7 @@ export default function TimelinePage() {
       {/* Timeline */}
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">
-          {`C\u00E1c s\u1EF1 ki\u1EC7n`} ({total})
+          {`Các sự kiện`} ({total})
         </h2>
 
         {error && (
@@ -108,10 +105,10 @@ export default function TimelinePage() {
             <CardContent className="flex flex-col items-center justify-center py-12 text-center">
               <FileUp className="size-12 text-muted-foreground/50 mb-4" />
               <p className="text-lg font-medium text-muted-foreground">
-                {`Ch\u01B0a c\u00F3 d\u1EEF li\u1EC7u s\u1EE9c kh\u1ECFe`}
+                {`Chưa có dữ liệu sức khỏe`}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                {`H\u00E3y t\u1EA3i t\u00E0i li\u1EC7u \u0111\u1EA7u ti\u00EAn!`}
+                {`Hãy tải tài liệu đầu tiên!`}
               </p>
             </CardContent>
           </Card>
@@ -127,7 +124,7 @@ export default function TimelinePage() {
                   disabled={loading}
                   className="min-w-[160px]"
                 >
-                  {loading ? `\u0110ang t\u1EA3i...` : `Xem th\u00EAm`}
+                  {loading ? `Đang tải...` : `Xem thêm`}
                 </Button>
               </div>
             )}

@@ -38,7 +38,7 @@ export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppH
       {actingForName && (
         <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2 text-center">
           <p className="text-sm text-yellow-800 font-medium">
-            \u0110ang thao t\u00E1c cho{' '}
+            Đang thao tác cho{' '}
             <span className="font-semibold">{actingForName}</span>
           </p>
         </div>
@@ -49,7 +49,7 @@ export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppH
           <button
             onClick={onMenuToggle}
             className="lg:hidden p-2 rounded-lg hover:bg-accent"
-            aria-label="M\u1EDF menu"
+            aria-label="Mở menu"
           >
             <Menu className="size-6" />
           </button>
@@ -65,7 +65,7 @@ export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppH
             <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
               {(userName?.[0] ?? 'U').toUpperCase()}
             </div>
-            <span className="hidden sm:inline text-base">{userName ?? 'T\u00E0i kho\u1EA3n'}</span>
+            <span className="hidden sm:inline text-base">{userName ?? 'Tài khoản'}</span>
             <ChevronDown className="size-4 text-muted-foreground" />
           </button>
 
@@ -79,7 +79,7 @@ export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppH
                 className="w-full flex items-center gap-3 px-4 py-3 text-base hover:bg-accent transition-colors"
               >
                 <User className="size-5" />
-                H\u1ED3 s\u01A1
+                Hồ sơ
               </button>
               <button
                 onClick={() => {
@@ -89,7 +89,7 @@ export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppH
                 className="w-full flex items-center gap-3 px-4 py-3 text-base hover:bg-accent transition-colors"
               >
                 <Settings className="size-5" />
-                C\u00E0i \u0111\u1EB7t
+                Cài đặt
               </button>
               <div className="border-t border-border my-1" />
               <button
@@ -97,7 +97,7 @@ export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppH
                 className="w-full flex items-center gap-3 px-4 py-3 text-base text-destructive hover:bg-destructive/5 transition-colors"
               >
                 <LogOut className="size-5" />
-                \u0110\u0103ng xu\u1EA5t
+                Đăng xuất
               </button>
             </div>
           )}

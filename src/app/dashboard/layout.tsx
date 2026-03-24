@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { AppHeader } from '@/components/layout/app-header'
 import { ActOnBehalfBanner } from '@/components/family/act-on-behalf-banner'
 import { ActingAsProvider } from '@/hooks/use-acting-as'
-import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/hooks/use-auth'
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard': 'Tổng quan',
@@ -22,72 +22,16 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/settings': 'Cài đặt',
 }
 
-const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
-
-interface CitizenData {
-  full_name: string | null
-  has_consented: boolean
-}
-
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [userName, setUserName] = useState<string>('')
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
+  const { user, loading } = useAuth()
   const pathname = usePathname()
 
-  useEffect(() => {
-    async function checkAuth() {
-      // ── Demo mode: get user from demo API ──
-      if (IS_DEMO) {
-        try {
-          const res = await fetch('/api/demo/me')
-          const data = await res.json()
-          if (!data.user) {
-            router.push('/login')
-            return
-          }
-          setUserName(data.user.fullName ?? '')
-          setLoading(false)
-        } catch {
-          router.push('/login')
-        }
-        return
-      }
-
-      // ── Supabase mode ──
-      const supabase = createClient()
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (!user) {
-        router.push('/login')
-        return
-      }
-
-      // Check consent
-      const { data: citizen } = await supabase
-        .from('citizens')
-        .select('full_name, has_consented')
-        .eq('auth_id', user.id)
-        .single()
-
-      if (citizen && !citizen.has_consented) {
-        router.push('/consent')
-        return
-      }
-
-      setUserName(citizen?.full_name ?? '')
-      setLoading(false)
-    }
-
-    checkAuth()
-  }, [router])
+  const userName = user?.fullName ?? ''
 
   const pageTitle =
     PAGE_TITLES[pathname] ??

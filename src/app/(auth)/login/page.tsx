@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { PhoneOtpForm } from '@/components/auth/phone-otp-form'
 import { DemoLoginSection } from '@/components/auth/demo-login-section'
@@ -9,12 +10,12 @@ export default function LoginPage() {
     <div className="space-y-6">
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-semibold">
-          {isDemoMode ? '\u0110\u0103ng nh\u1EADp Demo' : '\u0110\u0103ng nh\u1EADp'}
+          {isDemoMode ? 'Đăng nhập Demo' : 'Đăng nhập'}
         </h2>
         <p className="text-muted-foreground">
           {isDemoMode
-            ? 'Ch\u1ECDn t\u00E0i kho\u1EA3n demo ho\u1EB7c nh\u1EADp email/m\u1EADt kh\u1EA9u'
-            : 'Nh\u1EADp s\u1ED1 \u0111i\u1EC7n tho\u1EA1i \u0111\u1EC3 nh\u1EADn m\u00E3 x\u00E1c th\u1EF1c'}
+            ? 'Chọn tài khoản demo hoặc nhập email/mật khẩu'
+            : 'Nhập số điện thoại để nhận mã xác thực'}
         </p>
       </div>
 
@@ -24,7 +25,7 @@ export default function LoginPage() {
         <Card>
           <CardHeader className="pb-4">
             <p className="text-sm text-muted-foreground text-center">
-              Ch\u00FAng t\u00F4i s\u1EBD g\u1EEDi m\u00E3 OTP qua SMS \u0111\u1EBFn s\u1ED1 \u0111i\u1EC7n tho\u1EA1i c\u1EE7a b\u1EA1n
+              Chúng tôi sẽ gửi mã OTP qua SMS đến số điện thoại của bạn
             </p>
           </CardHeader>
           <CardContent>
@@ -32,6 +33,12 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       )}
+      <p className="text-center text-base">
+        Chưa có tài khoản?{' '}
+        <Link href="/register" className="font-semibold text-primary hover:underline">
+          Đăng ký
+        </Link>
+      </p>
     </div>
   )
 }

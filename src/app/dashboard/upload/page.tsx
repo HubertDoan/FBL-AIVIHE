@@ -1,43 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DocumentUploader } from '@/components/documents/document-uploader'
 import { DocumentList } from '@/components/documents/document-list'
-import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function UploadPage() {
-  const [citizenId, setCitizenId] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading } = useAuth()
   const router = useRouter()
-
-  useEffect(() => {
-    async function fetchCitizen() {
-      const supabase = createClient()
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (!user) {
-        router.push('/login')
-        return
-      }
-
-      const { data: citizen } = await supabase
-        .from('citizens')
-        .select('id')
-        .eq('auth_id', user.id)
-        .single()
-
-      if (citizen) {
-        setCitizenId(citizen.id)
-      }
-      setLoading(false)
-    }
-
-    fetchCitizen()
-  }, [router])
+  const citizenId = user?.citizenId ?? null
 
   const handleUploadComplete = (documentId: string) => {
     router.push(`/dashboard/extraction/${documentId}`)

@@ -57,6 +57,7 @@ const citizens: Record<string, Citizen> = {
   [MINH]: {
     id: MINH,
     full_name: 'Nguyễn Văn Minh',
+    username: 'minhnv2024',
     date_of_birth: '1962-05-15',
     gender: 'male',
     national_id: '001062012345',
@@ -73,6 +74,7 @@ const citizens: Record<string, Citizen> = {
   [LAN]: {
     id: LAN,
     full_name: 'Trần Thị Lan',
+    username: 'lant2024',
     date_of_birth: '1966-09-20',
     gender: 'female',
     national_id: '001066054321',
@@ -89,6 +91,7 @@ const citizens: Record<string, Citizen> = {
   [TUAN]: {
     id: TUAN,
     full_name: 'Nguyễn Tuấn',
+    username: 'tuann2024',
     date_of_birth: '1989-03-12',
     gender: 'male',
     national_id: '001089067890',
@@ -105,6 +108,7 @@ const citizens: Record<string, Citizen> = {
   [DUC]: {
     id: DUC,
     full_name: 'Phạm Văn Đức',
+    username: 'ducpv2024',
     date_of_birth: '1954-11-08',
     gender: 'male',
     national_id: '001054098765',
@@ -121,6 +125,7 @@ const citizens: Record<string, Citizen> = {
   [BS_HAI]: {
     id: BS_HAI,
     full_name: 'BS. Nguyễn Hải',
+    username: 'hain2024',
     date_of_birth: '1975-07-22',
     gender: 'male',
     national_id: '001075011111',
@@ -137,6 +142,7 @@ const citizens: Record<string, Citizen> = {
   [ADMIN]: {
     id: ADMIN,
     full_name: 'Admin AIVIHE',
+    username: 'admina2024',
     date_of_birth: '1990-01-01',
     gender: 'male',
     national_id: null,
