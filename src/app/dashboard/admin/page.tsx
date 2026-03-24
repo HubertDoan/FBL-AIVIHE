@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2, Bell, Crown } from 'lucide-react'
+import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2, Bell, Crown, UserCheck } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -9,6 +9,7 @@ import { MemberManagement } from '@/components/admin/member-management'
 import { AuditLogTable } from '@/components/admin/audit-log-table'
 import { AnnouncementManager } from '@/components/admin/announcement-manager'
 import { ProgramManager } from '@/components/admin/program-manager'
+import { DoctorApprovalList } from '@/components/admin/doctor-approval-list'
 import { useAuth } from '@/hooks/use-auth'
 
 interface Stats {
@@ -26,14 +27,14 @@ interface Stats {
 function getVisibleTabs(role: string): string[] {
   switch (role) {
     case 'super_admin':
-      return ['users', 'announcements', 'programs', 'audit', 'stats']
+      return ['users', 'doctors', 'announcements', 'programs', 'audit', 'stats']
     case 'director':
       return ['announcements', 'programs', 'stats']
     case 'branch_director':
       return ['announcements', 'stats']
     case 'admin':
     default:
-      return ['users', 'announcements', 'audit', 'stats']
+      return ['users', 'doctors', 'announcements', 'audit', 'stats']
   }
 }
 
@@ -114,6 +115,12 @@ export default function AdminPage() {
               Người dùng
             </TabsTrigger>
           )}
+          {visibleTabs.includes('doctors') && (
+            <TabsTrigger value="doctors" className="gap-1.5 text-base">
+              <UserCheck className="size-4" />
+              Bác sĩ
+            </TabsTrigger>
+          )}
           {visibleTabs.includes('announcements') && (
             <TabsTrigger value="announcements" className="gap-1.5 text-base">
               <Bell className="size-4" />
@@ -149,6 +156,20 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent>
                 <MemberManagement />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {/* Doctors Tab */}
+        {visibleTabs.includes('doctors') && (
+          <TabsContent value="doctors">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Duyệt đăng ký bác sĩ gia đình</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DoctorApprovalList />
               </CardContent>
             </Card>
           </TabsContent>

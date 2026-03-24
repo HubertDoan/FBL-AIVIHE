@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { AppHeader } from '@/components/layout/app-header'
@@ -21,6 +21,9 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/doctor': 'Thông tin bác sĩ',
   '/dashboard/settings': 'Cài đặt',
   '/dashboard/register-member': 'Đăng ký thành viên',
+  '/dashboard/doctor-register': 'Đăng ký bác sĩ',
+  '/dashboard/doctor-profile': 'Hồ sơ chuyên môn',
+  '/dashboard/choose-doctor': 'Bác sĩ gia đình',
 }
 
 export default function DashboardLayout({
@@ -29,11 +32,25 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [doctorProfileStatus, setDoctorProfileStatus] = useState<'pending' | 'approved' | 'suspended' | null>(null)
   const { user, loading } = useAuth()
   const pathname = usePathname()
 
   const userName = user?.fullName ?? ''
   const userRole = user?.role ?? 'guest'
+
+  // Fetch doctor profile status once for sidebar nav visibility
+  useEffect(() => {
+    if (user?.role !== 'doctor') return
+    fetch('/api/doctor-profile')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.profile?.status) {
+          setDoctorProfileStatus(data.profile.status)
+        }
+      })
+      .catch(() => { /* silent */ })
+  }, [user])
 
   const pageTitle =
     PAGE_TITLES[pathname] ??
@@ -61,6 +78,7 @@ export default function DashboardLayout({
           userRole={userRole}
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
+          doctorProfileStatus={doctorProfileStatus}
         />
 
         <div className="flex-1 flex flex-col lg:ml-64">

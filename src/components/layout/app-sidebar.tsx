@@ -19,6 +19,8 @@ import {
   ClipboardList,
   Calendar,
   HeartPulse,
+  UserPlus,
+  Award,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -34,6 +36,9 @@ interface NavItem {
   doctorOnly?: boolean
   receptionOnly?: boolean
   examDoctorOnly?: boolean
+  // Doctor sub-conditions — evaluated in AppSidebar where profile state is available
+  doctorNotRegistered?: boolean  // visible only for doctor who has NOT yet registered
+  doctorApproved?: boolean       // visible only for doctor with approved profile
 }
 
 const ADMIN_ROLES = ['admin', 'director', 'branch_director', 'super_admin']
@@ -50,7 +55,10 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/summary', label: 'Tóm tắt sức khỏe', icon: FileText, memberOnly: true },
   { href: '/dashboard/visit-prep', label: 'Đăng ký khám bệnh', icon: Stethoscope, memberOnly: true },
   { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, memberOnly: true },
+  { href: '/dashboard/doctor-register', label: 'Đăng ký BS', icon: UserPlus, doctorOnly: true, doctorNotRegistered: true },
+  { href: '/dashboard/doctor-profile', label: 'Hồ sơ chuyên môn', icon: Award, doctorOnly: true, doctorApproved: true },
   { href: '/dashboard/doctor-review', label: 'Xem xét khám', icon: Stethoscope, doctorOnly: true },
+  { href: '/dashboard/choose-doctor', label: 'BS gia đình', icon: Stethoscope, memberOnly: true },
   { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, receptionOnly: true },
   { href: '/dashboard/exam-schedule', label: 'Lịch khám', icon: Calendar, examDoctorOnly: true },
   { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, memberOnly: true },
@@ -64,9 +72,10 @@ interface AppSidebarProps {
   userRole?: string
   open?: boolean
   onClose?: () => void
+  doctorProfileStatus?: 'pending' | 'approved' | 'suspended' | null
 }
 
-export function AppSidebar({ userName, userAvatar, userRole, open, onClose }: AppSidebarProps) {
+export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doctorProfileStatus }: AppSidebarProps) {
   const pathname = usePathname()
   const isGuest = userRole === 'guest'
   const isAdmin = ADMIN_ROLES.includes(userRole ?? '')
@@ -74,6 +83,8 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose }: Ap
   const isDoctor = userRole === 'doctor'
   const isReception = userRole === 'reception'
   const isExamDoctor = userRole === 'exam_doctor'
+  const isDoctorRegistered = doctorProfileStatus != null
+  const isDoctorApproved = doctorProfileStatus === 'approved'
 
   const visibleItems = NAV_ITEMS.filter((item) => {
     if (item.guestOnly && !isGuest) return false
@@ -83,6 +94,8 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose }: Ap
     if (item.doctorOnly && !isDoctor) return false
     if (item.receptionOnly && !isReception) return false
     if (item.examDoctorOnly && !isExamDoctor) return false
+    if (item.doctorNotRegistered && isDoctorRegistered) return false
+    if (item.doctorApproved && !isDoctorApproved) return false
     return true
   })
 
