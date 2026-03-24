@@ -49,18 +49,33 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/notifications — create notification (admin only)
+// POST /api/notifications — create notification
+// Supports: user_id (single user) OR targetRole (all users with that role)
+// Members can send to 'doctor' role (ask family doctor)
 export async function POST(request: NextRequest) {
   if (isDemoMode()) {
     const user = await getDemoUser(request)
     if (!user) return demoUnauthorized()
-    if (!hasAdminAccess(user.role)) return demoForbidden()
 
     const body = await request.json()
-    if (!body.user_id || !body.title) {
-      return demoResponse({ error: 'Thiếu user_id hoặc title.' }, 400)
+    if (!body.title) {
+      return demoResponse({ error: 'Thiếu title.' }, 400)
     }
 
+    // Send to a specific role (e.g. doctor)
+    if (body.targetRole) {
+      const { DEMO_ACCOUNTS } = await import('@/lib/demo/demo-accounts')
+      const targets = DEMO_ACCOUNTS.filter((a) => a.role === body.targetRole)
+      const notifications = targets.map((t) =>
+        addNotification(t.id, body.title, body.content ?? '')
+      )
+      return demoResponse({ sent: notifications.length }, 201)
+    }
+
+    // Send to specific user
+    if (!body.user_id) {
+      return demoResponse({ error: 'Thiếu user_id hoặc targetRole.' }, 400)
+    }
     const notif = addNotification(body.user_id, body.title, body.content ?? '')
     return demoResponse(notif, 201)
   }
@@ -70,26 +85,35 @@ export async function POST(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
-    const { data: citizen } = await supabase
-      .from('citizens')
-      .select('role')
-      .eq('auth_id', user.id)
-      .single()
-    if (!citizen || !hasAdminAccess(citizen.role)) {
-      return NextResponse.json({ error: 'Không có quyền tạo thông báo.' }, { status: 403 })
-    }
-
     const body = await request.json()
-    if (!body.user_id || !body.title) {
-      return NextResponse.json({ error: 'Thiếu user_id hoặc title.' }, { status: 400 })
+    if (!body.title) {
+      return NextResponse.json({ error: 'Thiếu title.' }, { status: 400 })
     }
 
+    // Send to role group
+    if (body.targetRole) {
+      const { data: targets } = await supabase
+        .from('citizens')
+        .select('auth_id')
+        .eq('role', body.targetRole)
+      const inserts = (targets ?? []).map((t) => ({
+        user_id: t.auth_id, title: body.title, content: body.content ?? '',
+      }))
+      if (inserts.length > 0) {
+        await supabase.from('notifications').insert(inserts)
+      }
+      return NextResponse.json({ sent: inserts.length }, { status: 201 })
+    }
+
+    // Send to specific user
+    if (!body.user_id) {
+      return NextResponse.json({ error: 'Thiếu user_id hoặc targetRole.' }, { status: 400 })
+    }
     const { data, error } = await supabase
       .from('notifications')
       .insert({ user_id: body.user_id, title: body.title, content: body.content ?? '' })
       .select()
       .single()
-
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })
     return NextResponse.json(data, { status: 201 })
   } catch (e) {
