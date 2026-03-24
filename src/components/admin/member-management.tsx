@@ -62,6 +62,8 @@ export function MemberManagement() {
   const [passwordTarget, setPasswordTarget] = useState<Member | null>(null)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Member | null>(null)
+  const [approveOpen, setApproveOpen] = useState(false)
+  const [approveTarget, setApproveTarget] = useState<Member | null>(null)
 
   const loadMembers = useCallback(async () => {
     setLoading(true)
@@ -132,7 +134,10 @@ export function MemberManagement() {
       })
       if (res.ok) {
         const result = await res.json()
-        toast.success(result.message)
+        const successMsg = action === 'approve'
+          ? 'Đã duyệt. Thông báo đã gửi đến thành viên.'
+          : result.message
+        toast.success(successMsg)
         loadMembers()
       } else {
         const err = await res.json()
@@ -141,6 +146,11 @@ export function MemberManagement() {
     } catch {
       toast.error('Lỗi kết nối máy chủ.')
     }
+  }
+
+  async function handleApproveConfirmed() {
+    if (!approveTarget) return
+    await handleStatusChange(approveTarget, 'approve')
   }
 
   async function handleDelete() {
@@ -260,7 +270,7 @@ export function MemberManagement() {
                     <div className="flex items-center justify-center gap-1 flex-wrap">
                       {m.status === 'pending' && (
                         <Button size="sm" variant="default" className="gap-1 text-sm bg-green-600 hover:bg-green-700"
-                          onClick={() => handleStatusChange(m, 'approve')}>
+                          onClick={() => { setApproveTarget(m); setApproveOpen(true) }}>
                           <CheckCircle className="size-3.5" /> Duyệt
                         </Button>
                       )}
@@ -338,6 +348,15 @@ export function MemberManagement() {
         confirmLabel="Xóa"
         variant="danger"
         onConfirm={handleDelete}
+      />
+
+      <ConfirmDialog
+        open={approveOpen}
+        onOpenChange={setApproveOpen}
+        title="Xác nhận duyệt thành viên"
+        description={`Đã nhận thanh toán phí thành viên 1.800.000đ (6 tháng). Xác nhận duyệt cho "${approveTarget?.full_name}"?`}
+        confirmLabel="Duyệt"
+        onConfirm={handleApproveConfirmed}
       />
     </div>
   )

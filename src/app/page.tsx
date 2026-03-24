@@ -108,10 +108,10 @@ export default function LandingPage() {
               <ArrowRight className="size-5" />
             </Link>
             <Link
-              href="/login?demo=true"
+              href="/login"
               className={buttonVariants({ variant: 'outline', size: 'lg', className: 'text-lg px-8 py-6 rounded-xl min-h-[52px]' })}
             >
-              Xem demo
+              Đăng nhập
             </Link>
           </div>
         </div>

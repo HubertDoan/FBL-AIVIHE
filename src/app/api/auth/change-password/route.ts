@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     if (isDemoMode()) {
       // Demo mode: simulate success
       return NextResponse.json({
-        message: 'Đổi mật khẩu thành công! (Chế độ demo)',
+        message: 'Đổi mật khẩu thành công!',
       })
     }
 

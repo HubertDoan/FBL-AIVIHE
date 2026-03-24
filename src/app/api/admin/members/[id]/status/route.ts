@@ -8,13 +8,14 @@ import {
   demoForbidden,
   hasAdminAccess,
 } from '@/lib/demo/demo-api-helper'
+import { addNotification } from '@/lib/demo/demo-notification-data'
 
 type Params = { params: Promise<{ id: string }> }
 
 const ACTION_MAP: Record<string, { status: string; is_active: boolean; message: string }> = {
   suspend: { status: 'suspended', is_active: false, message: 'Đã tạm dừng tài khoản.' },
   activate: { status: 'active', is_active: true, message: 'Đã kích hoạt tài khoản.' },
-  approve: { status: 'active', is_active: true, message: 'Đã duyệt đăng ký thành viên.' },
+  approve: { status: 'active', is_active: true, message: 'Thành viên đã được duyệt thành công.' },
 }
 
 export async function POST(request: NextRequest, { params }: Params) {
@@ -27,6 +28,16 @@ export async function POST(request: NextRequest, { params }: Params) {
     const body = await request.json()
     const info = ACTION_MAP[body.action]
     if (!info) return demoResponse({ error: 'Hành động không hợp lệ.' }, 400)
+
+    // On approve: create in-app notification for the member
+    if (body.action === 'approve') {
+      addNotification(
+        id,
+        'Chúc mừng! Bạn đã trở thành thành viên AIVIHE',
+        'Bạn đã được chấp nhận làm thành viên AIVIHE. Thẻ Bạc đã kích hoạt. Phí thành viên 1.800.000đ (6 tháng) đã được xác nhận.'
+      )
+    }
+
     return demoResponse({ success: true, message: info.message, status: info.status })
   }
 
@@ -42,9 +53,21 @@ export async function POST(request: NextRequest, { params }: Params) {
     const info = ACTION_MAP[body.action]
     if (!info) return NextResponse.json({ error: 'Hành động không hợp lệ.' }, { status: 400 })
 
+    const updates: Record<string, unknown> = {
+      status: info.status,
+      is_active: info.is_active,
+      updated_at: new Date().toISOString(),
+    }
+
+    // On approve: promote role to member and set member_since
+    if (body.action === 'approve') {
+      updates.role = 'member'
+      updates.member_since = new Date().toISOString().split('T')[0]
+    }
+
     const { error } = await supabase
       .from('citizens')
-      .update({ status: info.status, is_active: info.is_active, updated_at: new Date().toISOString() })
+      .update(updates)
       .eq('id', id)
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })

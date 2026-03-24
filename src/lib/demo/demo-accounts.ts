@@ -18,7 +18,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0001-0000-0000-000000000001',
     email: 'minh@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Nguyễn Văn Minh',
     role: 'citizen',
     citizenId: 'demo-citizen-minh',
@@ -28,7 +28,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0002-0000-0000-000000000002',
     email: 'lan@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Trần Thị Lan',
     role: 'citizen',
     citizenId: 'demo-citizen-lan',
@@ -38,7 +38,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0003-0000-0000-000000000003',
     email: 'tuan@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Nguyễn Tuấn',
     role: 'citizen',
     citizenId: 'demo-citizen-tuan',
@@ -48,7 +48,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0004-0000-0000-000000000004',
     email: 'duc@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Phạm Văn Đức',
     role: 'citizen',
     citizenId: 'demo-citizen-duc',
@@ -58,7 +58,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0005-0000-0000-000000000005',
     email: 'bshai@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'BS. Nguyễn Hải',
     role: 'doctor',
     citizenId: 'demo-doctor-hai',
@@ -68,7 +68,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0006-0000-0000-000000000006',
     email: 'admin@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Admin AIVIHE',
     role: 'admin',
     citizenId: 'demo-admin',
@@ -78,7 +78,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0007-0000-0000-000000000007',
     email: 'khach@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Lê Thị Hoa',
     role: 'guest',
     citizenId: 'demo-guest-hoa',
@@ -88,7 +88,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0008-0000-0000-000000000008',
     email: 'tram@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Trần Thị Ngọc Trâm',
     role: 'director',
     citizenId: 'demo-director-tram',
@@ -98,7 +98,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0009-0000-0000-000000000009',
     email: 'khanh@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Lưu Tuấn Khanh',
     role: 'branch_director',
     citizenId: 'demo-branch-director-khanh',
@@ -108,7 +108,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0010-0000-0000-000000000010',
     email: 'hai@demo.aivihe.vn',
-    password: 'Demo@2024',
+    password: 'Aivihe@2024',
     fullName: 'Doãn Ngọc Hải',
     role: 'super_admin',
     citizenId: 'demo-super-admin-hai',

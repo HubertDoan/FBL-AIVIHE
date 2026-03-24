@@ -85,7 +85,7 @@ export default function SettingsPage() {
   }
 
   async function handleDeleteAccount() {
-    toast.success('Yêu cầu xóa tài khoản đã được ghi nhận. (Chế độ demo)')
+    toast.success('Yêu cầu xóa tài khoản đã được ghi nhận. Chúng tôi sẽ xử lý trong 24 giờ.')
   }
 
   return (

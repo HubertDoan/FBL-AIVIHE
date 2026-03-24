@@ -8,7 +8,7 @@ import {
 export async function POST(request: NextRequest) {
   if (!isDemoMode()) {
     return NextResponse.json(
-      { error: 'Demo mode is not enabled' },
+      { error: 'Chế độ trải nghiệm chưa được bật.' },
       { status: 403 }
     )
   }

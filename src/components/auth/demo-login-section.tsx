@@ -183,10 +183,10 @@ export function DemoLoginSection() {
       </Card>
 
       {/* Info banner */}
-      <div className="rounded-lg bg-amber-50 border border-amber-200 p-3">
-        <p className="text-sm text-amber-800 text-center">
-          Dữ liệu mẫu để trải nghiệm hệ thống.
-          Mật khẩu chung: <span className="font-mono font-bold">Demo@2024</span>
+      <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
+        <p className="text-sm text-blue-800 text-center">
+          Chọn tài khoản bên trên hoặc nhập thông tin đăng nhập.
+          Mật khẩu mặc định: <span className="font-mono font-bold">Aivihe@2024</span>
         </p>
       </div>
     </div>
