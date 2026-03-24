@@ -6,15 +6,23 @@ import { Button } from '@/components/ui/button'
 import { OverviewCards } from '@/components/dashboard/overview-cards'
 import { BulletinBoard } from '@/components/dashboard/bulletin-board'
 import { RecentActivity } from '@/components/dashboard/recent-activity'
+import { MedicationReminderCard } from '@/components/dashboard/medication-reminder-card'
 import { useAuth } from '@/hooks/use-auth'
 import { GuestDashboard } from '@/components/membership/guest-dashboard'
 import { Upload, Clock, Stethoscope } from 'lucide-react'
+import type { ExamRegistration, MedicationReminder } from '@/lib/demo/demo-exam-registration-data'
+
+interface ReminderItem extends MedicationReminder {
+  regId: string
+  index: number
+}
 
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth()
   const [counts, setCounts] = useState({ documents: 0, visits: 0, pending: 0, family: 0 })
   const [recentDocs, setRecentDocs] = useState<Array<{ id: string; original_filename: string | null; document_type: string; created_at: string }>>([])
   const [pendingExtractions, setPendingExtractions] = useState<Array<{ id: string; field_name: string; field_value: string | null; document_id: string }>>([])
+  const [activeReminders, setActiveReminders] = useState<ReminderItem[]>([])
   const [dataLoading, setDataLoading] = useState(true)
   const router = useRouter()
 
@@ -23,9 +31,10 @@ export default function DashboardPage() {
 
     async function fetchDashboard() {
       try {
-        const [statsRes, docsRes] = await Promise.all([
+        const [statsRes, docsRes, examRes] = await Promise.all([
           fetch('/api/dashboard/stats'),
           fetch('/api/documents?limit=5'),
+          fetch('/api/exam-registration'),
         ])
 
         if (statsRes.ok) {
@@ -41,6 +50,24 @@ export default function DashboardPage() {
         if (docsRes.ok) {
           const docsData = await docsRes.json()
           setRecentDocs(docsData.documents ?? [])
+        }
+
+        // Collect active medication reminders from completed exam registrations
+        if (examRes.ok) {
+          const examData = await examRes.json()
+          const regs: ExamRegistration[] = examData.registrations ?? []
+          const reminders: ReminderItem[] = []
+          regs.forEach((reg) => {
+            if (
+              (reg.status === 'completed' || reg.status === 'results_returned') &&
+              reg.medication_reminders && reg.medication_reminders.length > 0
+            ) {
+              reg.medication_reminders.forEach((med, i) => {
+                reminders.push({ ...med, regId: reg.id, index: i })
+              })
+            }
+          })
+          setActiveReminders(reminders)
         }
       } catch {
         // Silently handle fetch errors
@@ -62,7 +89,6 @@ export default function DashboardPage() {
     )
   }
 
-  // Guest users see a restricted dashboard
   if (user?.role === 'guest') {
     return <GuestDashboard />
   }
@@ -93,6 +119,11 @@ export default function DashboardPage() {
         pendingCount={counts.pending}
         familyCount={counts.family}
       />
+
+      {/* Show medication reminders for members with active prescriptions */}
+      {activeReminders.length > 0 && (
+        <MedicationReminderCard reminders={activeReminders} />
+      )}
 
       <BulletinBoard />
 

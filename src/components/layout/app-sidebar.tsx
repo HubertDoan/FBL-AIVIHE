@@ -16,6 +16,8 @@ import {
   Shield,
   Server,
   X,
+  ClipboardList,
+  Calendar,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -28,6 +30,9 @@ interface NavItem {
   highlight?: boolean
   adminOnly?: boolean
   superAdminOnly?: boolean
+  doctorOnly?: boolean
+  receptionOnly?: boolean
+  examDoctorOnly?: boolean
 }
 
 const ADMIN_ROLES = ['admin', 'director', 'branch_director', 'super_admin']
@@ -42,7 +47,10 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/upload', label: 'Tải tài liệu', icon: Upload, memberOnly: true },
   { href: '/dashboard/timeline', label: 'Dòng thời gian', icon: Clock, memberOnly: true },
   { href: '/dashboard/summary', label: 'Tóm tắt sức khỏe', icon: FileText, memberOnly: true },
-  { href: '/dashboard/visit-prep', label: 'Chuẩn bị đi khám', icon: Stethoscope, memberOnly: true },
+  { href: '/dashboard/visit-prep', label: 'Đăng ký khám bệnh', icon: Stethoscope, memberOnly: true },
+  { href: '/dashboard/doctor-review', label: 'Xem xét khám', icon: Stethoscope, doctorOnly: true },
+  { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, receptionOnly: true },
+  { href: '/dashboard/exam-schedule', label: 'Lịch khám', icon: Calendar, examDoctorOnly: true },
   { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, memberOnly: true },
   { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings },
   { href: '/dashboard/system', label: 'Hệ thống', icon: Server, superAdminOnly: true },
@@ -61,12 +69,18 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose }: Ap
   const isGuest = userRole === 'guest'
   const isAdmin = ADMIN_ROLES.includes(userRole ?? '')
   const isSuperAdmin = userRole === 'super_admin'
+  const isDoctor = userRole === 'doctor'
+  const isReception = userRole === 'reception'
+  const isExamDoctor = userRole === 'exam_doctor'
 
   const visibleItems = NAV_ITEMS.filter((item) => {
     if (item.guestOnly && !isGuest) return false
     if (item.memberOnly && isGuest) return false
     if (item.adminOnly && !isAdmin) return false
     if (item.superAdminOnly && !isSuperAdmin) return false
+    if (item.doctorOnly && !isDoctor) return false
+    if (item.receptionOnly && !isReception) return false
+    if (item.examDoctorOnly && !isExamDoctor) return false
     return true
   })
 

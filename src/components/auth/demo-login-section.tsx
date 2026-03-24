@@ -17,6 +17,8 @@ const roleLabels: Record<string, string> = {
   director: 'Giám đốc',
   branch_director: 'GĐ Chi nhánh',
   super_admin: 'Super Admin',
+  reception: 'Tiếp đón',
+  exam_doctor: 'BS Khám bệnh',
 }
 
 const roleBadgeColors: Record<string, string> = {
@@ -27,6 +29,8 @@ const roleBadgeColors: Record<string, string> = {
   director: 'bg-purple-100 text-purple-800',
   branch_director: 'bg-indigo-100 text-indigo-800',
   super_admin: 'bg-red-100 text-red-800',
+  reception: 'bg-teal-100 text-teal-800',
+  exam_doctor: 'bg-cyan-100 text-cyan-800',
 }
 
 export function DemoLoginSection() {
