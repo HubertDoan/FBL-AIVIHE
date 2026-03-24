@@ -30,6 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard },
   { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User },
   { href: '/dashboard/register-member', label: 'Đăng ký thành viên', icon: Crown, guestOnly: true, highlight: true },
+  { href: '/dashboard/membership', label: 'Thành viên', icon: Crown, memberOnly: true },
   { href: '/dashboard/family', label: 'Gia đình', icon: Users, memberOnly: true },
   { href: '/dashboard/upload', label: 'Tải tài liệu', icon: Upload, memberOnly: true },
   { href: '/dashboard/timeline', label: 'Dòng thời gian', icon: Clock, memberOnly: true },

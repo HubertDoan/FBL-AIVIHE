@@ -187,7 +187,7 @@ export default function RegisterMemberPage() {
         return
       }
 
-      router.push('/dashboard')
+      router.push('/dashboard/membership')
       router.refresh()
     } catch {
       setError('Không thể kết nối. Vui lòng thử lại sau.')

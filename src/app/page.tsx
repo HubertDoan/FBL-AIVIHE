@@ -65,8 +65,17 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-cyan-500/5" />
-        <div className="relative max-w-5xl mx-auto px-4 pt-20 pb-16 text-center">
-          {/* Logo Title */}
+        <div className="relative max-w-5xl mx-auto px-4 pt-12 pb-16 text-center">
+          {/* FBL Logo */}
+          <div className="mb-6 flex justify-center">
+            <img
+              src="/fbl-logo.jpg"
+              alt="FBL - Life Ecosystem - For Better Life"
+              className="h-24 md:h-32 w-auto object-contain"
+            />
+          </div>
+
+          {/* AIVIHE Title */}
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4">
             <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
               AIVIHE
@@ -251,7 +260,7 @@ export default function LandingPage() {
       <footer className="border-t border-gray-100 bg-white py-8">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <p className="text-gray-500 mb-1" style={{ fontSize: '15px' }}>
-            &copy; 2024 AIVIHE - FBL (Family Better Life)
+            &copy; 2024 AIVIHE - FBL (For Better Life - Cho cuộc sống tốt hơn)
           </p>
           <p className="text-gray-400 text-sm">
             Được phát triển bởi đội ngũ FBL

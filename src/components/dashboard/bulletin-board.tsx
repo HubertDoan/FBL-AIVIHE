@@ -16,6 +16,7 @@ import {
   Stethoscope,
   FolderOpen,
   Users,
+  CreditCard,
 } from 'lucide-react'
 
 interface Announcement {
@@ -152,6 +153,35 @@ export function BulletinBoard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Payment Reminder (members only) */}
+      {isMember && (
+        <Card className="border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30">
+          <CardContent className="pt-5 pb-4">
+            <div className="flex items-start gap-3">
+              <div className="size-10 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center shrink-0">
+                <CreditCard className="size-5 text-amber-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-lg font-semibold text-amber-800 dark:text-amber-300">
+                  Phí hội viên tháng 03/2026: 50.000đ
+                </p>
+                <p className="text-base text-amber-700/80 dark:text-amber-400/80 mt-1">
+                  Vui lòng thanh toán để duy trì quyền lợi thành viên.
+                </p>
+                <Link href="/dashboard/membership">
+                  <Button
+                    className="mt-3 min-h-[48px] text-base font-semibold bg-amber-600 hover:bg-amber-700"
+                  >
+                    <CreditCard className="size-4 mr-2" />
+                    Chuyển khoản ngay
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Member Program */}
       <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30">

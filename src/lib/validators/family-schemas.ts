@@ -93,6 +93,31 @@ export const updateFamilyMemberSchema = z.object({
     .optional(),
 })
 
+// ─── Invitation Schema ───────────────────────────────────────────────────────
+
+const RELATIONSHIPS = [
+  'father', 'mother', 'son', 'daughter',
+  'grandfather', 'grandmother',
+  'wife', 'husband', 'sibling', 'other',
+] as const
+
+export const createInvitationSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .regex(/^0\d{9}$/, 'Số điện thoại không hợp lệ. Nhập 10 chữ số bắt đầu bằng 0.'),
+  relationship: z.enum(RELATIONSHIPS, {
+    error: 'Vui lòng chọn mối quan hệ.',
+  }),
+  message: z.string().max(200, 'Lời nhắn tối đa 200 ký tự.').optional(),
+})
+
+export const respondInvitationSchema = z.object({
+  action: z.enum(['accept', 'decline'] as const, {
+    error: 'Hành động không hợp lệ.',
+  }),
+})
+
 // ─── Exported Types ──────────────────────────────────────────────────────────
 
 export type FamilyInput = z.infer<typeof familySchema>
@@ -100,3 +125,5 @@ export type FamilyMemberInput = z.infer<typeof familyMemberSchema>
 export type InviteMemberInput = z.infer<typeof inviteMemberSchema>
 export type UpdateFamilyInput = z.infer<typeof updateFamilySchema>
 export type UpdateFamilyMemberInput = z.infer<typeof updateFamilyMemberSchema>
+export type CreateInvitationInput = z.infer<typeof createInvitationSchema>
+export type RespondInvitationInput = z.infer<typeof respondInvitationSchema>

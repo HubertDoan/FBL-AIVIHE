@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { FamilyMemberCard } from '@/components/family/family-member-card'
 import { InviteMemberDialog } from '@/components/family/invite-member-dialog'
+import { SearchMember } from '@/components/family/search-member'
+import { InvitationList } from '@/components/family/invitation-list'
+import { FamilyMemberHealth } from '@/components/family/family-member-health'
 import { useAuth } from '@/hooks/use-auth'
 import { useActingAs } from '@/hooks/use-acting-as'
-import { UserPlus, Users } from 'lucide-react'
+import { UserPlus, Users, Search, Mail, Heart } from 'lucide-react'
 import type { FamilyRole } from '@/types/database'
 
 interface MemberRow {
@@ -21,6 +23,8 @@ interface MemberRow {
   citizen?: { full_name: string }
 }
 
+type TabKey = 'members' | 'search' | 'invitations'
+
 export default function FamilyPage() {
   const { user, loading: authLoading } = useAuth()
   const [familyId, setFamilyId] = useState<string | null>(null)
@@ -29,6 +33,13 @@ export default function FamilyPage() {
   const [myRole, setMyRole] = useState<FamilyRole>('member')
   const [inviteOpen, setInviteOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<TabKey>('members')
+  const [invitationRefresh, setInvitationRefresh] = useState(0)
+  const [healthDialog, setHealthDialog] = useState<{
+    open: boolean
+    memberId: string
+    memberName: string
+  }>({ open: false, memberId: '', memberName: '' })
   const router = useRouter()
   const { setActingAs } = useActingAs()
 
@@ -36,7 +47,6 @@ export default function FamilyPage() {
     if (!user) return
 
     try {
-      // Step 1: Get my family memberships
       const famRes = await fetch('/api/family')
       if (!famRes.ok) { setLoading(false); return }
       const memberships = await famRes.json()
@@ -52,11 +62,9 @@ export default function FamilyPage() {
       setMyRole(first.role as FamilyRole)
       setFamilyName(first.families?.name ?? '')
 
-      // Step 2: Get family members
       const memRes = await fetch(`/api/family/members?familyId=${fId}`)
       if (memRes.ok) {
         const mems = await memRes.json()
-        // Normalize: demo data uses 'citizen' key, Supabase uses 'citizens'
         const normalized = (mems as MemberRow[]).map((m) => ({
           ...m,
           citizens: m.citizens ?? m.citizen ?? { full_name: '' },
@@ -95,6 +103,7 @@ export default function FamilyPage() {
   }
 
   const canManage = myRole === 'owner' || myRole === 'manager'
+  const isOwner = myRole === 'owner'
 
   if (authLoading || loading) {
     return (
@@ -107,20 +116,35 @@ export default function FamilyPage() {
     )
   }
 
+  // No family yet — show create + search options
   if (!familyId) {
     return (
-      <div className="max-w-md mx-auto text-center py-12 space-y-6">
-        <Users className="size-16 mx-auto text-muted-foreground" />
-        <h2 className="text-2xl font-bold">Quản lý gia đình</h2>
-        <p className="text-lg text-muted-foreground">
-          Bạn chưa thuộc nhóm gia đình nào.
-        </p>
-        <Button className="h-14 text-lg px-8" onClick={handleCreateFamily}>
-          Tạo nhóm gia đình
-        </Button>
+      <div className="max-w-lg mx-auto py-12 space-y-8">
+        <div className="text-center space-y-4">
+          <Users className="size-16 mx-auto text-muted-foreground" />
+          <h2 className="text-2xl font-bold">Quản lý gia đình</h2>
+          <p className="text-lg text-muted-foreground">
+            Bạn chưa thuộc nhóm gia đình nào.
+          </p>
+          <Button className="h-14 text-lg px-8" onClick={handleCreateFamily}>
+            Tạo nhóm gia đình
+          </Button>
+        </div>
+
+        {/* Even without a family, show received invitations */}
+        <div className="space-y-3">
+          <h3 className="text-xl font-semibold">Lời mời gia đình</h3>
+          <InvitationList refreshKey={invitationRefresh} />
+        </div>
       </div>
     )
   }
+
+  const tabs: { key: TabKey; label: string; icon: React.ReactNode }[] = [
+    { key: 'members', label: 'Thành viên', icon: <Users className="size-5" /> },
+    { key: 'search', label: 'Tìm người thân', icon: <Search className="size-5" /> },
+    { key: 'invitations', label: 'Lời mời', icon: <Mail className="size-5" /> },
+  ]
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -132,33 +156,88 @@ export default function FamilyPage() {
         {canManage && (
           <Button className="h-12 text-base" onClick={() => setInviteOpen(true)}>
             <UserPlus className="size-5 mr-2" />
-            Thêm thành viên
+            Thêm nhanh
           </Button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {members.map((m) => (
-          <FamilyMemberCard
-            key={m.id}
-            memberId={m.id}
-            citizenId={m.citizen_id}
-            name={m.citizens?.full_name ?? ''}
-            relationship={m.relationship}
-            role={m.role}
-            joinedAt={m.joined_at}
-            canManage={canManage && m.citizen_id !== user?.citizenId}
-            onViewProfile={(cid) => router.push(`/dashboard/profile?citizen=${cid}`)}
-            onActOnBehalf={(cid, name) => setActingAs(cid, name)}
-          />
+      {/* Tab navigation */}
+      <div className="flex gap-2 border-b pb-0">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`flex items-center gap-2 px-4 py-3 text-base font-medium border-b-2 transition-colors ${
+              activeTab === tab.key
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
+            }`}
+          >
+            {tab.icon}
+            {tab.label}
+          </button>
         ))}
       </div>
+
+      {/* Tab content */}
+      {activeTab === 'members' && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {members.map((m) => (
+            <div key={m.id} className="relative">
+              <FamilyMemberCard
+                memberId={m.id}
+                citizenId={m.citizen_id}
+                name={m.citizens?.full_name ?? ''}
+                relationship={m.relationship}
+                role={m.role}
+                joinedAt={m.joined_at}
+                canManage={canManage && m.citizen_id !== user?.citizenId}
+                onViewProfile={(cid) => router.push(`/dashboard/profile?citizen=${cid}`)}
+                onActOnBehalf={(cid, name) => setActingAs(cid, name)}
+              />
+              {isOwner && m.citizen_id !== user?.citizenId && (
+                <Button
+                  variant="outline"
+                  className="w-full h-12 text-base mt-2 border-red-200 text-red-700 hover:bg-red-50"
+                  onClick={() =>
+                    setHealthDialog({
+                      open: true,
+                      memberId: m.id,
+                      memberName: m.citizens?.full_name ?? '',
+                    })
+                  }
+                >
+                  <Heart className="size-4 mr-2" />
+                  Xem hồ sơ sức khỏe
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {activeTab === 'search' && (
+        <SearchMember
+          onInviteSent={() => setInvitationRefresh((n) => n + 1)}
+        />
+      )}
+
+      {activeTab === 'invitations' && (
+        <InvitationList refreshKey={invitationRefresh} />
+      )}
 
       <InviteMemberDialog
         open={inviteOpen}
         onOpenChange={setInviteOpen}
         familyId={familyId}
         onInvite={handleInvite}
+      />
+
+      <FamilyMemberHealth
+        open={healthDialog.open}
+        onOpenChange={(open) => setHealthDialog((prev) => ({ ...prev, open }))}
+        memberId={healthDialog.memberId}
+        memberName={healthDialog.memberName}
       />
     </div>
   )
