@@ -20,6 +20,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/extraction': 'Trích xuất dữ liệu',
   '/dashboard/doctor': 'Thông tin bác sĩ',
   '/dashboard/settings': 'Cài đặt',
+  '/dashboard/register-member': 'Đăng ký thành viên',
 }
 
 export default function DashboardLayout({
@@ -32,6 +33,7 @@ export default function DashboardLayout({
   const pathname = usePathname()
 
   const userName = user?.fullName ?? ''
+  const userRole = user?.role ?? 'guest'
 
   const pageTitle =
     PAGE_TITLES[pathname] ??
@@ -56,6 +58,7 @@ export default function DashboardLayout({
       <div className="min-h-screen flex">
         <AppSidebar
           userName={userName}
+          userRole={userRole}
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
         />

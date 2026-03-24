@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -19,44 +20,51 @@ import {
 
 interface Announcement {
   id: string
-  date: string
   title: string
   content?: string
+  category: string
+  published_at: string
 }
 
-const ADMIN_ANNOUNCEMENTS: Announcement[] = [
+// Fallback demo data when API is unavailable
+const FALLBACK_ADMIN: Announcement[] = [
   {
     id: 'a1',
-    date: '24/03/2026',
     title: 'Chào mừng đến AIVIHE',
     content: 'Hệ thống quản lý sức khỏe cá nhân chính thức ra mắt.',
+    category: 'admin',
+    published_at: '2026-03-24T08:00:00Z',
   },
   {
     id: 'a2',
-    date: '20/03/2026',
     title: 'Cập nhật tính năng mới: Trích xuất AI',
     content: 'AI giúp trích xuất thông tin từ giấy khám bệnh tự động.',
+    category: 'admin',
+    published_at: '2026-03-20T08:00:00Z',
   },
   {
     id: 'a3',
-    date: '15/03/2026',
     title: 'Lịch bảo trì hệ thống',
     content: 'Hệ thống sẽ bảo trì từ 22:00 - 02:00 ngày 16/03.',
+    category: 'admin',
+    published_at: '2026-03-15T08:00:00Z',
   },
 ]
 
-const CENTER_ANNOUNCEMENTS: Announcement[] = [
+const FALLBACK_CENTER: Announcement[] = [
   {
     id: 'c1',
-    date: '22/03/2026',
     title: 'Chương trình khám sức khỏe miễn phí tại Sóc Sơn',
     content: 'Khám miễn phí cho người cao tuổi trên 60 tuổi.',
+    category: 'center',
+    published_at: '2026-03-22T08:00:00Z',
   },
   {
     id: 'c2',
-    date: '18/03/2026',
     title: 'Hội thảo sức khỏe cộng đồng lần 3',
     content: 'Chủ đề: Phòng chống bệnh tiểu đường cho người lớn tuổi.',
+    category: 'center',
+    published_at: '2026-03-18T08:00:00Z',
   },
 ]
 
@@ -67,9 +75,41 @@ const MEMBER_BENEFITS = [
   { icon: Users, text: 'Chia sẻ hồ sơ gia đình' },
 ]
 
+function formatDate(iso: string) {
+  try {
+    return new Date(iso).toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })
+  } catch {
+    return ''
+  }
+}
+
 export function BulletinBoard() {
   const { user } = useAuth({ redirect: false })
-  const isMember = user?.role === 'citizen' || user?.role === 'doctor'
+  const isMember = !!user?.role && user.role !== 'guest'
+
+  const [adminAnnouncements, setAdminAnnouncements] = useState<Announcement[]>(FALLBACK_ADMIN)
+  const [centerAnnouncements, setCenterAnnouncements] = useState<Announcement[]>(FALLBACK_CENTER)
+
+  useEffect(() => {
+    async function fetchAnnouncements() {
+      try {
+        const res = await fetch('/api/announcements')
+        if (!res.ok) return
+        const data: Announcement[] = await res.json()
+        const admin = data.filter((a) => a.category === 'admin')
+        const center = data.filter((a) => a.category === 'center')
+        if (admin.length > 0) setAdminAnnouncements(admin)
+        if (center.length > 0) setCenterAnnouncements(center)
+      } catch {
+        // Keep fallback data
+      }
+    }
+    fetchAnnouncements()
+  }, [])
 
   return (
     <div className="space-y-4">
@@ -82,7 +122,7 @@ export function BulletinBoard() {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-4">
-          <AnnouncementList items={ADMIN_ANNOUNCEMENTS} color="blue" />
+          <AnnouncementList items={adminAnnouncements} color="blue" />
           <div className="mt-3 text-right">
             <Link href="/dashboard/notifications">
               <Button variant="ghost" className="text-base text-blue-600">
@@ -102,7 +142,7 @@ export function BulletinBoard() {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-4">
-          <AnnouncementList items={CENTER_ANNOUNCEMENTS} color="green" />
+          <AnnouncementList items={centerAnnouncements} color="green" />
           <div className="mt-3 text-right">
             <Link href="/dashboard/notifications">
               <Button variant="ghost" className="text-base text-green-600">
@@ -140,10 +180,12 @@ export function BulletinBoard() {
               <span className="text-lg font-medium">Bạn đã là Thành viên</span>
             </div>
           ) : (
-            <Button className="w-full min-h-[56px] text-lg font-semibold bg-purple-600 hover:bg-purple-700">
-              <Crown className="size-5 mr-2" />
-              Đăng ký Thành viên
-            </Button>
+            <Link href="/dashboard/register-member">
+              <Button className="w-full min-h-[56px] text-lg font-semibold bg-purple-600 hover:bg-purple-700">
+                <Crown className="size-5 mr-2" />
+                Đăng ký Thành viên
+              </Button>
+            </Link>
           )}
         </CardContent>
       </Card>
@@ -171,7 +213,7 @@ function AnnouncementList({
             variant="secondary"
             className={`shrink-0 text-xs px-2 py-0.5 mt-0.5 ${badgeClass}`}
           >
-            {item.date}
+            {formatDate(item.published_at)}
           </Badge>
           <div className="min-w-0">
             <p className="text-base font-medium leading-snug">{item.title}</p>

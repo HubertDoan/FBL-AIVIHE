@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,6 +13,7 @@ import { User, Lock, LogOut, Trash2, Shield } from 'lucide-react'
 
 export default function SettingsPage() {
   const { user, loading } = useAuth()
+  const router = useRouter()
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -73,8 +75,13 @@ export default function SettingsPage() {
     }
   }
 
-  function handleLogoutAll() {
-    toast.success('Đã đăng xuất tất cả thiết bị. (Chế độ demo)')
+  async function handleLogoutAll() {
+    const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+    if (IS_DEMO) {
+      await fetch('/api/demo/logout', { method: 'POST' })
+    }
+    toast.success('Đã đăng xuất tất cả thiết bị.')
+    router.push('/')
   }
 
   async function handleDeleteAccount() {

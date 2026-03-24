@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2 } from 'lucide-react'
+import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2, Bell, Crown } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserTable } from '@/components/admin/user-table'
 import { AuditLogTable } from '@/components/admin/audit-log-table'
+import { AnnouncementManager } from '@/components/admin/announcement-manager'
+import { ProgramManager } from '@/components/admin/program-manager'
 
 interface Stats {
   total_users: number
@@ -71,15 +73,23 @@ export default function AdminPage() {
           Quản trị hệ thống
         </h1>
         <p className="text-muted-foreground mt-1">
-          Quản lý người dùng, xem nhật ký và thống kê hệ thống
+          Quản lý người dùng, thông báo, chương trình và thống kê hệ thống
         </p>
       </div>
 
       <Tabs defaultValue="users" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 max-w-lg">
+        <TabsList className="grid w-full grid-cols-5 max-w-2xl">
           <TabsTrigger value="users" className="gap-1.5 text-base">
             <Users className="size-4" />
             Người dùng
+          </TabsTrigger>
+          <TabsTrigger value="announcements" className="gap-1.5 text-base">
+            <Bell className="size-4" />
+            Thông báo
+          </TabsTrigger>
+          <TabsTrigger value="programs" className="gap-1.5 text-base">
+            <Crown className="size-4" />
+            Chương trình
           </TabsTrigger>
           <TabsTrigger value="audit" className="gap-1.5 text-base">
             <ScrollText className="size-4" />
@@ -99,6 +109,30 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent>
               <UserTable />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Announcements Tab */}
+        <TabsContent value="announcements">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Quản lý thông báo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <AnnouncementManager />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Programs Tab */}
+        <TabsContent value="programs">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Quản lý chương trình thành viên</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ProgramManager />
             </CardContent>
           </Card>
         </TabsContent>

@@ -28,9 +28,14 @@ export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppH
   }, [])
 
   async function handleLogout() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/login')
+    const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+    if (IS_DEMO) {
+      await fetch('/api/demo/logout', { method: 'POST' })
+    } else {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+    }
+    router.push('/')
   }
 
   return (

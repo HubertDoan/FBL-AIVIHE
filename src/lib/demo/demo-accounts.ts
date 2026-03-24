@@ -1,7 +1,7 @@
 // Demo accounts for testing without Supabase
 // Only used when NEXT_PUBLIC_DEMO_MODE=true
 
-export type DemoRole = 'citizen' | 'doctor' | 'admin'
+export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'admin'
 
 export interface DemoAccount {
   id: string
@@ -74,6 +74,16 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     citizenId: 'demo-admin',
     phone: '0901000006',
     description: 'Quản trị hệ thống',
+  },
+  {
+    id: 'demo-0007-0000-0000-000000000007',
+    email: 'khach@demo.aivihe.vn',
+    password: 'Demo@2024',
+    fullName: 'Lê Thị Hoa',
+    role: 'guest',
+    citizenId: 'demo-guest-hoa',
+    phone: '0901000007',
+    description: 'Khách mới đăng ký, chưa là thành viên',
   },
 ]
 

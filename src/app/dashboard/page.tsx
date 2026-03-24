@@ -7,6 +7,7 @@ import { OverviewCards } from '@/components/dashboard/overview-cards'
 import { BulletinBoard } from '@/components/dashboard/bulletin-board'
 import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { useAuth } from '@/hooks/use-auth'
+import { GuestDashboard } from '@/components/membership/guest-dashboard'
 import { Upload, Clock, Stethoscope } from 'lucide-react'
 
 export default function DashboardPage() {
@@ -50,7 +51,23 @@ export default function DashboardPage() {
     fetchDashboard()
   }, [authLoading, user])
 
-  if (authLoading || dataLoading) {
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center space-y-3">
+          <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-lg text-muted-foreground">Đang tải...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Guest users see a restricted dashboard
+  if (user?.role === 'guest') {
+    return <GuestDashboard />
+  }
+
+  if (dataLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center space-y-3">

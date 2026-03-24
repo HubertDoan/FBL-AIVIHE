@@ -18,7 +18,7 @@ function previewUsername(fullName: string): string {
   const ten = parts[parts.length - 1]
   const ho = parts[0]
   const dem = parts.length > 2 ? parts.slice(1, -1).map(w => w[0]).join('') : ''
-  return `${ten}${ho[0]}${dem}`.toLowerCase() + `${year}`
+  return `${ten}${ho[0]}${dem}`.toLowerCase() + `${year}@aivihe.vn`
 }
 
 export default function RegisterPage() {

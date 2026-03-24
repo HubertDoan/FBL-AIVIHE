@@ -24,7 +24,7 @@ function generateUsername(fullName: string): string {
   const year = new Date().getFullYear()
 
   if (parts.length === 1) {
-    return `${parts[0].toLowerCase()}${year}`
+    return `${parts[0].toLowerCase()}${year}@aivihe.vn`
   }
 
   const ten = parts[parts.length - 1] // Tên (last word)
@@ -32,7 +32,7 @@ function generateUsername(fullName: string): string {
   const dem = parts.length > 2 ? parts.slice(1, -1).map(w => w[0]).join('') : '' // Đệm
 
   const base = `${ten}${ho[0]}${dem}`.toLowerCase()
-  return `${base}${year}`
+  return `${base}${year}@aivihe.vn`
 }
 
 export async function POST(request: Request) {
@@ -156,16 +156,17 @@ async function findUniqueUsername(supabase: any, base: string): Promise<string> 
 
   if (!data) return base
 
-  // Tách phần trước năm (4 chữ số cuối)
-  const match = base.match(/^(.+?)(\d{4})$/)
+  // Tách: prefix + year + @aivihe.vn
+  const match = base.match(/^(.+?)(\d{4})(@aivihe\.vn)$/)
   if (!match) return base
 
   const prefix = match[1]
   const year = match[2]
+  const suffix = match[3]
 
   let counter = 1
   while (counter < 1000) {
-    const candidate = `${prefix}${counter}${year}`
+    const candidate = `${prefix}${counter}${year}${suffix}`
     const { data: exists } = await supabase
       .from('citizens')
       .select('username')
@@ -175,5 +176,5 @@ async function findUniqueUsername(supabase: any, base: string): Promise<string> 
     counter++
   }
 
-  return `${prefix}${Date.now()}${year}`
+  return `${prefix}${Date.now()}${year}${suffix}`
 }
