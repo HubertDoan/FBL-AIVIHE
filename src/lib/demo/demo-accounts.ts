@@ -1,7 +1,7 @@
 // Demo accounts for testing without Supabase
 // Only used when NEXT_PUBLIC_DEMO_MODE=true
 
-export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'admin'
+export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'admin' | 'director' | 'branch_director' | 'super_admin'
 
 export interface DemoAccount {
   id: string
@@ -84,6 +84,36 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     citizenId: 'demo-guest-hoa',
     phone: '0901000007',
     description: 'Khách mới đăng ký, chưa là thành viên',
+  },
+  {
+    id: 'demo-0008-0000-0000-000000000008',
+    email: 'tram@demo.aivihe.vn',
+    password: 'Demo@2024',
+    fullName: 'Trần Thị Ngọc Trâm',
+    role: 'director',
+    citizenId: 'demo-director-tram',
+    phone: '0901000008',
+    description: 'Giám đốc công ty FBL',
+  },
+  {
+    id: 'demo-0009-0000-0000-000000000009',
+    email: 'khanh@demo.aivihe.vn',
+    password: 'Demo@2024',
+    fullName: 'Lưu Tuấn Khanh',
+    role: 'branch_director',
+    citizenId: 'demo-branch-director-khanh',
+    phone: '0901000009',
+    description: 'Giám đốc chi nhánh Đông Anh',
+  },
+  {
+    id: 'demo-0010-0000-0000-000000000010',
+    email: 'hai@demo.aivihe.vn',
+    password: 'Demo@2024',
+    fullName: 'Doãn Ngọc Hải',
+    role: 'super_admin',
+    citizenId: 'demo-super-admin-hai',
+    phone: '0901000010',
+    description: 'Chuyên gia cao cấp, Super Admin toàn quyền',
   },
 ]
 

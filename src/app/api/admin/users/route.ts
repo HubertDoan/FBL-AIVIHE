@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { isDemoMode, getDemoUser, demoResponse, demoUnauthorized, demoForbidden } from '@/lib/demo/demo-api-helper'
+import { isDemoMode, getDemoUser, demoResponse, demoUnauthorized, demoForbidden, hasAdminAccess } from '@/lib/demo/demo-api-helper'
 import { getDemoAdminUsers } from '@/lib/demo/demo-data'
 
 export async function GET(request: NextRequest) {
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
     const searchParams = new URL(request.url).searchParams
     const page = parseInt(searchParams.get('page') ?? '1', 10)
     const limit = parseInt(searchParams.get('limit') ?? '20', 10)

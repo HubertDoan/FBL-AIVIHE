@@ -14,6 +14,9 @@ const roleLabels: Record<string, string> = {
   citizen: 'Người dân',
   doctor: 'Bác sĩ',
   admin: 'Quản trị',
+  director: 'Giám đốc',
+  branch_director: 'GĐ Chi nhánh',
+  super_admin: 'Super Admin',
 }
 
 const roleBadgeColors: Record<string, string> = {
@@ -21,6 +24,9 @@ const roleBadgeColors: Record<string, string> = {
   citizen: 'bg-blue-100 text-blue-800',
   doctor: 'bg-green-100 text-green-800',
   admin: 'bg-purple-100 text-purple-800',
+  director: 'bg-purple-100 text-purple-800',
+  branch_director: 'bg-indigo-100 text-indigo-800',
+  super_admin: 'bg-red-100 text-red-800',
 }
 
 export function DemoLoginSection() {
@@ -70,11 +76,11 @@ export function DemoLoginSection() {
 
   return (
     <div className="space-y-4">
-      {/* Quick select demo accounts */}
+      {/* Quick select accounts */}
       <Card>
         <CardHeader className="pb-3">
           <p className="text-sm font-medium text-center">
-            Chọn nhanh tài khoản demo
+            Chọn nhanh tài khoản
           </p>
         </CardHeader>
         <CardContent className="space-y-2">
@@ -127,7 +133,7 @@ export function DemoLoginSection() {
               <Input
                 id="demo-email"
                 type="email"
-                placeholder="email@demo.aivihe.vn"
+                placeholder="email@aivihe.vn"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value)
@@ -169,7 +175,7 @@ export function DemoLoginSection() {
                   Đang đăng nhập...
                 </>
               ) : (
-                'Đăng nhập Demo'
+                'Đăng nhập'
               )}
             </Button>
           </form>
@@ -179,7 +185,7 @@ export function DemoLoginSection() {
       {/* Info banner */}
       <div className="rounded-lg bg-amber-50 border border-amber-200 p-3">
         <p className="text-sm text-amber-800 text-center">
-          Chế độ demo &mdash; dữ liệu mẫu, không kết nối Supabase.
+          Dữ liệu mẫu để trải nghiệm hệ thống.
           Mật khẩu chung: <span className="font-mono font-bold">Demo@2024</span>
         </p>
       </div>

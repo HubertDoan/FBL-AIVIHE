@@ -6,6 +6,7 @@ import {
   demoResponse,
   demoUnauthorized,
   demoForbidden,
+  hasAdminAccess,
 } from '@/lib/demo/demo-api-helper'
 
 // In-memory store for demo mode
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
 
     const page = Number(request.nextUrl.searchParams.get('page') ?? '1')
     const limit = Number(request.nextUrl.searchParams.get('limit') ?? '20')
@@ -149,7 +150,7 @@ export async function POST(request: NextRequest) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
 
     const body = await request.json()
     const newAnnouncement = {

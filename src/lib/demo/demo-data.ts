@@ -23,6 +23,9 @@ const TUAN = 'demo-0003-0000-0000-000000000003'
 const DUC = 'demo-0004-0000-0000-000000000004'
 const BS_HAI = 'demo-0005-0000-0000-000000000005'
 const ADMIN = 'demo-0006-0000-0000-000000000006'
+const TRAM = 'demo-0008-0000-0000-000000000008'
+const KHANH = 'demo-0009-0000-0000-000000000009'
+const HAI_SA = 'demo-0010-0000-0000-000000000010'
 
 // ─── Dashboard Stats ─────────────────────────────────────────────────────────
 
@@ -155,6 +158,57 @@ const citizens: Record<string, Citizen> = {
     has_consented: true,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
+  },
+  [TRAM]: {
+    id: TRAM,
+    full_name: 'Trần Thị Ngọc Trâm',
+    username: 'tramntt2024@aivihe.vn',
+    date_of_birth: '1978-04-12',
+    gender: 'female',
+    national_id: '001078045678',
+    phone: '0901000008',
+    email: 'tram@demo.aivihe.vn',
+    address: 'Quận Ba Đình, Hà Nội',
+    ethnicity: 'Kinh',
+    occupation: 'Giám đốc công ty FBL',
+    avatar_url: null,
+    has_consented: true,
+    created_at: '2024-01-05T00:00:00Z',
+    updated_at: '2025-03-01T00:00:00Z',
+  },
+  [KHANH]: {
+    id: KHANH,
+    full_name: 'Lưu Tuấn Khanh',
+    username: 'khanhlt2024@aivihe.vn',
+    date_of_birth: '1985-08-20',
+    gender: 'male',
+    national_id: '001085067890',
+    phone: '0901000009',
+    email: 'khanh@demo.aivihe.vn',
+    address: 'Huyện Đông Anh, Hà Nội',
+    ethnicity: 'Kinh',
+    occupation: 'Giám đốc chi nhánh',
+    avatar_url: null,
+    has_consented: true,
+    created_at: '2024-01-08T00:00:00Z',
+    updated_at: '2025-03-01T00:00:00Z',
+  },
+  [HAI_SA]: {
+    id: HAI_SA,
+    full_name: 'Doãn Ngọc Hải',
+    username: 'haidn2024@aivihe.vn',
+    date_of_birth: '1970-12-05',
+    gender: 'male',
+    national_id: '001070089012',
+    phone: '0901000010',
+    email: 'hai@demo.aivihe.vn',
+    address: 'Quận Hoàn Kiếm, Hà Nội',
+    ethnicity: 'Kinh',
+    occupation: 'Chuyên gia cao cấp',
+    avatar_url: null,
+    has_consented: true,
+    created_at: '2024-01-02T00:00:00Z',
+    updated_at: '2025-03-01T00:00:00Z',
   },
 }
 

@@ -6,6 +6,7 @@ import {
   demoResponse,
   demoUnauthorized,
   demoForbidden,
+  hasAdminAccess,
 } from '@/lib/demo/demo-api-helper'
 
 type Params = { params: Promise<{ id: string }> }
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest, { params }: Params) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
     return demoResponse({ success: true, message: 'Đã đặt lại mật khẩu thành công.' })
   }
 

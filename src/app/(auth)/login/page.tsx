@@ -10,11 +10,11 @@ export default function LoginPage() {
     <div className="space-y-6">
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-semibold">
-          {isDemoMode ? 'Đăng nhập Demo' : 'Đăng nhập'}
+          Đăng nhập
         </h2>
         <p className="text-muted-foreground">
           {isDemoMode
-            ? 'Chọn tài khoản demo hoặc nhập email/mật khẩu'
+            ? 'Chọn tài khoản hoặc nhập email/mật khẩu'
             : 'Nhập số điện thoại để nhận mã xác thực'}
         </p>
       </div>

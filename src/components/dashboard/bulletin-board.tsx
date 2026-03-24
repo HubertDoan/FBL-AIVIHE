@@ -17,6 +17,7 @@ import {
   FolderOpen,
   Users,
   CreditCard,
+  Megaphone,
 } from 'lucide-react'
 
 interface Announcement {
@@ -69,6 +70,23 @@ const FALLBACK_CENTER: Announcement[] = [
   },
 ]
 
+const FALLBACK_DIRECTOR: Announcement[] = [
+  {
+    id: 'd1',
+    title: 'Định hướng phát triển AIVIHE Q2/2026',
+    content: 'Mở rộng dịch vụ chăm sóc sức khỏe cộng đồng tại các huyện ngoại thành Hà Nội.',
+    category: 'director',
+    published_at: '2026-03-23T08:00:00Z',
+  },
+  {
+    id: 'd2',
+    title: 'Chúc mừng đội ngũ AIVIHE đạt 1000 thành viên',
+    content: 'Cảm ơn toàn bộ đội ngũ đã nỗ lực phát triển hệ thống phục vụ cộng đồng.',
+    category: 'director',
+    published_at: '2026-03-15T08:00:00Z',
+  },
+]
+
 const MEMBER_BENEFITS = [
   { icon: Gift, text: 'Ưu đãi khám bệnh' },
   { icon: Stethoscope, text: 'Tư vấn bác sĩ gia đình' },
@@ -94,6 +112,7 @@ export function BulletinBoard() {
 
   const [adminAnnouncements, setAdminAnnouncements] = useState<Announcement[]>(FALLBACK_ADMIN)
   const [centerAnnouncements, setCenterAnnouncements] = useState<Announcement[]>(FALLBACK_CENTER)
+  const [directorAnnouncements, setDirectorAnnouncements] = useState<Announcement[]>(FALLBACK_DIRECTOR)
 
   useEffect(() => {
     async function fetchAnnouncements() {
@@ -103,8 +122,10 @@ export function BulletinBoard() {
         const data: Announcement[] = await res.json()
         const admin = data.filter((a) => a.category === 'admin')
         const center = data.filter((a) => a.category === 'center')
+        const director = data.filter((a) => a.category === 'director')
         if (admin.length > 0) setAdminAnnouncements(admin)
         if (center.length > 0) setCenterAnnouncements(center)
+        if (director.length > 0) setDirectorAnnouncements(director)
       } catch {
         // Keep fallback data
       }
@@ -147,6 +168,26 @@ export function BulletinBoard() {
           <div className="mt-3 text-right">
             <Link href="/dashboard/notifications">
               <Button variant="ghost" className="text-base text-green-600">
+                Xem tất cả <ArrowRight className="size-4 ml-1" />
+              </Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Director Announcements */}
+      <Card>
+        <CardHeader className="bg-orange-50 dark:bg-orange-950/30">
+          <CardTitle className="text-xl flex items-center gap-2 text-orange-700 dark:text-orange-400">
+            <Megaphone className="size-5" />
+            Thông báo từ Giám đốc
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <AnnouncementList items={directorAnnouncements} color="orange" />
+          <div className="mt-3 text-right">
+            <Link href="/dashboard/notifications">
+              <Button variant="ghost" className="text-base text-orange-600">
                 Xem tất cả <ArrowRight className="size-4 ml-1" />
               </Button>
             </Link>
@@ -228,12 +269,14 @@ function AnnouncementList({
   color,
 }: {
   items: Announcement[]
-  color: 'blue' | 'green'
+  color: 'blue' | 'green' | 'orange'
 }) {
-  const badgeClass =
-    color === 'blue'
-      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400'
-      : 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400'
+  const badgeClasses: Record<string, string> = {
+    blue: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+    green: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+    orange: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
+  }
+  const badgeClass = badgeClasses[color]
 
   return (
     <ul className="space-y-3">

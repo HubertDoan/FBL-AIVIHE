@@ -6,6 +6,7 @@ import {
   demoResponse,
   demoUnauthorized,
   demoForbidden,
+  hasAdminAccess,
 } from '@/lib/demo/demo-api-helper'
 import { DEMO_MEMBERS } from '../route'
 
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest, { params }: Params) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
     const member = DEMO_MEMBERS.find(m => m.id === id)
     if (!member) return demoResponse({ error: 'Không tìm thấy thành viên.' }, 404)
     return demoResponse(member)
@@ -50,7 +51,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
     const body = await request.json()
     return demoResponse({ id, ...body, updated_at: new Date().toISOString() })
   }
@@ -94,7 +95,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
     return demoResponse({ success: true, message: 'Đã xóa thành viên.' })
   }
 

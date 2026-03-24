@@ -9,6 +9,7 @@ import { MemberManagement } from '@/components/admin/member-management'
 import { AuditLogTable } from '@/components/admin/audit-log-table'
 import { AnnouncementManager } from '@/components/admin/announcement-manager'
 import { ProgramManager } from '@/components/admin/program-manager'
+import { useAuth } from '@/hooks/use-auth'
 
 interface Stats {
   total_users: number
@@ -17,10 +18,38 @@ interface Stats {
   documents_today: number
 }
 
+// Tab visibility per role:
+// super_admin: ALL tabs
+// director: announcements, programs, stats
+// branch_director: announcements, stats
+// admin: users, audit, stats, announcements
+function getVisibleTabs(role: string): string[] {
+  switch (role) {
+    case 'super_admin':
+      return ['users', 'announcements', 'programs', 'audit', 'stats']
+    case 'director':
+      return ['announcements', 'programs', 'stats']
+    case 'branch_director':
+      return ['announcements', 'stats']
+    case 'admin':
+    default:
+      return ['users', 'announcements', 'audit', 'stats']
+  }
+}
+
+function getDefaultTab(role: string): string {
+  const tabs = getVisibleTabs(role)
+  return tabs[0] ?? 'stats'
+}
+
 export default function AdminPage() {
+  const { user } = useAuth({ redirect: false })
   const [authorized, setAuthorized] = useState<boolean | null>(null)
   const [stats, setStats] = useState<Stats | null>(null)
   const [statsLoading, setStatsLoading] = useState(true)
+
+  const userRole = user?.role ?? 'admin'
+  const visibleTabs = getVisibleTabs(userRole)
 
   useEffect(() => {
     async function checkAccess() {
@@ -77,77 +106,95 @@ export default function AdminPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="users" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5 max-w-2xl">
-          <TabsTrigger value="users" className="gap-1.5 text-base">
-            <Users className="size-4" />
-            Người dùng
-          </TabsTrigger>
-          <TabsTrigger value="announcements" className="gap-1.5 text-base">
-            <Bell className="size-4" />
-            Thông báo
-          </TabsTrigger>
-          <TabsTrigger value="programs" className="gap-1.5 text-base">
-            <Crown className="size-4" />
-            Chương trình
-          </TabsTrigger>
-          <TabsTrigger value="audit" className="gap-1.5 text-base">
-            <ScrollText className="size-4" />
-            Nhật ký
-          </TabsTrigger>
-          <TabsTrigger value="stats" className="gap-1.5 text-base">
-            <BarChart3 className="size-4" />
-            Thống kê
-          </TabsTrigger>
+      <Tabs defaultValue={getDefaultTab(userRole)} className="space-y-4">
+        <TabsList className={`grid w-full max-w-2xl`} style={{ gridTemplateColumns: `repeat(${visibleTabs.length}, minmax(0, 1fr))` }}>
+          {visibleTabs.includes('users') && (
+            <TabsTrigger value="users" className="gap-1.5 text-base">
+              <Users className="size-4" />
+              Người dùng
+            </TabsTrigger>
+          )}
+          {visibleTabs.includes('announcements') && (
+            <TabsTrigger value="announcements" className="gap-1.5 text-base">
+              <Bell className="size-4" />
+              Thông báo
+            </TabsTrigger>
+          )}
+          {visibleTabs.includes('programs') && (
+            <TabsTrigger value="programs" className="gap-1.5 text-base">
+              <Crown className="size-4" />
+              Chương trình
+            </TabsTrigger>
+          )}
+          {visibleTabs.includes('audit') && (
+            <TabsTrigger value="audit" className="gap-1.5 text-base">
+              <ScrollText className="size-4" />
+              Nhật ký
+            </TabsTrigger>
+          )}
+          {visibleTabs.includes('stats') && (
+            <TabsTrigger value="stats" className="gap-1.5 text-base">
+              <BarChart3 className="size-4" />
+              Thống kê
+            </TabsTrigger>
+          )}
         </TabsList>
 
         {/* Users Tab */}
-        <TabsContent value="users">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Quản lý thành viên</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <MemberManagement />
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {visibleTabs.includes('users') && (
+          <TabsContent value="users">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Quản lý thành viên</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <MemberManagement />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         {/* Announcements Tab */}
-        <TabsContent value="announcements">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Quản lý thông báo</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <AnnouncementManager />
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {visibleTabs.includes('announcements') && (
+          <TabsContent value="announcements">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Quản lý thông báo</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AnnouncementManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         {/* Programs Tab */}
-        <TabsContent value="programs">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Quản lý chương trình thành viên</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ProgramManager />
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {visibleTabs.includes('programs') && (
+          <TabsContent value="programs">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Quản lý chương trình thành viên</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ProgramManager />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         {/* Audit Logs Tab */}
-        <TabsContent value="audit">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Nhật ký hệ thống</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <AuditLogTable />
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {visibleTabs.includes('audit') && (
+          <TabsContent value="audit">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Nhật ký hệ thống</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AuditLogTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         {/* Stats Tab */}
         <TabsContent value="stats">

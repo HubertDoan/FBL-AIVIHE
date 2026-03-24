@@ -39,10 +39,13 @@ interface AnnouncementFormProps {
   onSave: (data: AnnouncementData) => Promise<void>
 }
 
-const CATEGORIES = [
+import { useAuth } from '@/hooks/use-auth'
+
+const ALL_CATEGORIES = [
   { value: 'admin', label: 'Thông báo Admin' },
   { value: 'center', label: 'Thông báo Trung tâm' },
   { value: 'program', label: 'Chương trình' },
+  { value: 'director', label: 'Thông báo từ Giám đốc' },
 ]
 
 const TARGETS = [
@@ -60,9 +63,21 @@ export function AnnouncementForm({
   initialData,
   onSave,
 }: AnnouncementFormProps) {
+  const { user } = useAuth({ redirect: false })
+  const userRole = user?.role ?? 'admin'
+
+  // Director can only create in their own category
+  const categories = userRole === 'director'
+    ? ALL_CATEGORIES.filter((c) => c.value === 'director')
+    : userRole === 'branch_director'
+      ? ALL_CATEGORIES.filter((c) => c.value === 'admin' || c.value === 'center')
+      : ALL_CATEGORIES
+
+  const defaultCategory = userRole === 'director' ? 'director' : 'admin'
+
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [category, setCategory] = useState('admin')
+  const [category, setCategory] = useState(defaultCategory)
   const [targetType, setTargetType] = useState('all')
   const [targetUserId, setTargetUserId] = useState('')
   const [isPublished, setIsPublished] = useState(true)
@@ -79,7 +94,7 @@ export function AnnouncementForm({
     } else {
       setTitle('')
       setContent('')
-      setCategory('admin')
+      setCategory(defaultCategory)
       setTargetType('all')
       setTargetUserId('')
       setIsPublished(true)
@@ -142,12 +157,12 @@ export function AnnouncementForm({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-base">Danh mục</Label>
-              <Select value={category} onValueChange={(v) => setCategory(v ?? 'admin')}>
+              <Select value={category} onValueChange={(v) => setCategory(v ?? defaultCategory)}>
                 <SelectTrigger className="h-10 w-full text-base">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {CATEGORIES.map((c) => (
+                  {categories.map((c) => (
                     <SelectItem key={c.value} value={c.value}>
                       {c.label}
                     </SelectItem>

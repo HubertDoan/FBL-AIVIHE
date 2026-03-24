@@ -13,6 +13,8 @@ import {
   MessageSquare,
   Settings,
   Crown,
+  Shield,
+  Server,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -24,12 +26,17 @@ interface NavItem {
   guestOnly?: boolean
   memberOnly?: boolean
   highlight?: boolean
+  adminOnly?: boolean
+  superAdminOnly?: boolean
 }
+
+const ADMIN_ROLES = ['admin', 'director', 'branch_director', 'super_admin']
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard },
   { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User },
   { href: '/dashboard/register-member', label: 'Đăng ký thành viên', icon: Crown, guestOnly: true, highlight: true },
+  { href: '/dashboard/admin', label: 'Quản trị', icon: Shield, adminOnly: true },
   { href: '/dashboard/membership', label: 'Thành viên', icon: Crown, memberOnly: true },
   { href: '/dashboard/family', label: 'Gia đình', icon: Users, memberOnly: true },
   { href: '/dashboard/upload', label: 'Tải tài liệu', icon: Upload, memberOnly: true },
@@ -38,6 +45,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/visit-prep', label: 'Chuẩn bị đi khám', icon: Stethoscope, memberOnly: true },
   { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, memberOnly: true },
   { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings },
+  { href: '/dashboard/system', label: 'Hệ thống', icon: Server, superAdminOnly: true },
 ]
 
 interface AppSidebarProps {
@@ -51,10 +59,14 @@ interface AppSidebarProps {
 export function AppSidebar({ userName, userAvatar, userRole, open, onClose }: AppSidebarProps) {
   const pathname = usePathname()
   const isGuest = userRole === 'guest'
+  const isAdmin = ADMIN_ROLES.includes(userRole ?? '')
+  const isSuperAdmin = userRole === 'super_admin'
 
   const visibleItems = NAV_ITEMS.filter((item) => {
     if (item.guestOnly && !isGuest) return false
     if (item.memberOnly && isGuest) return false
+    if (item.adminOnly && !isAdmin) return false
+    if (item.superAdminOnly && !isSuperAdmin) return false
     return true
   })
 

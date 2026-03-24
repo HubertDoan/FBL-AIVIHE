@@ -74,3 +74,15 @@ export function demoForbidden(): NextResponse {
     { status: 403 }
   )
 }
+
+/**
+ * Roles that have admin-level access to the admin panel
+ */
+export const ADMIN_ROLES = ['admin', 'director', 'branch_director', 'super_admin'] as const
+
+/**
+ * Check if a role has admin-level access
+ */
+export function hasAdminAccess(role: string): boolean {
+  return (ADMIN_ROLES as readonly string[]).includes(role)
+}

@@ -6,6 +6,7 @@ import {
   demoResponse,
   demoUnauthorized,
   demoForbidden,
+  hasAdminAccess,
 } from '@/lib/demo/demo-api-helper'
 
 export async function PUT(
@@ -18,7 +19,7 @@ export async function PUT(
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
 
     const body = await request.json()
     return demoResponse({
@@ -79,7 +80,7 @@ export async function DELETE(
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
     return demoResponse({ success: true, id })
   }
 

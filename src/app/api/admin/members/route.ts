@@ -6,6 +6,7 @@ import {
   demoResponse,
   demoUnauthorized,
   demoForbidden,
+  hasAdminAccess,
 } from '@/lib/demo/demo-api-helper'
 import { getDemoAdminUsers } from '@/lib/demo/demo-data'
 
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
     const p = new URL(request.url).searchParams
     return demoResponse(filterDemoMembers(
       p.get('search') ?? '', p.get('role') ?? 'all', p.get('status') ?? 'all',
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (demoUser.role !== 'admin') return demoForbidden()
+    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
     const body = await request.json()
     return demoResponse({
       id: 'demo-new-' + Date.now(),
