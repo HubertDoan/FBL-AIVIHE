@@ -70,10 +70,13 @@ export function MembershipCard({
           </div>
         </div>
 
-        {/* Middle: Name */}
-        <div className="relative z-10">
+        {/* Middle: Name + Member ID */}
+        <div className="relative z-10 space-y-1">
           <p className="text-xl font-bold text-gray-900 truncate">
             {fullName || 'Họ và tên'}
+          </p>
+          <p className="text-base text-gray-700 font-mono font-bold tracking-wide">
+            {memberId || '---'}
           </p>
         </div>
 
@@ -82,9 +85,6 @@ export function MembershipCard({
           <div className="space-y-0.5">
             <p className="text-sm text-gray-600">
               Thành viên từ: <span className="font-semibold">{sinceLabel}</span>
-            </p>
-            <p className="text-sm text-gray-700 font-mono font-semibold">
-              {memberId || '---'}
             </p>
           </div>
           <div className="flex flex-col items-center gap-1">

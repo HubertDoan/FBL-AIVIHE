@@ -75,15 +75,14 @@ export default function LandingPage() {
             />
           </div>
 
-          {/* AIVIHE Title */}
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4">
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              AIVIHE
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-blue-700 font-semibold mb-8">
-            Trợ lý AI sức khỏe cá nhân
-          </p>
+          {/* AIVIHE Logo */}
+          <div className="mb-8 flex justify-center">
+            <img
+              src="/AIVIHE.jpg"
+              alt="AIVIHE - Trợ lý AI sức khỏe cá nhân"
+              className="h-32 md:h-44 w-auto object-contain rounded-xl shadow-lg"
+            />
+          </div>
 
           {/* 3 Mandatory Sentences */}
           <div className="max-w-3xl mx-auto mb-10 bg-white/80 backdrop-blur border border-blue-100 rounded-2xl p-6 shadow-sm">
