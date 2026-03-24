@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import {
   Upload, Sparkles, TrendingUp, FileText,
-  CheckCircle, ShieldAlert, ArrowRight, Lock, Camera, Brain,
+  CheckCircle, ShieldAlert, ArrowRight, Lock, Camera, Brain, Stethoscope,
 } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 
@@ -233,6 +233,59 @@ export default function LandingPage() {
                   Mọi thông tin AI tạo ra đều trích dẫn nguồn gốc từ tài liệu gốc.
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Family Doctor Section */}
+      <section className="py-16 bg-gradient-to-b from-blue-50/30 to-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-200 rounded-2xl p-8 md:p-10 shadow-sm">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="size-14 rounded-full bg-teal-100 flex items-center justify-center shrink-0">
+                <Stethoscope className="size-7 text-teal-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-teal-900 mb-2">
+                  Đăng ký Bác sĩ Gia đình
+                </h2>
+                <p className="text-lg text-teal-800">
+                  Bạn có thể đăng ký bác sĩ gia đình để hỗ trợ quản lý sức khỏe cá nhân bạn và gia đình bạn.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4 mb-8">
+              <div className="flex items-center gap-3 text-base text-teal-800">
+                <CheckCircle className="size-5 text-teal-600 shrink-0" />
+                <span>Tư vấn sức khỏe định kỳ cho cả gia đình</span>
+              </div>
+              <div className="flex items-center gap-3 text-base text-teal-800">
+                <CheckCircle className="size-5 text-teal-600 shrink-0" />
+                <span>Theo dõi và giám sát chỉ số sức khỏe</span>
+              </div>
+              <div className="flex items-center gap-3 text-base text-teal-800">
+                <CheckCircle className="size-5 text-teal-600 shrink-0" />
+                <span>Hướng dẫn trước khi đi khám chuyên khoa</span>
+              </div>
+              <div className="flex items-center gap-3 text-base text-teal-800">
+                <CheckCircle className="size-5 text-teal-600 shrink-0" />
+                <span>Hỗ trợ đọc kết quả xét nghiệm</span>
+              </div>
+            </div>
+
+            <div className="text-center space-y-3">
+              <Link
+                href="/login"
+                className={buttonVariants({ size: 'lg', className: 'text-lg px-8 py-5 rounded-xl min-h-[52px] gap-2 bg-teal-600 hover:bg-teal-700' })}
+              >
+                <Stethoscope className="size-5" />
+                Trở thành Thành viên để đăng ký
+              </Link>
+              <p className="text-sm text-teal-700">
+                Bạn cần đăng ký Thành viên AIVIHE trước khi đăng ký Bác sĩ gia đình
+              </p>
             </div>
           </div>
         </div>
