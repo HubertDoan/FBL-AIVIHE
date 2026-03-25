@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         const session = JSON.parse(cookie.value)
         const account = findDemoAccountById(session.id)
         if (account) {
-          const demoRole = role === 'doctor' ? 'doctor' : 'citizen'
+          const demoRole = role === 'doctor' ? 'doctor' : 'member'
           const idx = DEMO_ACCOUNTS.findIndex((a) => a.id === account.id)
           if (idx !== -1) {
             ;(DEMO_ACCOUNTS[idx] as { role: string }).role = demoRole
