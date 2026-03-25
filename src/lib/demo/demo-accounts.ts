@@ -1,7 +1,23 @@
 // Demo accounts for testing without Supabase
 // Only used when NEXT_PUBLIC_DEMO_MODE=true
 
-export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'admin' | 'director' | 'branch_director' | 'super_admin' | 'reception' | 'exam_doctor'
+export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'admin' | 'director' | 'branch_director' | 'super_admin' | 'reception' | 'exam_doctor' | 'staff' | 'accountant' | 'hr'
+
+// Loại tài khoản hiển thị trên form đăng nhập
+export const ACCOUNT_TYPES = [
+  { value: 'guest', label: 'Khách' },
+  { value: 'citizen', label: 'Thành viên' },
+  { value: 'staff', label: 'Nhân viên' },
+  { value: 'accountant', label: 'Kế toán' },
+  { value: 'hr', label: 'Hành chính' },
+  { value: 'doctor', label: 'Bác sĩ' },
+  { value: 'reception', label: 'Tiếp đón' },
+  { value: 'exam_doctor', label: 'BS Khám bệnh' },
+  { value: 'branch_director', label: 'Giám đốc chi nhánh' },
+  { value: 'director', label: 'Giám đốc công ty' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'super_admin', label: 'Super Admin' },
+] as const
 
 export interface DemoAccount {
   id: string
