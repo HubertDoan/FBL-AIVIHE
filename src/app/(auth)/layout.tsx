@@ -5,26 +5,26 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
-      {/* Header: FBL logo on top, AIVIHE below */}
-      <header className="flex flex-col items-center py-6 gap-3">
-        <img
-          src="/fbl-logo.jpg"
-          alt="FBL - Life Ecosystem"
-          className="h-16 w-auto object-contain"
-        />
+      {/* Header: AIVIHE nhỏ ở giữa trên cùng, FBL bên phải */}
+      <header className="relative flex items-center justify-center py-3 px-4">
         <img
           src="/AIVIHE.jpg"
           alt="AIVIHE - Trợ lý AI sức khỏe cá nhân"
-          className="h-20 w-auto object-contain rounded-lg"
+          className="h-10 w-auto object-contain rounded"
+        />
+        <img
+          src="/fbl-logo.jpg"
+          alt="FBL - For Better Life"
+          className="absolute right-4 h-10 w-auto object-contain"
         />
       </header>
 
-      {/* Centered content */}
-      <main className="flex-1 flex items-start justify-center px-4 pb-20">
+      {/* Centered content - đẩy lên sát header */}
+      <main className="flex-1 flex items-start justify-center px-4 pt-2 pb-10">
         <div className="w-full max-w-md">
           {children}
-          <div className="mt-6 text-center">
-            <a href="/" className="text-base text-muted-foreground hover:text-primary underline">
+          <div className="mt-4 text-center">
+            <a href="/" className="text-sm text-muted-foreground hover:text-primary underline">
               ← Trở về trang chủ
             </a>
           </div>
