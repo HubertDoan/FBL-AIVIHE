@@ -15,7 +15,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { Plus, Pencil, Crown, CheckCircle } from 'lucide-react'
+import { Plus, Pencil, Crown, CheckCircle, Send, Users } from 'lucide-react'
+import { toastSuccess } from '@/lib/utils/toast-helpers'
 
 interface Program {
   id: string
@@ -79,6 +80,25 @@ export function ProgramManager() {
   const [price, setPrice] = useState('')
   const [featuresText, setFeaturesText] = useState('')
   const [active, setActive] = useState(true)
+  const [sendOpen, setSendOpen] = useState(false)
+  const [sendProgram, setSendProgram] = useState<Program | null>(null)
+  const [sendTarget, setSendTarget] = useState<'all' | 'group' | 'individual'>('all')
+  const [sendPhone, setSendPhone] = useState('')
+
+  function openSend(prog: Program) {
+    setSendProgram(prog)
+    setSendTarget('all')
+    setSendPhone('')
+    setSendOpen(true)
+  }
+
+  function handleSend() {
+    const targetLabel = sendTarget === 'all' ? 'tất cả thành viên'
+      : sendTarget === 'group' ? 'nhóm thành viên'
+      : `SĐT ${sendPhone}`
+    toastSuccess(`Đã gửi "${sendProgram?.name}" đến ${targetLabel}`)
+    setSendOpen(false)
+  }
 
   function openCreate() {
     setEditIndex(null)
@@ -180,10 +200,71 @@ export function ProgramManager() {
                   </li>
                 ))}
               </ul>
+              {prog.active && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full min-h-[40px] text-sm mt-2"
+                  onClick={() => openSend(prog)}
+                >
+                  <Send className="size-4 mr-2" />
+                  Gửi cho thành viên
+                </Button>
+              )}
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {/* Dialog gửi chương trình */}
+      <Dialog open={sendOpen} onOpenChange={setSendOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl">
+              Gửi chương trình
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-base font-medium">{sendProgram?.name}</p>
+            <div className="space-y-2">
+              <Label className="text-base">Gửi đến</Label>
+              <select
+                value={sendTarget}
+                onChange={(e) => setSendTarget(e.target.value as 'all' | 'group' | 'individual')}
+                className="w-full h-12 text-base px-3 rounded-lg border border-input bg-background"
+              >
+                <option value="all">Tất cả thành viên</option>
+                <option value="group">Nhóm thành viên (theo chi nhánh)</option>
+                <option value="individual">Gửi cho cá nhân</option>
+              </select>
+            </div>
+            {sendTarget === 'individual' && (
+              <div className="space-y-2">
+                <Label className="text-base">Số điện thoại</Label>
+                <Input
+                  value={sendPhone}
+                  onChange={(e) => setSendPhone(e.target.value)}
+                  placeholder="0912345678"
+                  className="h-12 text-base"
+                />
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSendOpen(false)} className="min-h-[44px]">
+              Hủy
+            </Button>
+            <Button
+              onClick={handleSend}
+              disabled={sendTarget === 'individual' && !sendPhone.trim()}
+              className="min-h-[44px]"
+            >
+              <Send className="size-4 mr-2" />
+              Gửi thông báo
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
         <DialogContent className="sm:max-w-lg">
