@@ -31,7 +31,8 @@ export interface DemoAccount {
   description: string
 }
 
-export const DEMO_ACCOUNTS: DemoAccount[] = [
+// Initial demo accounts — immutable seed
+const SEED_ACCOUNTS: DemoAccount[] = [
   {
     id: 'demo-0001-0000-0000-000000000001',
     email: 'minh@demo.aivihe.vn',
@@ -164,6 +165,15 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   },
 ]
 
+// Global store — survives across API route module boundaries in Next.js
+const globalStore = globalThis as unknown as { __AIVIHE_DEMO_ACCOUNTS?: DemoAccount[] }
+if (!globalStore.__AIVIHE_DEMO_ACCOUNTS) {
+  globalStore.__AIVIHE_DEMO_ACCOUNTS = [...SEED_ACCOUNTS]
+}
+
+/** Runtime mutable list — use this everywhere */
+export const DEMO_ACCOUNTS = globalStore.__AIVIHE_DEMO_ACCOUNTS
+
 export const DEMO_COOKIE_NAME = 'demo-auth-session'
 
 export function findDemoAccount(
@@ -181,4 +191,38 @@ export function findDemoAccountById(id: string): DemoAccount | undefined {
 
 export function isDemoMode(): boolean {
   return process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+}
+
+/**
+ * Kiểm tra username đã tồn tại chưa trong demo accounts
+ * Nếu trùng → tự động thêm số thứ tự tăng dần
+ * Ví dụ: haidn2026@aivihe.vn trùng → haidn12026@aivihe.vn → haidn22026@aivihe.vn
+ */
+export function findUniqueDemoUsername(baseUsername: string): string {
+  const exists = DEMO_ACCOUNTS.some(
+    (a) => a.email === baseUsername
+  )
+  if (!exists) return baseUsername
+
+  // Tách: prefix + year + @aivihe.vn
+  const match = baseUsername.match(/^(.+?)(\d{4})(@aivihe\.vn)$/)
+  if (!match) return `${Date.now()}${baseUsername}`
+
+  const [, prefix, year, suffix] = match
+  let counter = 1
+  while (counter < 1000) {
+    const candidate = `${prefix}${counter}${year}${suffix}`
+    if (!DEMO_ACCOUNTS.some((a) => a.email === candidate)) {
+      return candidate
+    }
+    counter++
+  }
+  return `${prefix}${Date.now()}${year}${suffix}`
+}
+
+/**
+ * Thêm account mới vào runtime DEMO_ACCOUNTS
+ */
+export function addDemoAccount(account: DemoAccount): void {
+  DEMO_ACCOUNTS.push(account)
 }

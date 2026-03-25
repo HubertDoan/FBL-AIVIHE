@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server'
 import { isDemoMode } from '@/lib/demo/demo-api-helper'
+import {
+  DEMO_ACCOUNTS,
+  findUniqueDemoUsername,
+  addDemoAccount,
+} from '@/lib/demo/demo-accounts'
 
 /**
  * Bỏ dấu tiếng Việt: Nguyễn → Nguyen, Minh → Minh, Đức → Duc
@@ -61,12 +66,39 @@ export async function POST(request: Request) {
     const defaultPassword = '123456'
 
     if (isDemoMode()) {
+      // Kiểm tra SĐT đã đăng ký chưa
+      const existingPhone = DEMO_ACCOUNTS.find((a) => a.phone === phone)
+      if (existingPhone) {
+        return NextResponse.json(
+          { error: 'Số điện thoại này đã được đăng ký. Vui lòng đăng nhập.' },
+          { status: 409 }
+        )
+      }
+
+      // Kiểm tra trùng username → tự động tăng số
+      const uniqueUsername = findUniqueDemoUsername(baseUsername)
+
+      // Lưu vào runtime DEMO_ACCOUNTS để đăng nhập được
+      const newId = `demo-reg-${Date.now()}`
+      addDemoAccount({
+        id: newId,
+        email: uniqueUsername,
+        password: defaultPassword,
+        fullName,
+        role: 'guest',
+        citizenId: `citizen-${newId}`,
+        phone,
+        description: `Đăng ký mới (${new Date().toLocaleDateString('vi-VN')})`,
+      })
+
       return NextResponse.json({
-        username: baseUsername,
+        username: uniqueUsername,
         phone,
         fullName,
         password: defaultPassword,
-        message: 'Đăng ký thành công!',
+        message: uniqueUsername !== baseUsername
+          ? `Đăng ký thành công! Tên "${baseUsername}" đã tồn tại, tài khoản của bạn là "${uniqueUsername}".`
+          : 'Đăng ký thành công!',
       })
     }
 
