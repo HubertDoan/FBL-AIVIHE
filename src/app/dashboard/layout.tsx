@@ -24,6 +24,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/doctor-register': 'Đăng ký bác sĩ',
   '/dashboard/doctor-profile': 'Hồ sơ chuyên môn',
   '/dashboard/choose-doctor': 'Bác sĩ gia đình',
+  '/dashboard/director': 'Truyền thông nội bộ',
 }
 
 export default function DashboardLayout({

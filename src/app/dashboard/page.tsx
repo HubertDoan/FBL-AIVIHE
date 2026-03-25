@@ -120,8 +120,8 @@ export default function DashboardPage() {
         familyCount={counts.family}
       />
 
-      {/* Show medication reminders for members with active prescriptions */}
-      {activeReminders.length > 0 && (
+      {/* Show medication reminders only for regular members with active prescriptions */}
+      {activeReminders.length > 0 && user?.role === 'member' && (
         <MedicationReminderCard reminders={activeReminders} />
       )}
 

@@ -8,88 +8,10 @@ import {
   demoForbidden,
   hasAdminAccess,
 } from '@/lib/demo/demo-api-helper'
-
-// In-memory store for demo mode
-const demoAnnouncements = [
-  {
-    id: 'ann-1',
-    title: 'Chào mừng đến AIVIHE',
-    content: 'Hệ thống quản lý sức khỏe cá nhân chính thức ra mắt.',
-    category: 'admin',
-    target_type: 'all',
-    target_user_id: null,
-    is_published: true,
-    published_at: '2026-03-24T08:00:00Z',
-    created_by: 'admin-001',
-    created_at: '2026-03-24T08:00:00Z',
-    updated_at: '2026-03-24T08:00:00Z',
-  },
-  {
-    id: 'ann-2',
-    title: 'Cập nhật tính năng mới: Trích xuất AI',
-    content: 'AI giúp trích xuất thông tin từ giấy khám bệnh tự động.',
-    category: 'admin',
-    target_type: 'all',
-    target_user_id: null,
-    is_published: true,
-    published_at: '2026-03-20T08:00:00Z',
-    created_by: 'admin-001',
-    created_at: '2026-03-20T08:00:00Z',
-    updated_at: '2026-03-20T08:00:00Z',
-  },
-  {
-    id: 'ann-3',
-    title: 'Lịch bảo trì hệ thống',
-    content: 'Hệ thống sẽ bảo trì từ 22:00 - 02:00 ngày 16/03.',
-    category: 'admin',
-    target_type: 'all',
-    target_user_id: null,
-    is_published: true,
-    published_at: '2026-03-15T08:00:00Z',
-    created_by: 'admin-001',
-    created_at: '2026-03-15T08:00:00Z',
-    updated_at: '2026-03-15T08:00:00Z',
-  },
-  {
-    id: 'ann-4',
-    title: 'Chương trình khám sức khỏe miễn phí tại Sóc Sơn',
-    content: 'Khám miễn phí cho người cao tuổi trên 60 tuổi.',
-    category: 'center',
-    target_type: 'all',
-    target_user_id: null,
-    is_published: true,
-    published_at: '2026-03-22T08:00:00Z',
-    created_by: 'admin-001',
-    created_at: '2026-03-22T08:00:00Z',
-    updated_at: '2026-03-22T08:00:00Z',
-  },
-  {
-    id: 'ann-5',
-    title: 'Hội thảo sức khỏe cộng đồng lần 3',
-    content: 'Chủ đề: Phòng chống bệnh tiểu đường cho người lớn tuổi.',
-    category: 'center',
-    target_type: 'all',
-    target_user_id: null,
-    is_published: true,
-    published_at: '2026-03-18T08:00:00Z',
-    created_by: 'admin-001',
-    created_at: '2026-03-18T08:00:00Z',
-    updated_at: '2026-03-18T08:00:00Z',
-  },
-  {
-    id: 'ann-6',
-    title: 'Ra mắt Chương trình Thành viên Nâng cao',
-    content: 'Đăng ký ngay để nhận ưu đãi đặc biệt trong tháng đầu tiên.',
-    category: 'program',
-    target_type: 'member',
-    target_user_id: null,
-    is_published: true,
-    published_at: '2026-03-17T08:00:00Z',
-    created_by: 'admin-001',
-    created_at: '2026-03-17T08:00:00Z',
-    updated_at: '2026-03-17T08:00:00Z',
-  },
-]
+import {
+  demoAnnouncementsStore,
+  getDemoReplyCount,
+} from '@/lib/demo/demo-announcement-data'
 
 export async function GET(request: NextRequest) {
   // ── Demo mode ──
@@ -101,30 +23,23 @@ export async function GET(request: NextRequest) {
     const page = Number(request.nextUrl.searchParams.get('page') ?? '1')
     const limit = Number(request.nextUrl.searchParams.get('limit') ?? '20')
     const start = (page - 1) * limit
-    const items = demoAnnouncements.slice(start, start + limit)
 
-    return demoResponse({
-      data: items,
-      total: demoAnnouncements.length,
-      page,
-      limit,
-    })
+    // Attach live reply counts
+    const items = demoAnnouncementsStore
+      .slice(start, start + limit)
+      .map((a) => ({ ...a, reply_count: getDemoReplyCount(a.id) }))
+
+    return demoResponse({ data: items, total: demoAnnouncementsStore.length, page, limit })
   }
 
   // ── Supabase mode ──
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      return NextResponse.json({ error: 'Bạn chưa đăng nhập.' }, { status: 401 })
-    }
+    if (!user) return NextResponse.json({ error: 'Bạn chưa đăng nhập.' }, { status: 401 })
 
-    const { data: citizen } = await supabase
-      .from('citizens')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-    if (!citizen || citizen.role !== 'admin') {
+    const { data: citizen } = await supabase.from('citizens').select('role').eq('id', user.id).single()
+    if (!hasAdminAccess(citizen?.role ?? '')) {
       return NextResponse.json({ error: 'Bạn không có quyền truy cập.' }, { status: 403 })
     }
 
@@ -153,37 +68,38 @@ export async function POST(request: NextRequest) {
     if (!hasAdminAccess(demoUser.role)) return demoForbidden()
 
     const body = await request.json()
-    const newAnnouncement = {
+    const now = new Date().toISOString()
+    const newAnn = {
       id: `ann-${Date.now()}`,
       title: body.title ?? '',
       content: body.content ?? '',
-      category: body.category ?? 'admin',
+      category: body.category ?? 'general',
       target_type: body.target_type ?? 'all',
-      target_user_id: body.target_user_id ?? null,
+      target_groups: body.target_groups ?? [],
+      target_citizen_id: body.target_citizen_id ?? null,
+      target_user_name: body.target_user_name ?? null,
+      priority: body.priority ?? 'normal',
+      allow_reply: body.allow_reply ?? false,
+      attachments_note: body.attachments_note ?? '',
       is_published: body.is_published ?? true,
-      published_at: new Date().toISOString(),
+      published_at: now,
       created_by: demoUser.id,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      created_at: now,
+      updated_at: now,
+      reply_count: 0,
     }
-    demoAnnouncements.unshift(newAnnouncement)
-    return demoResponse(newAnnouncement, 201)
+    demoAnnouncementsStore.unshift(newAnn)
+    return demoResponse(newAnn, 201)
   }
 
   // ── Supabase mode ──
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      return NextResponse.json({ error: 'Bạn chưa đăng nhập.' }, { status: 401 })
-    }
+    if (!user) return NextResponse.json({ error: 'Bạn chưa đăng nhập.' }, { status: 401 })
 
-    const { data: citizen } = await supabase
-      .from('citizens')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-    if (!citizen || citizen.role !== 'admin') {
+    const { data: citizen } = await supabase.from('citizens').select('role').eq('id', user.id).single()
+    if (!hasAdminAccess(citizen?.role ?? '')) {
       return NextResponse.json({ error: 'Bạn không có quyền truy cập.' }, { status: 403 })
     }
 
@@ -193,9 +109,14 @@ export async function POST(request: NextRequest) {
       .insert({
         title: body.title,
         content: body.content,
-        category: body.category ?? 'admin',
+        category: body.category ?? 'general',
         target_type: body.target_type ?? 'all',
-        target_user_id: body.target_user_id ?? null,
+        target_groups: body.target_groups ?? [],
+        target_citizen_id: body.target_citizen_id ?? null,
+        target_user_name: body.target_user_name ?? null,
+        priority: body.priority ?? 'normal',
+        allow_reply: body.allow_reply ?? false,
+        attachments_note: body.attachments_note ?? '',
         is_published: body.is_published ?? true,
         created_by: user.id,
       })

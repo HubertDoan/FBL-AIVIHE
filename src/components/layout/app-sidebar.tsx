@@ -23,6 +23,7 @@ import {
   Award,
   CalendarDays,
   CalendarCheck,
+  Megaphone,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -41,6 +42,7 @@ interface NavItem {
   // Doctor sub-conditions — evaluated in AppSidebar where profile state is available
   doctorNotRegistered?: boolean  // visible only for doctor who has NOT yet registered
   doctorApproved?: boolean       // visible only for doctor with approved profile
+  directorOnly?: boolean         // visible only for director + branch_director
 }
 
 const ADMIN_ROLES = ['admin', 'director', 'branch_director', 'super_admin']
@@ -50,6 +52,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User },
   { href: '/dashboard/register-member', label: 'Đăng ký thành viên', icon: Crown, guestOnly: true, highlight: true },
   { href: '/dashboard/admin', label: 'Quản trị', icon: Shield, adminOnly: true },
+  { href: '/dashboard/director', label: 'Truyền thông', icon: Megaphone, directorOnly: true },
   { href: '/dashboard/membership', label: 'Thành viên', icon: Crown, memberOnly: true },
   { href: '/dashboard/family', label: 'Gia đình', icon: Users, memberOnly: true },
   { href: '/dashboard/upload', label: 'Tải tài liệu', icon: Upload, memberOnly: true },
@@ -87,6 +90,7 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doct
   const isDoctor = userRole === 'doctor'
   const isReception = userRole === 'reception'
   const isExamDoctor = userRole === 'exam_doctor'
+  const isDirector = userRole === 'director' || userRole === 'branch_director'
   const isDoctorRegistered = doctorProfileStatus != null
   const isDoctorApproved = doctorProfileStatus === 'approved'
 
@@ -100,6 +104,7 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doct
     if (item.examDoctorOnly && !isExamDoctor) return false
     if (item.doctorNotRegistered && isDoctorRegistered) return false
     if (item.doctorApproved && !isDoctorApproved) return false
+    if (item.directorOnly && !isDirector) return false
     return true
   })
 

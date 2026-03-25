@@ -130,7 +130,33 @@ export function BulletinBoard() {
         // Keep fallback data
       }
     }
+
+    async function fetchDirectorAnnouncements() {
+      try {
+        const res = await fetch('/api/director/announcements')
+        if (!res.ok) return
+        const json = await res.json()
+        const items: { id: string; title: string; content: string; category: string; created_at: string }[] =
+          json.data ?? []
+        // Show activity + professional categories on the bulletin board
+        const relevant = items
+          .filter((a) => a.category === 'activity' || a.category === 'professional')
+          .slice(0, 3)
+          .map((a) => ({
+            id: a.id,
+            title: a.title,
+            content: a.content,
+            category: 'director',
+            published_at: a.created_at,
+          }))
+        if (relevant.length > 0) setDirectorAnnouncements(relevant)
+      } catch {
+        // Keep fallback data
+      }
+    }
+
     fetchAnnouncements()
+    fetchDirectorAnnouncements()
   }, [])
 
   return (
