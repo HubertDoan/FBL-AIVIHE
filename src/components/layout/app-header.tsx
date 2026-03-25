@@ -1,8 +1,9 @@
 'use client'
 
-import { Menu, ChevronDown, User, Settings, LogOut, Bell } from 'lucide-react'
+import { Menu, ChevronDown, User, Settings, LogOut, Bell, MessageCircle } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 interface PendingInvitation {
@@ -34,6 +35,7 @@ interface AppHeaderProps {
   actingForName?: string
   userName?: string
   onMenuToggle: () => void
+  unreadMessageCount?: number
 }
 
 function timeAgo(iso: string): string {
@@ -47,7 +49,7 @@ function timeAgo(iso: string): string {
   return `${days} ngày trước`
 }
 
-export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppHeaderProps) {
+export function AppHeader({ title, actingForName, userName, onMenuToggle, unreadMessageCount = 0 }: AppHeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [bellOpen, setBellOpen] = useState(false)
   const [notifications, setNotifications] = useState<AppNotification[]>([])
@@ -182,6 +184,20 @@ export function AppHeader({ title, actingForName, userName, onMenuToggle }: AppH
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Messages icon with unread badge */}
+          {unreadMessageCount > 0 && (
+            <Link
+              href="/dashboard/messages"
+              className="relative p-2 rounded-lg hover:bg-accent transition-colors"
+              aria-label="Tin nhắn"
+            >
+              <MessageCircle className="size-6" />
+              <span className="absolute -top-0.5 -right-0.5 size-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                {unreadMessageCount > 9 ? '9+' : unreadMessageCount}
+              </span>
+            </Link>
+          )}
+
           {/* Unified notification bell */}
           <div className="relative" ref={bellRef}>
             <button

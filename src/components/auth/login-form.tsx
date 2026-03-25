@@ -16,6 +16,7 @@ const roleBadgeColors: Record<string, string> = {
   accountant: 'bg-emerald-100 text-emerald-800',
   hr: 'bg-orange-100 text-orange-800',
   doctor: 'bg-green-100 text-green-800',
+  specialist: 'bg-teal-100 text-teal-800',
   admin: 'bg-purple-100 text-purple-800',
   director: 'bg-purple-100 text-purple-800',
   branch_director: 'bg-indigo-100 text-indigo-800',

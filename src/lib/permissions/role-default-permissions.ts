@@ -64,6 +64,14 @@ const DOCTOR_PERMISSIONS: Permission[] = [
   PERMISSIONS.SETTINGS_VIEW,
 ]
 
+// Quyền của specialist (BS chuyên khoa — giống doctor + xem hồ sơ BN chuyển tuyến)
+const SPECIALIST_PERMISSIONS: Permission[] = [
+  PERMISSIONS.HEALTH_RECORDS_VIEW_ASSIGNED,
+  PERMISSIONS.EXAM_REGISTRATION_REVIEW,
+  PERMISSIONS.EXAM_REGISTRATION_COMPLETE,
+  PERMISSIONS.SETTINGS_VIEW,
+]
+
 // Quyền của exam_doctor (bác sĩ khám bệnh)
 const EXAM_DOCTOR_PERMISSIONS: Permission[] = [
   PERMISSIONS.HEALTH_RECORDS_VIEW_ASSIGNED,
@@ -129,6 +137,7 @@ export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, Permission[]> = {
   branch_director: BRANCH_DIRECTOR_PERMISSIONS,
   admin: ADMIN_PERMISSIONS,
   doctor: DOCTOR_PERMISSIONS,
+  specialist: SPECIALIST_PERMISSIONS,
   exam_doctor: EXAM_DOCTOR_PERMISSIONS,
   reception: RECEPTION_PERMISSIONS,
   staff: STAFF_PERMISSIONS,

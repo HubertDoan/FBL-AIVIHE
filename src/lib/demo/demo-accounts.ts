@@ -1,7 +1,7 @@
 // Demo accounts for testing without Supabase
 // Only used when NEXT_PUBLIC_DEMO_MODE=true
 
-export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'admin' | 'director' | 'branch_director' | 'super_admin' | 'reception' | 'exam_doctor' | 'staff' | 'accountant' | 'hr'
+export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'specialist' | 'admin' | 'director' | 'branch_director' | 'super_admin' | 'reception' | 'exam_doctor' | 'staff' | 'accountant' | 'hr'
 
 // Loại tài khoản hiển thị trên form đăng nhập
 export const ACCOUNT_TYPES = [
@@ -11,6 +11,7 @@ export const ACCOUNT_TYPES = [
   { value: 'accountant', label: 'Kế toán' },
   { value: 'hr', label: 'Hành chính' },
   { value: 'doctor', label: 'Bác sĩ' },
+  { value: 'specialist', label: 'BS Chuyên khoa' },
   { value: 'reception', label: 'Tiếp đón' },
   { value: 'exam_doctor', label: 'BS Khám bệnh' },
   { value: 'branch_director', label: 'Giám đốc chi nhánh' },
@@ -150,6 +151,16 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     citizenId: 'demo-exam-doctor-nam',
     phone: '0901000012',
     description: 'Bác sĩ khám bệnh - BV Đông Anh',
+  },
+  {
+    id: 'demo-0013-0000-0000-000000000013',
+    email: 'ducpv2024@aivihe.vn',
+    password: 'Aivihe@2024',
+    fullName: 'BS. Phạm Văn Đức',
+    role: 'specialist',
+    citizenId: 'demo-specialist-duc',
+    phone: '0901000013',
+    description: 'BS Chuyên khoa Tim mạch - Chuyên gia chuyển tuyến',
   },
 ]
 

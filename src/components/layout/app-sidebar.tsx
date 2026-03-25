@@ -11,6 +11,7 @@ import {
   FileText,
   Stethoscope,
   MessageSquare,
+  MessageCircle,
   Settings,
   Crown,
   Shield,
@@ -40,6 +41,7 @@ interface NavItem {
   doctorOnly?: boolean
   receptionOnly?: boolean
   examDoctorOnly?: boolean
+  notGuest?: boolean             // visible to all roles except guest
   // Doctor sub-conditions — evaluated in AppSidebar where profile state is available
   doctorNotRegistered?: boolean  // visible only for doctor who has NOT yet registered
   doctorApproved?: boolean       // visible only for doctor with approved profile
@@ -70,6 +72,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/book-appointment', label: 'Đặt lịch khám', icon: CalendarCheck, memberOnly: true },
   { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, receptionOnly: true },
   { href: '/dashboard/exam-schedule', label: 'Lịch khám', icon: Calendar, examDoctorOnly: true },
+  { href: '/dashboard/messages', label: 'Tin nhắn', icon: MessageCircle, notGuest: true },
   { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, memberOnly: true },
   { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings },
   { href: '/dashboard/permissions', label: 'Phân quyền', icon: ShieldCheck, permissionManagerOnly: true },
@@ -83,9 +86,10 @@ interface AppSidebarProps {
   open?: boolean
   onClose?: () => void
   doctorProfileStatus?: 'pending' | 'approved' | 'suspended' | null
+  unreadMessageCount?: number
 }
 
-export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doctorProfileStatus }: AppSidebarProps) {
+export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doctorProfileStatus, unreadMessageCount = 0 }: AppSidebarProps) {
   const pathname = usePathname()
   const isGuest = userRole === 'guest'
   const isAdmin = ADMIN_ROLES.includes(userRole ?? '')
@@ -108,6 +112,7 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doct
     if (item.examDoctorOnly && !isExamDoctor) return false
     if (item.doctorNotRegistered && isDoctorRegistered) return false
     if (item.doctorApproved && !isDoctorApproved) return false
+    if (item.notGuest && isGuest) return false
     if (item.directorOnly && !isDirector) return false
     if (item.permissionManagerOnly && !isPermissionManager) return false
     return true
@@ -159,7 +164,12 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doct
               )}
             >
               <item.icon className="size-5 shrink-0" />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {item.href === '/dashboard/messages' && unreadMessageCount > 0 && (
+                <span className="size-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  {unreadMessageCount > 9 ? '9+' : unreadMessageCount}
+                </span>
+              )}
             </Link>
           )
         })}

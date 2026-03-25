@@ -25,6 +25,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/doctor-profile': 'Hồ sơ chuyên môn',
   '/dashboard/choose-doctor': 'Bác sĩ gia đình',
   '/dashboard/director': 'Truyền thông nội bộ',
+  '/dashboard/messages': 'Tin nhắn',
 }
 
 export default function DashboardLayout({
@@ -34,6 +35,7 @@ export default function DashboardLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [doctorProfileStatus, setDoctorProfileStatus] = useState<'pending' | 'approved' | 'suspended' | null>(null)
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0)
   const { user, loading } = useAuth()
   const pathname = usePathname()
 
@@ -51,6 +53,20 @@ export default function DashboardLayout({
         }
       })
       .catch(() => { /* silent */ })
+  }, [user])
+
+  // Fetch unread message count for sidebar/header badge — poll every 30s
+  useEffect(() => {
+    if (!user || user.role === 'guest') return
+    function fetchUnread() {
+      fetch('/api/messages/unread')
+        .then(r => r.ok ? r.json() : null)
+        .then(data => { if (data?.count != null) setUnreadMessageCount(data.count) })
+        .catch(() => { /* silent */ })
+    }
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 30_000)
+    return () => clearInterval(interval)
   }, [user])
 
   const pageTitle =
@@ -80,6 +96,7 @@ export default function DashboardLayout({
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           doctorProfileStatus={doctorProfileStatus}
+          unreadMessageCount={unreadMessageCount}
         />
 
         <div className="flex-1 flex flex-col lg:ml-64">
@@ -87,6 +104,7 @@ export default function DashboardLayout({
             title={pageTitle}
             userName={userName}
             onMenuToggle={() => setSidebarOpen((prev) => !prev)}
+            unreadMessageCount={unreadMessageCount}
           />
           <ActOnBehalfBanner />
 
