@@ -20,6 +20,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 // Using native select for compatibility with base-ui
 import { toast } from 'sonner'
+import { PermissionGate } from '@/components/permissions/permission-gate'
 
 // ── Clone dialog ──────────────────────────────────────────────────────────────
 
@@ -261,21 +262,25 @@ export default function SystemPage() {
             <RefreshCw className={`size-4 ${loadingBranches ? 'animate-spin' : ''}`} />
             Làm mới
           </Button>
-          <Button
-            variant="outline"
-            className="min-h-[48px] text-base gap-2"
-            onClick={() => setCloneOpen(true)}
-          >
-            <Copy className="size-4" />
-            Clone chi nhánh
-          </Button>
-          <Button
-            className="min-h-[48px] text-base gap-2"
-            onClick={() => setCreateOpen(true)}
-          >
-            <Plus className="size-4" />
-            Tạo chi nhánh mới
-          </Button>
+          <PermissionGate permission="branches.clone">
+            <Button
+              variant="outline"
+              className="min-h-[48px] text-base gap-2"
+              onClick={() => setCloneOpen(true)}
+            >
+              <Copy className="size-4" />
+              Clone chi nhánh
+            </Button>
+          </PermissionGate>
+          <PermissionGate permission="branches.create">
+            <Button
+              className="min-h-[48px] text-base gap-2"
+              onClick={() => setCreateOpen(true)}
+            >
+              <Plus className="size-4" />
+              Tạo chi nhánh mới
+            </Button>
+          </PermissionGate>
         </div>
       </div>
 

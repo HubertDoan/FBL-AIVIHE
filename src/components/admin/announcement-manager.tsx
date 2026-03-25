@@ -15,6 +15,7 @@ import {
   AnnouncementListFilters,
   type AnnouncementFilters,
 } from './announcement-list-filters'
+import { PermissionGate } from '@/components/permissions/permission-gate'
 
 interface Announcement {
   id: string
@@ -147,10 +148,12 @@ export function AnnouncementManager() {
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <AnnouncementListFilters filters={filters} onFiltersChange={setFilters} />
-        <Button onClick={handleCreate} className="min-h-[48px] text-base shrink-0">
-          <Plus className="size-4 mr-2" />
-          Tạo thông báo mới
-        </Button>
+        <PermissionGate permission="announcements.create">
+          <Button onClick={handleCreate} className="min-h-[48px] text-base shrink-0">
+            <Plus className="size-4 mr-2" />
+            Tạo thông báo mới
+          </Button>
+        </PermissionGate>
       </div>
 
       <p className="text-sm text-muted-foreground">
@@ -221,12 +224,16 @@ export function AnnouncementManager() {
                     </TableCell>
                     <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon-sm" onClick={() => handleEdit(item)} title="Chỉnh sửa">
-                          <Pencil className="size-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon-sm" onClick={() => handleDelete(item.id)} title="Xóa" className="text-red-600 hover:text-red-700">
-                          <Trash2 className="size-4" />
-                        </Button>
+                        <PermissionGate permission="announcements.edit">
+                          <Button variant="ghost" size="icon-sm" onClick={() => handleEdit(item)} title="Chỉnh sửa">
+                            <Pencil className="size-4" />
+                          </Button>
+                        </PermissionGate>
+                        <PermissionGate permission="announcements.delete">
+                          <Button variant="ghost" size="icon-sm" onClick={() => handleDelete(item.id)} title="Xóa" className="text-red-600 hover:text-red-700">
+                            <Trash2 className="size-4" />
+                          </Button>
+                        </PermissionGate>
                       </div>
                     </TableCell>
                   </TableRow>

@@ -12,6 +12,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { MemberEditDialog, type MemberFormData } from './member-edit-dialog'
 import { PasswordResetDialog } from './password-reset-dialog'
 import { toast } from 'sonner'
+import { PermissionGate } from '@/components/permissions/permission-gate'
 
 interface Member {
   id: string
@@ -269,10 +270,12 @@ export function MemberManagement() {
                   <TableCell>
                     <div className="flex items-center justify-center gap-1 flex-wrap">
                       {m.status === 'pending' && (
-                        <Button size="sm" variant="default" className="gap-1 text-sm bg-green-600 hover:bg-green-700"
-                          onClick={() => { setApproveTarget(m); setApproveOpen(true) }}>
-                          <CheckCircle className="size-3.5" /> Duyệt
-                        </Button>
+                        <PermissionGate permission="members.approve">
+                          <Button size="sm" variant="default" className="gap-1 text-sm bg-green-600 hover:bg-green-700"
+                            onClick={() => { setApproveTarget(m); setApproveOpen(true) }}>
+                            <CheckCircle className="size-3.5" /> Duyệt
+                          </Button>
+                        </PermissionGate>
                       )}
                       <Button size="sm" variant="outline" className="gap-1 text-sm"
                         onClick={() => openEdit(m)}>

@@ -24,6 +24,7 @@ import {
   CalendarDays,
   CalendarCheck,
   Megaphone,
+  ShieldCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -43,6 +44,7 @@ interface NavItem {
   doctorNotRegistered?: boolean  // visible only for doctor who has NOT yet registered
   doctorApproved?: boolean       // visible only for doctor with approved profile
   directorOnly?: boolean         // visible only for director + branch_director
+  permissionManagerOnly?: boolean // visible only for super_admin, director, branch_director
 }
 
 const ADMIN_ROLES = ['admin', 'director', 'branch_director', 'super_admin']
@@ -70,6 +72,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard/exam-schedule', label: 'Lịch khám', icon: Calendar, examDoctorOnly: true },
   { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, memberOnly: true },
   { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings },
+  { href: '/dashboard/permissions', label: 'Phân quyền', icon: ShieldCheck, permissionManagerOnly: true },
   { href: '/dashboard/system', label: 'Hệ thống', icon: Server, superAdminOnly: true },
 ]
 
@@ -91,6 +94,7 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doct
   const isReception = userRole === 'reception'
   const isExamDoctor = userRole === 'exam_doctor'
   const isDirector = userRole === 'director' || userRole === 'branch_director'
+  const isPermissionManager = userRole === 'super_admin' || userRole === 'director' || userRole === 'branch_director'
   const isDoctorRegistered = doctorProfileStatus != null
   const isDoctorApproved = doctorProfileStatus === 'approved'
 
@@ -105,6 +109,7 @@ export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doct
     if (item.doctorNotRegistered && isDoctorRegistered) return false
     if (item.doctorApproved && !isDoctorApproved) return false
     if (item.directorOnly && !isDirector) return false
+    if (item.permissionManagerOnly && !isPermissionManager) return false
     return true
   })
 
