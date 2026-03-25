@@ -33,12 +33,25 @@ export function GuestDashboard() {
       {/* Welcome */}
       <div>
         <h1 className="text-2xl font-bold">
-          Chào mừng đến AIVIHE
+          Chào mừng đến AIVIHE, {user?.fullName || 'bạn'}!
         </h1>
-        <p className="text-lg text-muted-foreground mt-1">
-          Xin chào, {user?.fullName || 'bạn'}! Bạn đang sử dụng tài khoản Khách.
+        <p className="text-base text-muted-foreground mt-1">
+          Bạn đang sử dụng tài khoản Khách.
         </p>
       </div>
+
+      {/* Lời chào từ Giám đốc */}
+      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
+        <CardContent className="pt-5 space-y-2">
+          <p className="text-base text-blue-900 leading-relaxed">
+            Xin chào <strong>{user?.fullName || 'bạn'}</strong>,
+          </p>
+          <p className="text-base text-blue-800 leading-relaxed">
+            Tôi là <strong>Trần Thị Ngọc Trâm</strong> — Giám đốc FBL. Chào mừng bạn đến với AIVIHE — Trợ lý AI sức khỏe cá nhân. Hãy đăng ký Thành viên để sử dụng đầy đủ tính năng quản lý sức khỏe cho bạn và gia đình.
+          </p>
+          <p className="text-sm text-blue-600 italic">— Trần Thị Ngọc Trâm, Giám đốc FBL</p>
+        </CardContent>
+      </Card>
 
       {/* Register CTA - prominent */}
       <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 ring-2 ring-purple-300 dark:ring-purple-700">
@@ -66,6 +79,36 @@ export function GuestDashboard() {
               Đăng ký thành viên ngay
             </Button>
           </Link>
+        </CardContent>
+      </Card>
+
+      {/* Nếu chọn loại tài khoản BS → hướng dẫn thêm */}
+      <Card className="bg-gradient-to-r from-teal-50 to-emerald-50 border-teal-200">
+        <CardContent className="pt-5 space-y-3">
+          <h3 className="text-lg font-semibold text-teal-800 flex items-center gap-2">
+            <Stethoscope className="size-5" />
+            Dành cho Bác sĩ
+          </h3>
+          <p className="text-base text-teal-700">
+            Nếu bạn là bác sĩ, sau khi đăng ký Thành viên, bạn có thể đăng ký thêm vai trò:
+          </p>
+          <ul className="space-y-2 text-base text-teal-800">
+            <li className="flex items-center gap-2">
+              <Stethoscope className="size-4 text-teal-600 shrink-0" />
+              <strong>Bác sĩ gia đình</strong> — tư vấn sức khỏe cho thành viên
+            </li>
+            <li className="flex items-center gap-2">
+              <Brain className="size-4 text-teal-600 shrink-0" />
+              <strong>BS Chuyên khoa</strong> — hỗ trợ chuyên sâu theo chuyên ngành
+            </li>
+            <li className="flex items-center gap-2">
+              <Crown className="size-4 text-teal-600 shrink-0" />
+              <strong>Chuyên gia</strong> — tư vấn cao cấp, hội chẩn
+            </li>
+          </ul>
+          <p className="text-sm text-teal-600">
+            Bước 1: Đăng ký Thành viên → Bước 2: Đăng ký vai trò Bác sĩ trong tài khoản
+          </p>
         </CardContent>
       </Card>
 

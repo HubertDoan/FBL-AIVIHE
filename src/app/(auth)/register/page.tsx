@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -30,7 +31,9 @@ export default function RegisterPage() {
     username: string
     phone: string
     fullName: string
+    message?: string
   } | null>(null)
+  const router = useRouter()
 
   const usernamePreview = useMemo(() => previewUsername(fullName), [fullName])
 
@@ -59,7 +62,20 @@ export default function RegisterPage() {
         setError(data.error ?? 'Đã xảy ra lỗi.')
         return
       }
-      setResult({ username: data.username, phone: data.phone, fullName: data.fullName })
+      setResult({ username: data.username, phone: data.phone, fullName: data.fullName, message: data.message })
+      // Tự động đăng nhập luôn
+      try {
+        const loginRes = await fetch('/api/demo/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: data.username, password: '123456' }),
+        })
+        if (loginRes.ok) {
+          router.push('/dashboard')
+          router.refresh()
+          return
+        }
+      } catch { /* fallback to manual login */ }
     } catch {
       setError('Không thể kết nối đến máy chủ.')
     } finally {

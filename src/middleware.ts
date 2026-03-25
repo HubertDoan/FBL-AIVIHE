@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
-const PUBLIC_ROUTES = ['/', '/login', '/consent', '/api/auth/callback']
+const PUBLIC_ROUTES = ['/', '/login', '/register', '/consent', '/api/auth/callback', '/api/auth/register']
 const DEMO_API_ROUTES = ['/api/demo/login', '/api/demo/logout', '/api/demo/me']
 
 function isPublicRoute(pathname: string): boolean {
@@ -26,14 +26,26 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  const { user, supabaseResponse } = await updateSession(request)
-
-  // Allow public routes and static assets
+  // Allow public routes
   if (isPublicRoute(pathname)) {
-    return supabaseResponse
+    return NextResponse.next()
   }
 
-  // Protect dashboard and admin routes
+  // Check demo mode cookie first
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+  if (isDemoMode) {
+    const demoCookie = request.cookies.get('demo-auth-session')
+    if (isProtectedRoute(pathname) && !demoCookie?.value) {
+      const loginUrl = new URL('/login', request.url)
+      loginUrl.searchParams.set('redirect', pathname)
+      return NextResponse.redirect(loginUrl)
+    }
+    return NextResponse.next()
+  }
+
+  // Production: Supabase auth
+  const { user, supabaseResponse } = await updateSession(request)
+
   if (isProtectedRoute(pathname) && !user) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('redirect', pathname)
