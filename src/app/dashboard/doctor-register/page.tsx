@@ -3,6 +3,7 @@
 // Doctor registration form — allows doctor-role users to submit professional profile for admin approval
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,8 +24,17 @@ const DEGREE_OPTIONS = [
   { value: 'TS', label: 'Tiến sĩ Y khoa (TS)' },
 ]
 
+const TYPE_LABELS: Record<string, string> = {
+  family_doctor: 'Bác sĩ gia đình',
+  specialist: 'Bác sĩ chuyên khoa',
+  expert: 'Chuyên gia',
+}
+
 export default function DoctorRegisterPage() {
   const { user, loading } = useAuth()
+  const searchParams = useSearchParams()
+  const doctorType = searchParams.get('type') || 'family_doctor'
+  const typeLabel = TYPE_LABELS[doctorType] || 'Bác sĩ gia đình'
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
@@ -50,9 +60,9 @@ export default function DoctorRegisterPage() {
     return (
       <div className="max-w-xl mx-auto py-16 text-center space-y-4">
         <CheckCircle className="size-16 text-green-500 mx-auto" />
-        <h2 className="text-2xl font-bold">Đăng ký đã gửi!</h2>
+        <h2 className="text-2xl font-bold">Đăng ký {typeLabel} đã gửi!</h2>
         <p className="text-lg text-muted-foreground">
-          Hồ sơ của bạn đang chờ Admin duyệt. Bạn sẽ nhận được thông báo khi được chấp thuận.
+          Hồ sơ của bạn đang chờ Giám đốc xem xét và phê duyệt. Bạn sẽ nhận được thông báo khi được chấp thuận.
         </p>
       </div>
     )
@@ -75,6 +85,7 @@ export default function DoctorRegisterPage() {
         body: JSON.stringify({
           full_name: user?.fullName ?? '',
           citizen_id: user?.citizenId ?? '',
+          doctor_type: doctorType,
           specialties: specialties.split(',').map(s => s.trim()).filter(Boolean),
           degree,
           university,
@@ -102,7 +113,7 @@ export default function DoctorRegisterPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
         <UserPlus className="size-6 text-primary" />
-        <h1 className="text-2xl font-bold">Đăng ký bác sĩ gia đình</h1>
+        <h1 className="text-2xl font-bold">Đăng ký {typeLabel}</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
