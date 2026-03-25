@@ -66,20 +66,18 @@ export default function LandingPage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-cyan-500/5" />
         <div className="relative max-w-5xl mx-auto px-4 pt-4 pb-6">
-          {/* Header: FBL trái to, AIVIHE giữa */}
-          <div className="flex items-center justify-between mb-4">
+          {/* Header: FBL trái, AIVIHE chính giữa tuyệt đối */}
+          <div className="relative flex items-center justify-center mb-4 min-h-[56px] md:min-h-[72px]">
             <img
               src="/fbl-logo.jpg"
               alt="FBL - For Better Life - Cho cuộc sống tốt hơn"
-              className="h-14 md:h-18 w-auto object-contain"
+              className="absolute left-0 h-14 md:h-[72px] w-auto object-contain"
             />
             <img
               src="/AIVIHE.jpg"
               alt="AIVIHE - Trợ lý AI sức khỏe cá nhân"
-              className="h-16 md:h-20 w-auto object-contain rounded-lg shadow-sm"
+              className="h-14 md:h-16 w-auto object-contain rounded-lg shadow-sm"
             />
-            {/* Spacer to balance FBL on left */}
-            <div className="h-14 md:h-18 w-[87px] md:w-[116px]" />
           </div>
 
           {/* 3 Mandatory Sentences — compact */}
