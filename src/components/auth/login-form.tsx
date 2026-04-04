@@ -7,7 +7,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { DEMO_ACCOUNTS, ACCOUNT_TYPES, type DemoAccount } from '@/lib/demo/demo-accounts'
+import { createClient } from '@/lib/supabase/client'
 import { Loader2, ChevronDown, ChevronUp } from 'lucide-react'
+
+const IS_DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
 const roleBadgeColors: Record<string, string> = {
   guest: 'bg-amber-100 text-amber-800',
@@ -55,16 +58,20 @@ export function LoginForm() {
     setError('')
 
     try {
-      const res = await fetch('/api/demo/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-      const data = await res.json()
-
-      if (!res.ok) {
-        setError(data.error || 'Đăng nhập thất bại')
-        return
+      if (IS_DEMO) {
+        // Demo mode: use demo login API
+        const res = await fetch('/api/demo/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        })
+        const data = await res.json()
+        if (!res.ok) { setError(data.error || 'Đăng nhập thất bại'); return }
+      } else {
+        // Production: Supabase email/password auth
+        const supabase = createClient()
+        const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+        if (authError) { setError(authError.message === 'Invalid login credentials' ? 'Email hoặc mật khẩu không đúng' : authError.message); return }
       }
 
       router.push('/dashboard')
