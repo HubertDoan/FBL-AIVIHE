@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     // Verify caller is owner/manager of this family
     const { data: callerCitizen } = await supabase
-      .from('citizens').select('id').eq('auth_id', user.id).single()
+      .from('citizens').select('id').eq('id', user.id).single()
 
     if (!callerCitizen) {
       return NextResponse.json({ error: 'Không tìm thấy hồ sơ.' }, { status: 404 })

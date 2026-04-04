@@ -87,7 +87,7 @@ export async function POST(request: Request) {
     const { data: actor } = await supabase
       .from('citizens')
       .select('id, role')
-      .eq('auth_id', sbUser.id)
+      .eq('id', sbUser.id)
       .single()
 
     if (!actor || !canAssignPermissions(actor.role)) {

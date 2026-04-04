@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     const { data: citizen } = await supabase
       .from('citizens')
       .select('id, full_name, role, created_at')
-      .eq('auth_id', user.id)
+      .eq('id', user.id)
       .single()
 
     if (!citizen) {

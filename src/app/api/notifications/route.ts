@@ -94,10 +94,10 @@ export async function POST(request: NextRequest) {
     if (body.targetRole) {
       const { data: targets } = await supabase
         .from('citizens')
-        .select('auth_id')
+        .select('id')
         .eq('role', body.targetRole)
-      const inserts = (targets ?? []).map((t) => ({
-        user_id: t.auth_id, title: body.title, content: body.content ?? '',
+      const inserts = (targets ?? []).map((t: { id: string }) => ({
+        user_id: t.id, title: body.title, content: body.content ?? '',
       }))
       if (inserts.length > 0) {
         await supabase.from('notifications').insert(inserts)

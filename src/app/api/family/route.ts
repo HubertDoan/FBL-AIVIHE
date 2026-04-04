@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { data: citizen } = await supabase
-      .from('citizens').select('id').eq('auth_id', user.id).single()
+      .from('citizens').select('id').eq('id', user.id).single()
 
     if (!citizen) {
       return NextResponse.json({ error: 'Không tìm thấy hồ sơ.' }, { status: 404 })
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { data: citizen } = await supabase
-      .from('citizens').select('id').eq('auth_id', user.id).single()
+      .from('citizens').select('id').eq('id', user.id).single()
 
     if (!citizen) {
       return NextResponse.json({ error: 'Không tìm thấy hồ sơ.' }, { status: 404 })

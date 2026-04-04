@@ -48,7 +48,7 @@ export default function ConsentPage() {
       const { error: updateError } = await supabase
         .from('citizens')
         .update({ has_consented: true, consented_at: new Date().toISOString() })
-        .eq('auth_id', user.id)
+        .eq('id', user.id)
 
       if (updateError) {
         setError('Không thể lưu. Vui lòng thử lại.')

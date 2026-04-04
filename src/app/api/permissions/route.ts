@@ -41,7 +41,7 @@ export async function GET(request: Request) {
     const { data: citizen } = await supabase
       .from('citizens')
       .select('id, role')
-      .eq('auth_id', sbUser.id)
+      .eq('id', sbUser.id)
       .single()
 
     if (!citizen) {

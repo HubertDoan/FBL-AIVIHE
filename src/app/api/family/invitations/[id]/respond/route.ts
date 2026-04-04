@@ -39,7 +39,7 @@ export async function POST(
     }
 
     const { data: citizen } = await supabase
-      .from('citizens').select('id').eq('auth_id', user.id).single()
+      .from('citizens').select('id').eq('id', user.id).single()
     if (!citizen) {
       return NextResponse.json({ error: 'Không tìm thấy hồ sơ.' }, { status: 404 })
     }

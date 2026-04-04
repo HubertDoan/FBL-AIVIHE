@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
-    const { data: citizen } = await supabase.from('citizens').select('role').eq('auth_id', user.id).single()
+    const { data: citizen } = await supabase.from('citizens').select('role').eq('id', user.id).single()
     if (!citizen || citizen.role !== 'super_admin') {
       return NextResponse.json({ error: 'Chỉ Super Admin được clone chi nhánh.' }, { status: 403 })
     }

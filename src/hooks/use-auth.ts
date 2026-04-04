@@ -46,7 +46,7 @@ export function useAuth(options?: { redirect?: boolean }) {
             const { data: citizen } = await supabase
               .from('citizens')
               .select('id, full_name, phone, role')
-              .eq('auth_id', sbUser.id)
+              .eq('id', sbUser.id)
               .single()
             if (citizen) {
               setUser({

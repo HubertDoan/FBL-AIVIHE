@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const { data: citizen, error: citizenErr } = await supabase
       .from('citizens')
       .select('*')
-      .eq('auth_id', user.id)
+      .eq('id', user.id)
       .single()
 
     if (citizenErr || !citizen) {
@@ -70,7 +70,7 @@ export async function PUT(request: NextRequest) {
     const { data: citizen } = await supabase
       .from('citizens')
       .select('id')
-      .eq('auth_id', user.id)
+      .eq('id', user.id)
       .single()
 
     if (!citizen) {

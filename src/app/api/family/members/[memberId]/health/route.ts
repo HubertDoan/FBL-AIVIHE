@@ -27,7 +27,7 @@ export async function GET(
     }
 
     const { data: requester } = await supabase
-      .from('citizens').select('id').eq('auth_id', user.id).single()
+      .from('citizens').select('id').eq('id', user.id).single()
     if (!requester) {
       return NextResponse.json({ error: 'Không tìm thấy hồ sơ.' }, { status: 404 })
     }

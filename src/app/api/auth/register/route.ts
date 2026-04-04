@@ -146,7 +146,7 @@ export async function POST(request: Request) {
     const { error: citizenError } = await supabase
       .from('citizens')
       .insert({
-        auth_id: authData.user.id,
+        id: authData.user.id,
         full_name: fullName,
         phone,
         username,

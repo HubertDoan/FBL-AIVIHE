@@ -31,7 +31,7 @@ export default function SummaryPage() {
       const { data } = await supabase
         .from('citizens')
         .select('id')
-        .eq('auth_id', user.id)
+        .eq('id', user.id)
         .single()
       if (data) setCitizenId(data.id)
     }

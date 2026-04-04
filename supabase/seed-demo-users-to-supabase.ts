@@ -37,27 +37,31 @@ interface DemoUser {
   description: string
 }
 
+// Email = username format: tên + chữ cái đầu họ + đệm + năm@aivihe.vn
+// Password chung: Aivihe@2026
+const PW = 'Aivihe@2026'
+
 const DEMO_USERS: DemoUser[] = [
-  { email: 'minh@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Nguyễn Văn Minh', role: 'citizen', phone: '0901000001', username: 'minhnv2026@aivihe.vn', description: 'Bệnh nhân chính, nam 62 tuổi' },
-  { email: 'lan@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Trần Thị Lan', role: 'citizen', phone: '0901000002', username: 'lantt2026@aivihe.vn', description: 'Vợ, 58 tuổi' },
-  { email: 'tuan@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Nguyễn Tuấn', role: 'citizen', phone: '0901000003', username: 'tuann2026@aivihe.vn', description: 'Con trai, 35 tuổi' },
-  { email: 'duc@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Phạm Văn Đức', role: 'citizen', phone: '0901000004', username: 'ducpv2026@aivihe.vn', description: 'Hàng xóm, 70 tuổi' },
-  { email: 'bshai@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'BS. Nguyễn Hải', role: 'doctor', phone: '0901000005', username: 'hain2026@aivihe.vn', description: 'Bác sĩ gia đình' },
-  { email: 'admin@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Admin AIVIHE', role: 'admin', phone: '0901000006', username: 'admina2026@aivihe.vn', description: 'Admin hệ thống' },
-  { email: 'khach@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Lê Thị Hoa', role: 'guest', phone: '0901000007', username: 'hoalt2026@aivihe.vn', description: 'Khách' },
-  { email: 'tram@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Trần Thị Ngọc Trâm', role: 'director', phone: '0901000008', username: 'tramttn2026@aivihe.vn', description: 'Giám đốc Thong Dong Care' },
-  { email: 'khanh@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Lưu Tuấn Khanh', role: 'branch_director', phone: '0901000009', username: 'khanhlt2026@aivihe.vn', description: 'GĐ chi nhánh Đông Anh' },
-  { email: 'hai@demo.aivihe.vn', password: 'Aivihe@2024', fullName: 'Doãn Ngọc Hải', role: 'super_admin', phone: '0901000010', username: 'haidn2026@aivihe.vn', description: 'Super Admin' },
-  { email: 'tiepdon@aivihe.vn', password: 'Aivihe@2024', fullName: 'Nguyễn Thị Mai', role: 'reception', phone: '0901000011', username: 'maint2026@aivihe.vn', description: 'Tiếp đón' },
-  { email: 'bskham@aivihe.vn', password: 'Aivihe@2024', fullName: 'BS. Trần Văn Nam', role: 'exam_doctor', phone: '0901000012', username: 'namtv2026@aivihe.vn', description: 'BS Khám bệnh' },
-  { email: 'ducpv2024@aivihe.vn', password: 'Aivihe@2024', fullName: 'BS. Phạm Văn Đức', role: 'specialist', phone: '0901000013', username: 'ducpv12026@aivihe.vn', description: 'BS Chuyên khoa Tim mạch' },
-  { email: 'kythuat@aivihe.vn', password: 'Aivihe@2024', fullName: 'Trần Minh Kỹ Thuật', role: 'technician', phone: '0901000014', username: 'kythuattm2026@aivihe.vn', description: 'Kỹ thuật' },
-  { email: 'ktv@aivihe.vn', password: 'Aivihe@2024', fullName: 'Lê Văn Phúc', role: 'tech_assistant', phone: '0901000015', username: 'phuclv2026@aivihe.vn', description: 'Kỹ thuật viên' },
-  { email: 'dieuduong@aivihe.vn', password: 'Aivihe@2024', fullName: 'Nguyễn Thị Hương', role: 'nurse', phone: '0901000016', username: 'huongnt2026@aivihe.vn', description: 'Điều dưỡng' },
-  { email: 'hotro@aivihe.vn', password: 'Aivihe@2024', fullName: 'Phạm Thị Nga', role: 'support_staff', phone: '0901000017', username: 'ngapt2026@aivihe.vn', description: 'NV hỗ trợ' },
-  { email: 'thuctap@aivihe.vn', password: 'Aivihe@2024', fullName: 'Hoàng Văn An', role: 'intern', phone: '0901000018', username: 'anhv2026@aivihe.vn', description: 'NV thực tập' },
-  { email: 'quanly@aivihe.vn', password: 'Aivihe@2024', fullName: 'Vũ Đức Trung', role: 'manager', phone: '0901000019', username: 'trungvd2026@aivihe.vn', description: 'Quản lý' },
-  { email: 'hanhchinh@aivihe.vn', password: 'Aivihe@2024', fullName: 'Đỗ Thị Liên', role: 'admin_staff', phone: '0901000020', username: 'liendt2026@aivihe.vn', description: 'Hành chính' },
+  { email: 'minhnv2026@aivihe.vn', password: PW, fullName: 'Nguyễn Văn Minh', role: 'citizen', phone: '0901000001', username: 'minhnv2026@aivihe.vn', description: 'Bệnh nhân chính, nam 62 tuổi' },
+  { email: 'lantt2026@aivihe.vn', password: PW, fullName: 'Trần Thị Lan', role: 'citizen', phone: '0901000002', username: 'lantt2026@aivihe.vn', description: 'Vợ, 58 tuổi' },
+  { email: 'tuann2026@aivihe.vn', password: PW, fullName: 'Nguyễn Tuấn', role: 'citizen', phone: '0901000003', username: 'tuann2026@aivihe.vn', description: 'Con trai, 35 tuổi' },
+  { email: 'ducpv2026@aivihe.vn', password: PW, fullName: 'Phạm Văn Đức', role: 'citizen', phone: '0901000004', username: 'ducpv2026@aivihe.vn', description: 'Hàng xóm, 70 tuổi' },
+  { email: 'hain2026@aivihe.vn', password: PW, fullName: 'BS. Nguyễn Hải', role: 'doctor', phone: '0901000005', username: 'hain2026@aivihe.vn', description: 'Bác sĩ gia đình' },
+  { email: 'admina2026@aivihe.vn', password: PW, fullName: 'Admin AIVIHE', role: 'admin', phone: '0901000006', username: 'admina2026@aivihe.vn', description: 'Admin hệ thống' },
+  { email: 'hoalt2026@aivihe.vn', password: PW, fullName: 'Lê Thị Hoa', role: 'guest', phone: '0901000007', username: 'hoalt2026@aivihe.vn', description: 'Khách' },
+  { email: 'tramttn2026@aivihe.vn', password: PW, fullName: 'Trần Thị Ngọc Trâm', role: 'director', phone: '0901000008', username: 'tramttn2026@aivihe.vn', description: 'Giám đốc Thong Dong Care' },
+  { email: 'khanhlt2026@aivihe.vn', password: PW, fullName: 'Lưu Tuấn Khanh', role: 'branch_director', phone: '0901000009', username: 'khanhlt2026@aivihe.vn', description: 'GĐ chi nhánh Đông Anh' },
+  { email: 'haidn2026@aivihe.vn', password: PW, fullName: 'Doãn Ngọc Hải', role: 'super_admin', phone: '0901000010', username: 'haidn2026@aivihe.vn', description: 'Super Admin' },
+  { email: 'maint2026@aivihe.vn', password: PW, fullName: 'Nguyễn Thị Mai', role: 'reception', phone: '0901000011', username: 'maint2026@aivihe.vn', description: 'Tiếp đón' },
+  { email: 'namtv2026@aivihe.vn', password: PW, fullName: 'BS. Trần Văn Nam', role: 'exam_doctor', phone: '0901000012', username: 'namtv2026@aivihe.vn', description: 'BS Khám bệnh' },
+  { email: 'ducpv12026@aivihe.vn', password: PW, fullName: 'BS. Phạm Văn Đức', role: 'specialist', phone: '0901000013', username: 'ducpv12026@aivihe.vn', description: 'BS Chuyên khoa Tim mạch' },
+  { email: 'kythuattm2026@aivihe.vn', password: PW, fullName: 'Trần Minh Kỹ Thuật', role: 'technician', phone: '0901000014', username: 'kythuattm2026@aivihe.vn', description: 'Kỹ thuật' },
+  { email: 'phuclv2026@aivihe.vn', password: PW, fullName: 'Lê Văn Phúc', role: 'tech_assistant', phone: '0901000015', username: 'phuclv2026@aivihe.vn', description: 'Kỹ thuật viên' },
+  { email: 'huongnt2026@aivihe.vn', password: PW, fullName: 'Nguyễn Thị Hương', role: 'nurse', phone: '0901000016', username: 'huongnt2026@aivihe.vn', description: 'Điều dưỡng' },
+  { email: 'ngapt2026@aivihe.vn', password: PW, fullName: 'Phạm Thị Nga', role: 'support_staff', phone: '0901000017', username: 'ngapt2026@aivihe.vn', description: 'NV hỗ trợ' },
+  { email: 'anhv2026@aivihe.vn', password: PW, fullName: 'Hoàng Văn An', role: 'intern', phone: '0901000018', username: 'anhv2026@aivihe.vn', description: 'NV thực tập' },
+  { email: 'trungvd2026@aivihe.vn', password: PW, fullName: 'Vũ Đức Trung', role: 'manager', phone: '0901000019', username: 'trungvd2026@aivihe.vn', description: 'Quản lý' },
+  { email: 'liendt2026@aivihe.vn', password: PW, fullName: 'Đỗ Thị Liên', role: 'admin_staff', phone: '0901000020', username: 'liendt2026@aivihe.vn', description: 'Hành chính' },
 ]
 
 async function seedUsers() {
