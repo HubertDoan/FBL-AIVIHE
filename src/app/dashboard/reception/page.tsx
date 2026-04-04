@@ -1,15 +1,17 @@
 'use client'
 
-// Reception dashboard page — tiếp đón bệnh nhân, phân công BS, xử lý thanh toán, trả kết quả
+// Reception dashboard — Tab 1: tiếp nhận khám, Tab 2: đăng ký thành viên chờ duyệt
 
 import { useState, useEffect, useCallback } from 'react'
 import { Loader2, ClipboardList } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { ReceptionPatientCard } from '@/components/dashboard/reception-patient-card'
+import { ReceptionPendingMemberRegistrationList } from '@/components/reception/reception-pending-member-registration-list'
 import type { ExamRegistration } from '@/lib/demo/demo-exam-registration-data'
 
-export default function ReceptionPage() {
+function ExamReceptionTab() {
   const { user, loading: authLoading } = useAuth()
   const [registrations, setRegistrations] = useState<ExamRegistration[]>([])
   const [loading, setLoading] = useState(true)
@@ -28,12 +30,39 @@ export default function ReceptionPage() {
   }, [])
 
   useEffect(() => {
-    if (!authLoading && user?.role === 'reception') {
-      loadData()
-    } else if (!authLoading) {
-      setLoading(false)
-    }
-  }, [authLoading, user, loadData])
+    if (!authLoading) loadData()
+  }, [authLoading, loadData])
+
+  if (loading || authLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (registrations.length === 0) {
+    return (
+      <Card>
+        <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+          <ClipboardList className="size-12 text-muted-foreground/50 mb-4" />
+          <p className="text-lg font-medium text-muted-foreground">Không có hồ sơ nào đang chờ</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  return (
+    <div className="space-y-3">
+      {registrations.map((reg) => (
+        <ReceptionPatientCard key={reg.id} reg={reg} onUpdated={loadData} />
+      ))}
+    </div>
+  )
+}
+
+export default function ReceptionPage() {
+  const { user, loading: authLoading } = useAuth()
 
   if (!authLoading && user?.role !== 'reception') {
     return (
@@ -46,30 +75,30 @@ export default function ReceptionPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold">Tiếp đón bệnh nhân</h1>
+        <h1 className="text-2xl font-bold">Tiếp đón</h1>
         <p className="text-muted-foreground mt-1">
-          Danh sách hồ sơ đăng ký khám từ bác sĩ gia đình chuyển đến
+          Quản lý hồ sơ khám bệnh và đăng ký thành viên mới
         </p>
       </div>
 
-      {loading || authLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="size-8 animate-spin text-primary" />
-        </div>
-      ) : registrations.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <ClipboardList className="size-12 text-muted-foreground/50 mb-4" />
-            <p className="text-lg font-medium text-muted-foreground">Không có hồ sơ nào đang chờ</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-3">
-          {registrations.map((reg) => (
-            <ReceptionPatientCard key={reg.id} reg={reg} onUpdated={loadData} />
-          ))}
-        </div>
-      )}
+      <Tabs defaultValue="exam">
+        <TabsList className="mb-4">
+          <TabsTrigger value="exam" className="text-base min-h-[44px]">
+            Tiếp nhận khám
+          </TabsTrigger>
+          <TabsTrigger value="members" className="text-base min-h-[44px]">
+            Đăng ký thành viên
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="exam">
+          <ExamReceptionTab />
+        </TabsContent>
+
+        <TabsContent value="members">
+          <ReceptionPendingMemberRegistrationList />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

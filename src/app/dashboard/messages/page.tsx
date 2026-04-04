@@ -12,53 +12,28 @@ import { MessageThreadWithBubblesAndInput } from '@/components/messages/message-
 import { NewConversationStartDialog, type ContactOption } from '@/components/messages/new-conversation-start-dialog'
 import type { Conversation, Message, ConversationType } from '@/lib/demo/demo-messaging-data'
 
-// Contact list available per role for starting new conversations
-const CONTACTS_BY_ROLE: Record<string, ContactOption[]> = {
-  // Admin sees all users
-  admin: [
-    { id: 'demo-0001-0000-0000-000000000001', name: 'Nguyễn Văn Minh', role: 'citizen', roleLabel: 'Thành viên' },
-    { id: 'demo-0005-0000-0000-000000000005', name: 'BS. Nguyễn Hải', role: 'doctor', roleLabel: 'Bác sĩ' },
-    { id: 'demo-0008-0000-0000-000000000008', name: 'Trần Thị Ngọc Trâm', role: 'director', roleLabel: 'Giám đốc' },
-    { id: 'demo-0013-0000-0000-000000000013', name: 'BS. Phạm Văn Đức', role: 'specialist', roleLabel: 'BS Chuyên khoa' },
-  ],
-  super_admin: [
-    { id: 'demo-0001-0000-0000-000000000001', name: 'Nguyễn Văn Minh', role: 'citizen', roleLabel: 'Thành viên' },
-    { id: 'demo-0005-0000-0000-000000000005', name: 'BS. Nguyễn Hải', role: 'doctor', roleLabel: 'Bác sĩ' },
-    { id: 'demo-0008-0000-0000-000000000008', name: 'Trần Thị Ngọc Trâm', role: 'director', roleLabel: 'Giám đốc' },
-    { id: 'demo-0006-0000-0000-000000000006', name: 'Admin AIVIHE', role: 'admin', roleLabel: 'Admin' },
-  ],
-  // Director sees all employees
-  director: [
-    { id: 'demo-0005-0000-0000-000000000005', name: 'BS. Nguyễn Hải', role: 'doctor', roleLabel: 'Bác sĩ' },
-    { id: 'demo-0009-0000-0000-000000000009', name: 'Lưu Tuấn Khanh', role: 'branch_director', roleLabel: 'GĐ Chi nhánh' },
-    { id: 'demo-0006-0000-0000-000000000006', name: 'Admin AIVIHE', role: 'admin', roleLabel: 'Admin' },
-  ],
-  branch_director: [
-    { id: 'demo-0008-0000-0000-000000000008', name: 'Trần Thị Ngọc Trâm', role: 'director', roleLabel: 'Giám đốc' },
-    { id: 'demo-0006-0000-0000-000000000006', name: 'Admin AIVIHE', role: 'admin', roleLabel: 'Admin' },
-  ],
-  // Doctor sees their patients
-  doctor: [
-    { id: 'demo-0001-0000-0000-000000000001', name: 'Nguyễn Văn Minh', role: 'citizen', roleLabel: 'Bệnh nhân' },
-    { id: 'demo-0006-0000-0000-000000000006', name: 'Admin AIVIHE', role: 'admin', roleLabel: 'Admin' },
-  ],
-  // Specialist sees referred patients
-  specialist: [
-    { id: 'demo-0001-0000-0000-000000000001', name: 'Nguyễn Văn Minh', role: 'citizen', roleLabel: 'Bệnh nhân' },
-    { id: 'demo-0006-0000-0000-000000000006', name: 'Admin AIVIHE', role: 'admin', roleLabel: 'Admin' },
-  ],
-  // Citizens see admin + their doctor
-  citizen: [
-    { id: 'demo-0006-0000-0000-000000000006', name: 'Admin AIVIHE', role: 'admin', roleLabel: 'Admin' },
-    { id: 'demo-0005-0000-0000-000000000005', name: 'BS. Nguyễn Hải', role: 'doctor', roleLabel: 'Bác sĩ gia đình' },
-    { id: 'demo-0013-0000-0000-000000000013', name: 'BS. Phạm Văn Đức', role: 'specialist', roleLabel: 'BS Chuyên khoa' },
-  ],
+// Role label mapping for display
+const ROLE_LABELS: Record<string, string> = {
+  citizen: 'Thành viên',
+  guest: 'Khách',
+  doctor: 'Bác sĩ',
+  specialist: 'BS Chuyên khoa',
+  admin: 'Admin',
+  super_admin: 'Super Admin',
+  director: 'Giám đốc',
+  branch_director: 'GĐ Chi nhánh',
+  reception: 'Tiếp đón',
+  exam_doctor: 'BS Khám bệnh',
+  staff: 'Nhân viên',
+  accountant: 'Kế toán',
+  admin_staff: 'Hành chính',
+  manager: 'Quản lý',
+  technician: 'Kỹ thuật',
+  tech_assistant: 'Kỹ thuật viên',
+  nurse: 'Điều dưỡng',
+  support_staff: 'Nhân viên hỗ trợ',
+  intern: 'Nhân viên thực tập',
 }
-
-// Default contacts for staff roles
-const DEFAULT_CONTACTS: ContactOption[] = [
-  { id: 'demo-0006-0000-0000-000000000006', name: 'Admin AIVIHE', role: 'admin', roleLabel: 'Admin' },
-]
 
 export default function MessagesPage() {
   const [currentUserId, setCurrentUserId] = useState<string>('')
@@ -70,8 +45,9 @@ export default function MessagesPage() {
   const [showNewDialog, setShowNewDialog] = useState(false)
   const [mobileView, setMobileView] = useState<'list' | 'thread'>('list')
   const [loading, setLoading] = useState(true)
+  const [allContacts, setAllContacts] = useState<ContactOption[]>([])
 
-  // Load current user info
+  // Load current user info + all contacts
   useEffect(() => {
     fetch('/api/demo/me')
       .then((r) => r.json())
@@ -79,6 +55,23 @@ export default function MessagesPage() {
         if (data.user) {
           setCurrentUserId(data.user.id)
           setCurrentUserRole(data.user.role)
+        }
+      })
+      .catch(() => {})
+
+    // Fetch all accounts for contact list
+    fetch('/api/demo/accounts')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setAllContacts(
+            data.map((a: { id: string; fullName: string; role: string }) => ({
+              id: a.id,
+              name: a.fullName,
+              role: a.role,
+              roleLabel: ROLE_LABELS[a.role] ?? a.role,
+            }))
+          )
         }
       })
       .catch(() => {})
@@ -172,7 +165,10 @@ export default function MessagesPage() {
     handleSelectConversation(newConv)
   }
 
-  const contacts = CONTACTS_BY_ROLE[currentUserRole] ?? DEFAULT_CONTACTS
+  // Show all contacts except current user, sorted by role then name
+  const contacts = allContacts
+    .filter((c) => c.id !== currentUserId)
+    .sort((a, b) => a.role.localeCompare(b.role) || a.name.localeCompare(b.name))
 
   if (loading) {
     return (

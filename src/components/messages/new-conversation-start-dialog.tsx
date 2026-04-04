@@ -1,10 +1,10 @@
 'use client'
 
-// Dialog to start a new conversation: search contacts, select type, write first message
-// Contact list is filtered by relationship rules based on current user role
+// Dialog to start a new conversation: search contacts, filter by group, select type, write first message
+// Supports multi-select: click individual contacts or select entire group at once
 
-import { useState } from 'react'
-import { Loader2, Search } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { Check, Loader2, Search, Users, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -41,8 +41,33 @@ const ROLE_BADGE: Record<string, string> = {
   doctor: 'bg-green-100 text-green-700',
   specialist: 'bg-teal-100 text-teal-700',
   citizen: 'bg-blue-100 text-blue-700',
+  reception: 'bg-orange-100 text-orange-700',
+  exam_doctor: 'bg-emerald-100 text-emerald-700',
   staff: 'bg-slate-100 text-slate-700',
+  accountant: 'bg-amber-100 text-amber-700',
+  admin_staff: 'bg-pink-100 text-pink-700',
+  manager: 'bg-violet-100 text-violet-700',
+  technician: 'bg-cyan-100 text-cyan-700',
+  tech_assistant: 'bg-sky-100 text-sky-700',
+  nurse: 'bg-rose-100 text-rose-700',
+  support_staff: 'bg-lime-100 text-lime-700',
+  intern: 'bg-gray-100 text-gray-500',
+  guest: 'bg-gray-100 text-gray-600',
 }
+
+// Groups available for "select all" feature
+const GROUP_FILTERS: { role: string; label: string }[] = [
+  { role: 'all', label: 'Tất cả' },
+  { role: 'citizen', label: 'Thành viên' },
+  { role: 'doctor', label: 'Bác sĩ' },
+  { role: 'specialist', label: 'BS Chuyên khoa' },
+  { role: 'admin', label: 'Admin' },
+  { role: 'director', label: 'Giám đốc' },
+  { role: 'staff_all', label: 'Nhân viên' },
+]
+
+// Roles considered "staff" for grouping
+const STAFF_ROLES = new Set(['reception', 'exam_doctor', 'staff', 'accountant', 'admin_staff', 'manager', 'technician', 'tech_assistant', 'nurse', 'support_staff', 'intern'])
 
 interface NewConversationStartDialogProps {
   open: boolean
@@ -58,22 +83,91 @@ export function NewConversationStartDialog({
   onStart,
 }: NewConversationStartDialogProps) {
   const [search, setSearch] = useState('')
-  const [selectedContact, setSelectedContact] = useState<ContactOption | null>(null)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [activeGroup, setActiveGroup] = useState<string | null>(null)
   const [convType, setConvType] = useState<ConversationType>('admin')
   const [subject, setSubject] = useState('')
   const [firstMessage, setFirstMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
-  const filtered = contacts.filter((c) =>
-    search.trim() === '' ||
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.roleLabel.toLowerCase().includes(search.toLowerCase())
-  )
+  // Filter contacts by search text
+  const filtered = useMemo(() => {
+    let list = contacts
+    // Filter by active group
+    if (activeGroup && activeGroup !== 'all') {
+      if (activeGroup === 'staff_all') {
+        list = list.filter((c) => STAFF_ROLES.has(c.role))
+      } else {
+        list = list.filter((c) => c.role === activeGroup)
+      }
+    }
+    // Filter by search
+    if (search.trim()) {
+      const q = search.toLowerCase()
+      list = list.filter(
+        (c) =>
+          c.name.toLowerCase().includes(q) ||
+          c.roleLabel.toLowerCase().includes(q)
+      )
+    }
+    return list
+  }, [contacts, search, activeGroup])
+
+  // Get selected contacts for display
+  const selectedContacts = contacts.filter((c) => selectedIds.has(c.id))
+
+  function toggleContact(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function handleSelectGroup(groupRole: string) {
+    if (activeGroup === groupRole) {
+      // Deselect: clear group filter
+      setActiveGroup(null)
+      return
+    }
+    setActiveGroup(groupRole)
+
+    // Auto-select all contacts in this group
+    let groupContacts: ContactOption[]
+    if (groupRole === 'all') {
+      groupContacts = contacts
+    } else if (groupRole === 'staff_all') {
+      groupContacts = contacts.filter((c) => STAFF_ROLES.has(c.role))
+    } else {
+      groupContacts = contacts.filter((c) => c.role === groupRole)
+    }
+
+    // Check if all in group are already selected → deselect them
+    const allSelected = groupContacts.every((c) => selectedIds.has(c.id))
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      for (const c of groupContacts) {
+        if (allSelected) next.delete(c.id)
+        else next.add(c.id)
+      }
+      return next
+    })
+  }
+
+  function removeSelected(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      next.delete(id)
+      return next
+    })
+  }
 
   function handleClose() {
     setSearch('')
-    setSelectedContact(null)
+    setSelectedIds(new Set())
+    setActiveGroup(null)
     setSubject('')
     setFirstMessage('')
     setError('')
@@ -81,13 +175,18 @@ export function NewConversationStartDialog({
   }
 
   async function handleSubmit() {
-    if (!selectedContact) { setError('Vui lòng chọn người nhận.'); return }
+    if (selectedIds.size === 0) { setError('Vui lòng chọn người nhận.'); return }
     if (!firstMessage.trim()) { setError('Vui lòng nhập nội dung tin nhắn đầu tiên.'); return }
     setError('')
     setSubmitting(true)
     try {
-      const sub = subject.trim() || `Cuộc trò chuyện với ${selectedContact.name}`
-      await onStart(selectedContact.id, convType, sub, firstMessage.trim())
+      // Send to each selected recipient
+      const recipientIds = Array.from(selectedIds)
+      for (const recipientId of recipientIds) {
+        const contact = contacts.find((c) => c.id === recipientId)
+        const sub = subject.trim() || `Cuộc trò chuyện với ${contact?.name ?? 'người nhận'}`
+        await onStart(recipientId, convType, sub, firstMessage.trim())
+      }
       handleClose()
     } catch {
       setError('Không thể tạo cuộc trò chuyện. Vui lòng thử lại.')
@@ -98,15 +197,67 @@ export function NewConversationStartDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl">Tin nhắn mới</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Contact search */}
+          {/* Selected recipients chips */}
+          {selectedContacts.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {selectedContacts.map((c) => (
+                <span
+                  key={c.id}
+                  className="inline-flex items-center gap-1 bg-primary/10 text-primary rounded-full px-2.5 py-1 text-sm"
+                >
+                  {c.name}
+                  <button
+                    type="button"
+                    onClick={() => removeSelected(c.id)}
+                    className="hover:bg-primary/20 rounded-full p-0.5"
+                  >
+                    <X className="size-3" />
+                  </button>
+                </span>
+              ))}
+              <span className="text-sm text-muted-foreground self-center ml-1">
+                ({selectedContacts.length} người)
+              </span>
+            </div>
+          )}
+
+          {/* Contact search + group filter */}
           <div>
             <Label className="text-base mb-2 block">Người nhận</Label>
+
+            {/* Group filter chips */}
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {GROUP_FILTERS.map((g) => {
+                const count = g.role === 'all'
+                  ? contacts.length
+                  : g.role === 'staff_all'
+                    ? contacts.filter((c) => STAFF_ROLES.has(c.role)).length
+                    : contacts.filter((c) => c.role === g.role).length
+                if (count === 0) return null
+                return (
+                  <button
+                    key={g.role}
+                    onClick={() => handleSelectGroup(g.role)}
+                    className={cn(
+                      'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors',
+                      activeGroup === g.role
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-muted-foreground hover:bg-accent'
+                    )}
+                  >
+                    <Users className="size-3" />
+                    {g.label} ({count})
+                  </button>
+                )
+              })}
+            </div>
+
             <div className="relative mb-2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
@@ -116,30 +267,40 @@ export function NewConversationStartDialog({
                 className="pl-9 text-base"
               />
             </div>
-            <div className="border border-border rounded-lg max-h-36 overflow-y-auto">
+            <div className="border border-border rounded-lg max-h-48 overflow-y-auto">
               {filtered.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-4">Không tìm thấy liên hệ</p>
               ) : (
-                filtered.map((c) => (
-                  <button
-                    key={c.id}
-                    onClick={() => setSelectedContact(c)}
-                    className={cn(
-                      'w-full text-left px-3 py-2.5 flex items-center gap-2 hover:bg-accent transition-colors border-b border-border/50 last:border-0',
-                      selectedContact?.id === c.id && 'bg-primary/10'
-                    )}
-                  >
-                    <div className="size-8 rounded-full bg-muted flex items-center justify-center text-sm font-semibold shrink-0">
-                      {c.name[0]?.toUpperCase()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-base font-medium truncate">{c.name}</p>
-                    </div>
-                    <span className={cn('text-xs px-2 py-0.5 rounded-full shrink-0', ROLE_BADGE[c.role] ?? 'bg-muted text-muted-foreground')}>
-                      {c.roleLabel}
-                    </span>
-                  </button>
-                ))
+                filtered.map((c) => {
+                  const isSelected = selectedIds.has(c.id)
+                  return (
+                    <button
+                      key={c.id}
+                      onClick={() => toggleContact(c.id)}
+                      className={cn(
+                        'w-full text-left px-3 py-2.5 flex items-center gap-2 hover:bg-accent transition-colors border-b border-border/50 last:border-0',
+                        isSelected && 'bg-primary/10'
+                      )}
+                    >
+                      {/* Checkbox indicator */}
+                      <div className={cn(
+                        'size-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors',
+                        isSelected ? 'bg-primary border-primary text-primary-foreground' : 'border-muted-foreground/30'
+                      )}>
+                        {isSelected && <Check className="size-3" />}
+                      </div>
+                      <div className="size-8 rounded-full bg-muted flex items-center justify-center text-sm font-semibold shrink-0">
+                        {c.name[0]?.toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-base font-medium truncate">{c.name}</p>
+                      </div>
+                      <span className={cn('text-xs px-2 py-0.5 rounded-full shrink-0', ROLE_BADGE[c.role] ?? 'bg-muted text-muted-foreground')}>
+                        {c.roleLabel}
+                      </span>
+                    </button>
+                  )
+                })
               )}
             </div>
           </div>
@@ -200,7 +361,13 @@ export function NewConversationStartDialog({
             Huỷ
           </Button>
           <Button onClick={handleSubmit} disabled={submitting} className="text-base min-w-[100px]">
-            {submitting ? <Loader2 className="size-4 animate-spin" /> : 'Gửi'}
+            {submitting ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : selectedIds.size > 1 ? (
+              `Gửi (${selectedIds.size} người)`
+            ) : (
+              'Gửi'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

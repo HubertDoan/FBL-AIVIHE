@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Megaphone, Shield, Loader2 } from 'lucide-react'
+import { Megaphone, Shield, Loader2, HandHeart } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { DirectorAnnouncementForm } from '@/components/director/director-announcement-form'
@@ -10,6 +10,7 @@ import {
   announcementToFormData,
 } from '@/components/director/director-announcements-list'
 import { DirectorFeedbackInbox } from '@/components/director/director-feedback-inbox'
+import { DirectorGreetingEditor } from '@/components/director/director-greeting-editor'
 import type { DirectorAnnouncement } from '@/lib/demo/demo-director-announcement-data'
 import type { DirectorAnnouncementFormData } from '@/components/director/director-announcement-form'
 
@@ -120,13 +121,17 @@ export default function DirectorPage() {
       </div>
 
       <Tabs defaultValue="announcements" className="space-y-4">
-        <TabsList className="grid w-full max-w-sm grid-cols-2">
+        <TabsList className="grid w-full max-w-md grid-cols-3">
           <TabsTrigger value="announcements" className="text-base gap-1.5">
             <Megaphone className="size-4" />
             Thông báo
           </TabsTrigger>
           <TabsTrigger value="feedback" className="text-base gap-1.5">
             Phản hồi
+          </TabsTrigger>
+          <TabsTrigger value="greeting" className="text-base gap-1.5">
+            <HandHeart className="size-4" />
+            Lời chào
           </TabsTrigger>
         </TabsList>
 
@@ -142,6 +147,10 @@ export default function DirectorPage() {
 
         <TabsContent value="feedback">
           <DirectorFeedbackInbox announcements={announcements} />
+        </TabsContent>
+
+        <TabsContent value="greeting">
+          <DirectorGreetingEditor />
         </TabsContent>
       </Tabs>
 

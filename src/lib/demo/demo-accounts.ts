@@ -1,7 +1,7 @@
 // Demo accounts for testing without Supabase
 // Only used when NEXT_PUBLIC_DEMO_MODE=true
 
-export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'specialist' | 'admin' | 'director' | 'branch_director' | 'super_admin' | 'reception' | 'exam_doctor' | 'staff' | 'accountant' | 'hr'
+export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'specialist' | 'admin' | 'director' | 'branch_director' | 'super_admin' | 'reception' | 'exam_doctor' | 'staff' | 'accountant' | 'admin_staff' | 'manager' | 'technician' | 'tech_assistant' | 'nurse' | 'support_staff' | 'intern'
 
 // Loại tài khoản hiển thị trên form đăng nhập
 export const ACCOUNT_TYPES = [
@@ -9,7 +9,13 @@ export const ACCOUNT_TYPES = [
   { value: 'citizen', label: 'Thành viên' },
   { value: 'staff', label: 'Nhân viên' },
   { value: 'accountant', label: 'Kế toán' },
-  { value: 'hr', label: 'Hành chính' },
+  { value: 'admin_staff', label: 'Hành chính' },
+  { value: 'manager', label: 'Quản lý' },
+  { value: 'technician', label: 'Kỹ thuật' },
+  { value: 'tech_assistant', label: 'Kỹ thuật viên' },
+  { value: 'nurse', label: 'Điều dưỡng' },
+  { value: 'support_staff', label: 'Nhân viên hỗ trợ' },
+  { value: 'intern', label: 'Nhân viên thực tập' },
   { value: 'doctor', label: 'Bác sĩ' },
   { value: 'specialist', label: 'BS Chuyên khoa' },
   { value: 'reception', label: 'Tiếp đón' },
@@ -162,6 +168,76 @@ const SEED_ACCOUNTS: DemoAccount[] = [
     citizenId: 'demo-specialist-duc',
     phone: '0901000013',
     description: 'BS Chuyên khoa Tim mạch - Chuyên gia chuyển tuyến',
+  },
+  {
+    id: 'demo-0014-0000-0000-000000000014',
+    email: 'kythuat@aivihe.vn',
+    password: 'Aivihe@2024',
+    fullName: 'Trần Minh Kỹ Thuật',
+    role: 'technician',
+    citizenId: 'demo-technician-minh',
+    phone: '0901000014',
+    description: 'Nhân viên kỹ thuật',
+  },
+  {
+    id: 'demo-0015-0000-0000-000000000015',
+    email: 'ktv@aivihe.vn',
+    password: 'Aivihe@2024',
+    fullName: 'Lê Văn Phúc',
+    role: 'tech_assistant',
+    citizenId: 'demo-tech-assistant-phuc',
+    phone: '0901000015',
+    description: 'Kỹ thuật viên',
+  },
+  {
+    id: 'demo-0016-0000-0000-000000000016',
+    email: 'dieuduong@aivihe.vn',
+    password: 'Aivihe@2024',
+    fullName: 'Nguyễn Thị Hương',
+    role: 'nurse',
+    citizenId: 'demo-nurse-huong',
+    phone: '0901000016',
+    description: 'Điều dưỡng',
+  },
+  {
+    id: 'demo-0017-0000-0000-000000000017',
+    email: 'hotro@aivihe.vn',
+    password: 'Aivihe@2024',
+    fullName: 'Phạm Thị Nga',
+    role: 'support_staff',
+    citizenId: 'demo-support-staff-nga',
+    phone: '0901000017',
+    description: 'Nhân viên hỗ trợ',
+  },
+  {
+    id: 'demo-0018-0000-0000-000000000018',
+    email: 'thuctap@aivihe.vn',
+    password: 'Aivihe@2024',
+    fullName: 'Hoàng Văn An',
+    role: 'intern',
+    citizenId: 'demo-intern-an',
+    phone: '0901000018',
+    description: 'Nhân viên thực tập',
+  },
+  {
+    id: 'demo-0019-0000-0000-000000000019',
+    email: 'quanly@aivihe.vn',
+    password: 'Aivihe@2024',
+    fullName: 'Vũ Đức Trung',
+    role: 'manager',
+    citizenId: 'demo-manager-trung',
+    phone: '0901000019',
+    description: 'Quản lý',
+  },
+  {
+    id: 'demo-0020-0000-0000-000000000020',
+    email: 'hanhchinh@aivihe.vn',
+    password: 'Aivihe@2024',
+    fullName: 'Đỗ Thị Liên',
+    role: 'admin_staff',
+    citizenId: 'demo-admin-staff-lien',
+    phone: '0901000020',
+    description: 'Nhân viên hành chính',
   },
 ]
 

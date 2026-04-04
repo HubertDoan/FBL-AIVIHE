@@ -12,6 +12,7 @@ import {
   Stethoscope,
   MessageSquare,
   MessageCircle,
+  ClipboardCheck,
   Settings,
   Crown,
   Shield,
@@ -28,93 +29,73 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { PERMISSIONS, type Permission } from '@/lib/permissions/permission-definitions'
 
 interface NavItem {
   href: string
   label: string
   icon: typeof LayoutDashboard
-  guestOnly?: boolean
-  memberOnly?: boolean
+  requiredPermission?: Permission // Module permission cần có để hiển thị
   highlight?: boolean
-  adminOnly?: boolean
-  superAdminOnly?: boolean
-  doctorOnly?: boolean
-  receptionOnly?: boolean
-  examDoctorOnly?: boolean
-  notGuest?: boolean             // visible to all roles except guest
-  // Doctor sub-conditions — evaluated in AppSidebar where profile state is available
-  doctorNotRegistered?: boolean  // visible only for doctor who has NOT yet registered
-  doctorApproved?: boolean       // visible only for doctor with approved profile
-  directorOnly?: boolean         // visible only for director + branch_director
-  permissionManagerOnly?: boolean // visible only for super_admin, director, branch_director
+  // Doctor sub-conditions (chỉ áp dụng cho doctor modules)
+  doctorNotRegistered?: boolean
+  doctorApproved?: boolean
 }
 
-const ADMIN_ROLES = ['admin', 'director', 'branch_director', 'super_admin']
-
+// Mỗi menu item ánh xạ tới một module permission
 const NAV_ITEMS: NavItem[] = [
-  { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard },
-  { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User },
-  { href: '/dashboard/register-member', label: 'Đăng ký thành viên', icon: Crown, guestOnly: true, highlight: true },
-  { href: '/dashboard/admin', label: 'Quản trị', icon: Shield, adminOnly: true },
-  { href: '/dashboard/director', label: 'Truyền thông', icon: Megaphone, directorOnly: true },
-  { href: '/dashboard/membership', label: 'Thành viên', icon: Crown, memberOnly: true },
-  { href: '/dashboard/family', label: 'Gia đình', icon: Users, memberOnly: true },
-  { href: '/dashboard/upload', label: 'Tải tài liệu', icon: Upload, memberOnly: true },
-  { href: '/dashboard/timeline', label: 'Dòng thời gian', icon: Clock, memberOnly: true },
-  { href: '/dashboard/summary', label: 'Tóm tắt sức khỏe', icon: FileText, memberOnly: true },
-  { href: '/dashboard/visit-prep', label: 'Đăng ký khám bệnh', icon: Stethoscope, memberOnly: true },
-  { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, memberOnly: true },
-  { href: '/dashboard/doctor-register', label: 'Đăng ký BS', icon: UserPlus, doctorOnly: true, doctorNotRegistered: true },
-  { href: '/dashboard/doctor-profile', label: 'Hồ sơ chuyên môn', icon: Award, doctorOnly: true, doctorApproved: true },
-  { href: '/dashboard/doctor-review', label: 'Xem xét khám', icon: Stethoscope, doctorOnly: true },
-  { href: '/dashboard/doctor-schedule', label: 'Lịch khám', icon: CalendarDays, doctorOnly: true },
-  { href: '/dashboard/choose-doctor', label: 'BS gia đình', icon: Stethoscope, memberOnly: true },
-  { href: '/dashboard/book-appointment', label: 'Đặt lịch khám', icon: CalendarCheck, memberOnly: true },
-  { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, receptionOnly: true },
-  { href: '/dashboard/exam-schedule', label: 'Lịch khám', icon: Calendar, examDoctorOnly: true },
-  { href: '/dashboard/messages', label: 'Tin nhắn', icon: MessageCircle, notGuest: true },
-  { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, memberOnly: true },
-  { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings },
-  { href: '/dashboard/permissions', label: 'Phân quyền', icon: ShieldCheck, permissionManagerOnly: true },
-  { href: '/dashboard/system', label: 'Hệ thống', icon: Server, superAdminOnly: true },
+  { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard, requiredPermission: PERMISSIONS.MODULE_DASHBOARD },
+  { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE },
+  { href: '/dashboard/register-member', label: 'Đăng ký thành viên', icon: Crown, requiredPermission: PERMISSIONS.MODULE_REGISTER_MEMBER, highlight: true },
+  { href: '/dashboard/admin', label: 'Quản trị', icon: Shield, requiredPermission: PERMISSIONS.MODULE_ADMIN },
+  { href: '/dashboard/director', label: 'Truyền thông', icon: Megaphone, requiredPermission: PERMISSIONS.MODULE_DIRECTOR },
+  { href: '/dashboard/membership', label: 'Thành viên', icon: Crown, requiredPermission: PERMISSIONS.MODULE_MEMBERSHIP },
+  { href: '/dashboard/family', label: 'Gia đình', icon: Users, requiredPermission: PERMISSIONS.MODULE_FAMILY },
+  { href: '/dashboard/upload', label: 'Tải tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
+  { href: '/dashboard/timeline', label: 'Dòng thời gian', icon: Clock, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
+  { href: '/dashboard/summary', label: 'Tóm tắt sức khỏe', icon: FileText, requiredPermission: PERMISSIONS.MODULE_SUMMARY },
+  { href: '/dashboard/visit-prep', label: 'Đăng ký khám bệnh', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_VISIT_PREP },
+  { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TREATMENT },
+  { href: '/dashboard/doctor-register', label: 'Đăng ký BS', icon: UserPlus, requiredPermission: PERMISSIONS.MODULE_DOCTOR_REGISTER, doctorNotRegistered: true },
+  { href: '/dashboard/doctor-profile', label: 'Hồ sơ chuyên môn', icon: Award, requiredPermission: PERMISSIONS.MODULE_DOCTOR_PROFILE, doctorApproved: true },
+  { href: '/dashboard/doctor-review', label: 'Xem xét khám', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_DOCTOR_REVIEW },
+  { href: '/dashboard/doctor-schedule', label: 'Lịch khám', icon: CalendarDays, requiredPermission: PERMISSIONS.MODULE_DOCTOR_SCHEDULE },
+  { href: '/dashboard/choose-doctor', label: 'BS gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_CHOOSE_DOCTOR },
+  { href: '/dashboard/book-appointment', label: 'Đặt lịch khám', icon: CalendarCheck, requiredPermission: PERMISSIONS.MODULE_BOOK_APPOINTMENT },
+  { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, requiredPermission: PERMISSIONS.MODULE_RECEPTION },
+  { href: '/dashboard/exam-schedule', label: 'Lịch khám', icon: Calendar, requiredPermission: PERMISSIONS.MODULE_EXAM_SCHEDULE },
+  { href: '/dashboard/task-assignment', label: 'Giao việc', icon: ClipboardCheck, requiredPermission: PERMISSIONS.MODULE_TASK_ASSIGNMENT },
+  { href: '/dashboard/messages', label: 'Tin nhắn', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_MESSAGES },
+  { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, requiredPermission: PERMISSIONS.MODULE_FEEDBACK },
+  { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings, requiredPermission: PERMISSIONS.MODULE_SETTINGS },
+  { href: '/dashboard/permissions', label: 'Phân quyền', icon: ShieldCheck, requiredPermission: PERMISSIONS.MODULE_PERMISSIONS },
+  { href: '/dashboard/system', label: 'Hệ thống', icon: Server, requiredPermission: PERMISSIONS.MODULE_SYSTEM },
 ]
 
 interface AppSidebarProps {
   userName?: string
   userAvatar?: string
   userRole?: string
+  userPermissions?: Permission[]  // quyền hiệu lực (default + custom)
   open?: boolean
   onClose?: () => void
   doctorProfileStatus?: 'pending' | 'approved' | 'suspended' | null
   unreadMessageCount?: number
 }
 
-export function AppSidebar({ userName, userAvatar, userRole, open, onClose, doctorProfileStatus, unreadMessageCount = 0 }: AppSidebarProps) {
+export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [], open, onClose, doctorProfileStatus, unreadMessageCount = 0 }: AppSidebarProps) {
   const pathname = usePathname()
-  const isGuest = userRole === 'guest'
-  const isAdmin = ADMIN_ROLES.includes(userRole ?? '')
-  const isSuperAdmin = userRole === 'super_admin'
-  const isDoctor = userRole === 'doctor'
-  const isReception = userRole === 'reception'
-  const isExamDoctor = userRole === 'exam_doctor'
-  const isDirector = userRole === 'director' || userRole === 'branch_director'
-  const isPermissionManager = userRole === 'super_admin' || userRole === 'director' || userRole === 'branch_director'
   const isDoctorRegistered = doctorProfileStatus != null
   const isDoctorApproved = doctorProfileStatus === 'approved'
 
   const visibleItems = NAV_ITEMS.filter((item) => {
-    if (item.guestOnly && !isGuest) return false
-    if (item.memberOnly && isGuest) return false
-    if (item.adminOnly && !isAdmin) return false
-    if (item.superAdminOnly && !isSuperAdmin) return false
-    if (item.doctorOnly && !isDoctor) return false
-    if (item.receptionOnly && !isReception) return false
-    if (item.examDoctorOnly && !isExamDoctor) return false
+    // Kiểm tra module permission
+    if (item.requiredPermission && !userPermissions.includes(item.requiredPermission)) {
+      return false
+    }
+    // Doctor sub-conditions
     if (item.doctorNotRegistered && isDoctorRegistered) return false
     if (item.doctorApproved && !isDoctorApproved) return false
-    if (item.notGuest && isGuest) return false
-    if (item.directorOnly && !isDirector) return false
-    if (item.permissionManagerOnly && !isPermissionManager) return false
     return true
   })
 

@@ -9,6 +9,7 @@ import {
   hasAdminAccess,
 } from '@/lib/demo/demo-api-helper'
 import { addNotification } from '@/lib/demo/demo-notification-data'
+import { DEMO_ACCOUNTS, findDemoAccountById } from '@/lib/demo/demo-accounts'
 
 type Params = { params: Promise<{ id: string }> }
 
@@ -24,17 +25,27 @@ export async function POST(request: NextRequest, { params }: Params) {
   if (isDemoMode()) {
     const demoUser = await getDemoUser(request)
     if (!demoUser) return demoUnauthorized()
-    if (!hasAdminAccess(demoUser.role)) return demoForbidden()
+    // Reception cũng được phép trình duyệt thành viên
+    if (!hasAdminAccess(demoUser.role) && demoUser.role !== 'reception') return demoForbidden()
     const body = await request.json()
     const info = ACTION_MAP[body.action]
     if (!info) return demoResponse({ error: 'Hành động không hợp lệ.' }, 400)
 
-    // On approve: create in-app notification for the member
+    // On approve: update role to member + send notification with account details
     if (body.action === 'approve') {
+      const member = findDemoAccountById(id)
+      const idx = DEMO_ACCOUNTS.findIndex((a) => a.id === id)
+      if (idx !== -1) {
+        const acc = DEMO_ACCOUNTS[idx] as unknown as Record<string, unknown>
+        acc.role = 'citizen'
+        acc.registrationStatus = 'active'
+      }
+
+      const username = member?.email ?? 'tài khoản của bạn'
       addNotification(
         id,
-        'Chúc mừng! Bạn đã trở thành thành viên AIVIHE',
-        'Bạn đã được chấp nhận làm thành viên AIVIHE. Thẻ Bạc đã kích hoạt. Phí thành viên 1.800.000đ (6 tháng) đã được xác nhận.'
+        'Chào mừng bạn đến với AIVIHE!',
+        `Bạn đã được duyệt làm thành viên AIVIHE.\n\nTài khoản: ${username}\nMật khẩu: 123456\n\nThẻ Bạc đã kích hoạt. Phí thành viên 1.800.000đ (6 tháng) đã được xác nhận.\n\nQuét mã QR hoặc truy cập website để đăng nhập.`
       )
     }
 

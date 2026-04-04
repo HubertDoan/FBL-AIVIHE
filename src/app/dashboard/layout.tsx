@@ -7,6 +7,7 @@ import { AppHeader } from '@/components/layout/app-header'
 import { ActOnBehalfBanner } from '@/components/family/act-on-behalf-banner'
 import { ActingAsProvider } from '@/hooks/use-acting-as'
 import { useAuth } from '@/hooks/use-auth'
+import type { Permission } from '@/lib/permissions/permission-definitions'
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard': 'Tổng quan',
@@ -36,11 +37,25 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [doctorProfileStatus, setDoctorProfileStatus] = useState<'pending' | 'approved' | 'suspended' | null>(null)
   const [unreadMessageCount, setUnreadMessageCount] = useState(0)
+  const [userPermissions, setUserPermissions] = useState<Permission[]>([])
   const { user, loading } = useAuth()
   const pathname = usePathname()
 
   const userName = user?.fullName ?? ''
   const userRole = user?.role ?? 'guest'
+
+  // Fetch effective permissions for sidebar module visibility
+  useEffect(() => {
+    if (!user) return
+    fetch('/api/permissions')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.effectivePermissions) {
+          setUserPermissions(data.effectivePermissions)
+        }
+      })
+      .catch(() => { /* silent */ })
+  }, [user])
 
   // Fetch doctor profile status once for sidebar nav visibility
   useEffect(() => {
@@ -93,6 +108,7 @@ export default function DashboardLayout({
         <AppSidebar
           userName={userName}
           userRole={userRole}
+          userPermissions={userPermissions}
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           doctorProfileStatus={doctorProfileStatus}

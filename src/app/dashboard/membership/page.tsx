@@ -28,9 +28,9 @@ import {
 } from 'lucide-react'
 
 const BANK_INFO = {
-  bank: 'Vietcombank',
-  account: '1234567890',
-  holder: 'CONG TY FBL',
+  bank: 'BIDV',
+  account: '12310000073672',
+  holder: 'DOAN NGOC HAI',
 }
 
 const PLAN_PRICE = '300.000đ/tháng'
@@ -238,22 +238,31 @@ export default function MembershipPage() {
             </CardContent>
           </Card>
 
-          {/* QR Code placeholder */}
+          {/* VietQR Code */}
           <div className="flex justify-center">
-            <div className="w-48 h-48 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 border-2 border-dashed border-blue-400 flex flex-col items-center justify-center gap-2">
-              <Banknote className="size-10 text-blue-500" />
-              <p className="text-sm font-medium text-blue-600 dark:text-blue-400 text-center px-2">
-                QR Chuyển tiền
-              </p>
-              <p className="text-xs text-muted-foreground">(Sẽ cập nhật)</p>
+            <div className="rounded-xl overflow-hidden border border-blue-200 dark:border-blue-800">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`https://img.vietqr.io/image/970418-12310000073672-compact2.png?amount=1800000&addInfo=${encodeURIComponent(`AIVIHE ${username}`)}&accountName=${encodeURIComponent('DOAN NGOC HAI')}`}
+                alt="QR Chuyển khoản BIDV - Doan Ngoc Hai"
+                className="w-64 h-auto"
+              />
             </div>
+          </div>
+
+          {/* Payment note */}
+          <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 rounded-lg px-4 py-3 text-base">
+            <Building2 className="size-5 shrink-0" />
+            <span>
+              Sau khi chuyển khoản, hệ thống SePay sẽ tự động xác nhận và thông báo cho bạn.
+            </span>
           </div>
 
           {/* Confirm payment button */}
           {confirmSuccess ? (
             <div className="flex items-center gap-2 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded-lg px-4 py-3 text-lg font-medium">
               <CheckCircle className="size-5 shrink-0" />
-              Đã ghi nhận! Chúng tôi sẽ xác nhận trong 24 giờ.
+              Đã ghi nhận! Hệ thống sẽ tự động xác nhận khi nhận được tiền qua SePay.
             </div>
           ) : (
             <Button

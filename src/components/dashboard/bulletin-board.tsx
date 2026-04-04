@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
 import {
   Bell, Building2, Crown, ArrowRight, CheckCircle,
-  Gift, Stethoscope, FolderOpen, Users, CreditCard, Megaphone,
+  Gift, Stethoscope, FolderOpen, Users, CreditCard, Megaphone, Wrench,
 } from 'lucide-react'
 
 interface Announcement {
@@ -54,6 +54,7 @@ export function BulletinBoard() {
   const [adminAnn, setAdminAnn] = useState<Announcement[]>(FALLBACK_ADMIN)
   const [centerAnn, setCenterAnn] = useState<Announcement[]>(FALLBACK_CENTER)
   const [directorAnn, setDirectorAnn] = useState<Announcement[]>(FALLBACK_DIRECTOR)
+  const [maintenanceAnn, setMaintenanceAnn] = useState<Announcement[]>([])
 
   useEffect(() => {
     async function load() {
@@ -64,9 +65,11 @@ export function BulletinBoard() {
         const admin = data.filter((a) => a.category === 'admin')
         const center = data.filter((a) => a.category === 'center')
         const director = data.filter((a) => a.category === 'director')
+        const maintenance = data.filter((a) => a.category === 'maintenance')
         if (admin.length > 0) setAdminAnn(admin)
         if (center.length > 0) setCenterAnn(center)
         if (director.length > 0) setDirectorAnn(director)
+        if (maintenance.length > 0) setMaintenanceAnn(maintenance)
       } catch { /* fallback */ }
     }
     load()
@@ -74,6 +77,16 @@ export function BulletinBoard() {
 
   return (
     <div className="space-y-4">
+      {/* Bảo trì — luôn hiển thị khi có dữ liệu */}
+      {maintenanceAnn.length > 0 && (
+        <AnnouncementSection
+          title="Bảo trì"
+          icon={<Wrench className="size-5" />}
+          items={maintenanceAnn}
+          color="amber"
+        />
+      )}
+
       {/* Admin — luôn hiển thị cho tất cả (kể cả khách) */}
       <AnnouncementSection
         title="Thông báo từ Hệ thống"
@@ -169,11 +182,11 @@ function AnnouncementSection({
   title: string
   icon: React.ReactNode
   items: Announcement[]
-  color: 'blue' | 'green' | 'orange'
+  color: 'blue' | 'green' | 'orange' | 'amber'
 }) {
-  const bg = { blue: 'bg-blue-50', green: 'bg-green-50', orange: 'bg-orange-50' }[color]
-  const text = { blue: 'text-blue-700', green: 'text-green-700', orange: 'text-orange-700' }[color]
-  const badge = { blue: 'bg-blue-100 text-blue-700', green: 'bg-green-100 text-green-700', orange: 'bg-orange-100 text-orange-700' }[color]
+  const bg = { blue: 'bg-blue-50', green: 'bg-green-50', orange: 'bg-orange-50', amber: 'bg-amber-50' }[color]
+  const text = { blue: 'text-blue-700', green: 'text-green-700', orange: 'text-orange-700', amber: 'text-amber-700' }[color]
+  const badge = { blue: 'bg-blue-100 text-blue-700', green: 'bg-green-100 text-green-700', orange: 'bg-orange-100 text-orange-700', amber: 'bg-amber-100 text-amber-700' }[color]
 
   return (
     <Card>

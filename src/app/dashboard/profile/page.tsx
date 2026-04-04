@@ -1,14 +1,16 @@
 'use client'
 
+// Trang hồ sơ cá nhân — 3 tabs: Thông tin cá nhân, Khám định kỳ, Khám chữa bệnh
+// Tất cả users (nhân viên + khách hàng) đều thấy 3 tab này
+
 import { useState, useEffect, useCallback } from 'react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { PersonalInfoForm } from '@/components/profile/personal-info-form'
-import { HealthProfileForm } from '@/components/profile/health-profile-form'
-import { EmergencyCard } from '@/components/profile/emergency-card'
+import { PersonalInfoWithHealthForm } from '@/components/profile/personal-info-with-health-form'
+import { AnnualCheckupRecordsTab } from '@/components/profile/annual-checkup-records-tab'
 import { HealthExamHistoryList } from '@/components/profile/health-exam-history-list'
 import { useAuth } from '@/hooks/use-auth'
-import { Pencil, X } from 'lucide-react'
+import { Pencil, X, User, CalendarHeart, Stethoscope } from 'lucide-react'
 import type { Citizen, HealthProfile } from '@/types/database'
 
 export default function ProfilePage() {
@@ -27,9 +29,7 @@ export default function ProfilePage() {
         setCitizen(data.citizen as Citizen)
         setHealthProfile((data.healthProfile as HealthProfile) ?? null)
       }
-    } catch {
-      // Silently handle fetch errors
-    }
+    } catch { /* silent */ }
     setLoading(false)
   }, [])
 
@@ -38,24 +38,12 @@ export default function ProfilePage() {
     fetchData()
   }, [authLoading, user, fetchData])
 
-  const handleSaveCitizen = async (data: Partial<Citizen>) => {
+  const handleSave = async (citizenData: Partial<Citizen>, healthData: Partial<HealthProfile>) => {
     if (!citizen) return
-    await fetch('/api/profile', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-    await fetchData()
-    setEditing(false)
-  }
-
-  const handleSaveHealth = async (data: Partial<HealthProfile>) => {
-    if (!citizen) return
-    await fetch('/api/profile/health', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
+    await Promise.all([
+      fetch('/api/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(citizenData) }),
+      fetch('/api/profile/health', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(healthData) }),
+    ])
     await fetchData()
     setEditing(false)
   }
@@ -63,75 +51,49 @@ export default function ProfilePage() {
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-center space-y-3">
-          <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-lg text-muted-foreground">Đang tải...</p>
-        </div>
+        <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
       </div>
     )
   }
 
   if (!citizen) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-lg text-destructive">
-          Không tìm thấy hồ sơ. Vui lòng hoàn tất đăng ký.
-        </p>
-      </div>
-    )
+    return <div className="text-center py-12"><p className="text-lg text-destructive">Không tìm thấy hồ sơ.</p></div>
   }
+
+  const userId = user?.citizenId ?? user?.id ?? ''
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Hồ sơ cá nhân</h1>
-        <Button
-          variant={editing ? 'destructive' : 'outline'}
-          className="h-12 text-base"
-          onClick={() => setEditing(!editing)}
-        >
+        <Button variant={editing ? 'destructive' : 'outline'} className="h-12 text-base" onClick={() => setEditing(!editing)}>
           {editing ? <><X className="size-4 mr-1" /> Hủy</> : <><Pencil className="size-4 mr-1" /> Chỉnh sửa</>}
         </Button>
       </div>
 
-      <Tabs defaultValue={0}>
-        <TabsList className="w-full h-auto flex flex-wrap">
-          <TabsTrigger value={0} className="flex-1 py-3 text-base">
-            Thông tin cá nhân
+      <Tabs defaultValue="personal">
+        <TabsList className="w-full h-auto flex">
+          <TabsTrigger value="personal" className="flex-1 py-3 text-base gap-1.5">
+            <User className="size-4" /> Thông tin
           </TabsTrigger>
-          <TabsTrigger value={1} className="flex-1 py-3 text-base">
-            Sức khỏe nền
+          <TabsTrigger value="annual" className="flex-1 py-3 text-base gap-1.5">
+            <CalendarHeart className="size-4" /> Khám định kỳ
           </TabsTrigger>
-          <TabsTrigger value={2} className="flex-1 py-3 text-base">
-            Cấp cứu
-          </TabsTrigger>
-          <TabsTrigger value={3} className="flex-1 py-3 text-base">
-            Lịch sử khám
+          <TabsTrigger value="treatment" className="flex-1 py-3 text-base gap-1.5">
+            <Stethoscope className="size-4" /> Khám chữa bệnh
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value={0} className="mt-4">
-          <PersonalInfoForm
-            citizen={citizen}
-            editing={editing}
-            onSave={handleSaveCitizen}
-          />
+        <TabsContent value="personal" className="mt-4">
+          <PersonalInfoWithHealthForm citizen={citizen} healthProfile={healthProfile} editing={editing} onSave={handleSave} />
         </TabsContent>
 
-        <TabsContent value={1} className="mt-4">
-          <HealthProfileForm
-            profile={healthProfile}
-            editing={editing}
-            onSave={handleSaveHealth}
-          />
+        <TabsContent value="annual" className="mt-4">
+          <AnnualCheckupRecordsTab userId={userId} editing={editing} />
         </TabsContent>
 
-        <TabsContent value={2} className="mt-4">
-          <EmergencyCard citizen={citizen} healthProfile={healthProfile} />
-        </TabsContent>
-
-        <TabsContent value={3} className="mt-4">
-          <HealthExamHistoryList userId={user?.citizenId ?? user?.id ?? ''} />
+        <TabsContent value="treatment" className="mt-4">
+          <HealthExamHistoryList userId={userId} />
         </TabsContent>
       </Tabs>
     </div>

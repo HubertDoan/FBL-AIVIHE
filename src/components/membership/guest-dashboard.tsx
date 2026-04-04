@@ -1,32 +1,46 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
 import { Crown, User, Phone, Shield, Bell } from 'lucide-react'
 
+interface DirectorGreeting {
+  directorName: string
+  centerName: string
+  greeting: string
+  signature: string
+}
+
 export function GuestDashboard() {
   const { user } = useAuth({ redirect: false })
+  const [greeting, setGreeting] = useState<DirectorGreeting | null>(null)
+
+  useEffect(() => {
+    fetch('/api/director/greeting')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setGreeting(d) })
+      .catch(() => {})
+  }, [])
 
   return (
     <div className="max-w-xl mx-auto space-y-4">
-      {/* Lời chào GĐ TrinityX + 3 thông điệp gộp */}
+      {/* Lời chào Giám đốc — nội dung do GĐ tùy chỉnh */}
       <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
         <CardContent className="pt-5 space-y-3">
           <p className="text-base text-blue-900">
             Xin chào <strong>{user?.fullName || 'bạn'}</strong>,
           </p>
           <p className="text-base text-blue-800 leading-relaxed">
-            Tôi là <strong>Trần Thị Ngọc Trâm</strong> — Giám đốc TrinityX. Chào mừng bạn đến với
-            nền tảng <strong>FBL - AIVIHE</strong> (For Better Life - Cho cuộc sống tốt hơn).
+            Tôi là <strong>{greeting?.directorName ?? 'Trần Thị Ngọc Trâm'}</strong> — Giám đốc Trung tâm {greeting?.centerName ?? 'Thong Dong Care'}.
+            Chào mừng bạn đến với nền tảng <strong>AIVIHE</strong>.
           </p>
           <p className="text-sm text-blue-700 leading-relaxed">
-            AIVIHE là Trợ lý AI sức khỏe cá nhân giúp người dân hiểu và quản lý dữ liệu sức khỏe.
-            AI chỉ hỗ trợ tổng hợp và giải thích thông tin, không thay thế bác sĩ.
-            Dữ liệu thuộc về bạn và chỉ được chia sẻ khi bạn cho phép.
+            {greeting?.greeting ?? 'AIVIHE là Trợ lý AI sức khỏe cá nhân giúp khách hàng hiểu và quản lý dữ liệu sức khỏe của mình. Trợ lý AI hỗ trợ tổng hợp và giải thích thông tin, không thay thế bác sĩ. Dữ liệu thuộc về bạn và chỉ được chia sẻ khi bạn cho phép.'}
           </p>
-          <p className="text-sm text-blue-600 italic">— Trần Thị Ngọc Trâm, Giám đốc TrinityX</p>
+          <p className="text-sm text-blue-600 italic">— {greeting?.signature ?? 'Trần Thị Ngọc Trâm, Giám đốc Thong Dong Care'}</p>
         </CardContent>
       </Card>
 

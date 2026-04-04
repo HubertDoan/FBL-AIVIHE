@@ -58,23 +58,30 @@ export async function POST(request: NextRequest) {
     }
 
     if (isDemoMode()) {
-      // Demo mode: update the in-memory account role
+      // Demo mode: update the in-memory account — set status pending_review
       const cookie = request.cookies.get(DEMO_COOKIE_NAME)
       if (cookie?.value) {
         const session = JSON.parse(cookie.value)
         const account = findDemoAccountById(session.id)
         if (account) {
-          const demoRole = role === 'doctor' ? 'doctor' : 'member'
           const idx = DEMO_ACCOUNTS.findIndex((a) => a.id === account.id)
           if (idx !== -1) {
-            ;(DEMO_ACCOUNTS[idx] as { role: string }).role = demoRole
+            // Lưu thông tin đăng ký nhưng chưa chuyển role — chờ duyệt
+            const acc = DEMO_ACCOUNTS[idx] as unknown as Record<string, unknown>
+            acc.registrationStatus = 'pending_review'
+            acc.registrationData = {
+              gender, dateOfBirth, idNumber, ethnicity, occupation,
+              education, province, commune, streetAddress, role,
+            }
+            acc.registrationDate = new Date().toISOString()
+            if (fullName) acc.fullName = fullName
           }
         }
       }
 
       return NextResponse.json({
         success: true,
-        message: 'Đăng ký thành viên thành công!',
+        message: 'Đăng ký thành công! Hồ sơ đang chờ xét duyệt.',
       })
     }
 

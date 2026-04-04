@@ -43,13 +43,10 @@ export default function PermissionsPage() {
         setActorEffective(selfData.effectivePermissions ?? [])
       }
 
-      // Lấy danh sách nhân viên (không bao gồm citizen/guest)
-      const STAFF_ROLES = ['admin', 'director', 'branch_director', 'doctor', 'exam_doctor',
-        'reception', 'staff', 'accountant', 'hr', 'super_admin']
-
+      // Lấy danh sách tất cả người dùng (bao gồm citizen, trừ guest)
       const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
       if (isDemoMode) {
-        const accounts = DEMO_ACCOUNTS.filter((a) => STAFF_ROLES.includes(a.role))
+        const accounts = DEMO_ACCOUNTS.filter((a) => a.role !== 'guest')
         // Lấy quyền tùy chỉnh cho từng tài khoản
         const entries: UserEntry[] = await Promise.all(
           accounts.map(async (a) => {
@@ -64,7 +61,7 @@ export default function PermissionsPage() {
         )
         setUsers(entries)
       } else {
-        const res = await fetch('/api/admin/members?limit=100&role=staff')
+        const res = await fetch('/api/admin/members?limit=100')
         if (res.ok) {
           const data = await res.json()
           const entries: UserEntry[] = (data.members ?? []).map((m: { id: string; full_name: string; role: string }) => ({
@@ -124,7 +121,7 @@ export default function PermissionsPage() {
         <div>
           <h1 className="text-2xl font-bold">Phân quyền</h1>
           <p className="text-muted-foreground text-base">
-            Gán thêm hoặc thu hồi quyền tùy chỉnh cho nhân viên
+            Quản lý quyền truy cập module và chức năng cho tất cả thành viên
           </p>
         </div>
       </div>
