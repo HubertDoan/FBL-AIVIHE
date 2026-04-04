@@ -58,7 +58,7 @@ export async function POST(request: NextRequest, { params }: Params) {
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
     const { data: admin } = await supabase.from('citizens').select('role').eq('id', user.id).single()
-    if (!admin || admin.role !== 'admin') return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
+    if (!admin || !['admin','super_admin','director','branch_director','manager','reception'].includes(admin.role)) return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
 
     const body = await request.json()
     const info = ACTION_MAP[body.action]

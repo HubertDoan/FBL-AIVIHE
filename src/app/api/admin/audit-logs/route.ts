@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    if (!citizen || citizen.role !== 'admin') {
+    if (!citizen || !['admin','super_admin','director','branch_director','manager'].includes(citizen.role)) {
       return NextResponse.json(
         { error: 'Bạn không có quyền truy cập.' },
         { status: 403 }

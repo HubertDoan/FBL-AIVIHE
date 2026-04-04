@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: Params) {
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
     const { data: admin } = await supabase.from('citizens').select('role').eq('id', user.id).single()
-    if (!admin || admin.role !== 'admin') return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
+    if (!admin || !['admin','super_admin','director','branch_director','manager'].includes(admin.role)) return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
 
     const { data: member, error } = await supabase
       .from('citizens')
@@ -62,7 +62,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
     const { data: admin } = await supabase.from('citizens').select('role').eq('id', user.id).single()
-    if (!admin || admin.role !== 'admin') return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
+    if (!admin || !['admin','super_admin','director','branch_director','manager'].includes(admin.role)) return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
 
     const body = await request.json()
     const { full_name, phone, email, role, gender, status: memberStatus } = body
@@ -105,7 +105,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
     const { data: admin } = await supabase.from('citizens').select('role').eq('id', user.id).single()
-    if (!admin || admin.role !== 'admin') return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
+    if (!admin || !['admin','super_admin','director','branch_director','manager'].includes(admin.role)) return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
 
     const { error } = await supabase
       .from('citizens')

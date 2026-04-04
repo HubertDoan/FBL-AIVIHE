@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import {
   isDemoMode,
   getDemoUser,
@@ -60,7 +60,10 @@ export async function GET(request: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
     const { data: admin } = await supabase.from('citizens').select('role').eq('id', user.id).single()
-    if (!admin || admin.role !== 'admin') return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
+    if (!admin || !['admin','super_admin','director','branch_director','manager'].includes(admin.role)) return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
+
+    // Use service client to bypass RLS for admin queries
+    const adminDb = await createServiceClient()
 
     const sp = request.nextUrl.searchParams
     const page = parseInt(sp.get('page') ?? '1')
@@ -70,7 +73,7 @@ export async function GET(request: NextRequest) {
     const status = sp.get('status') ?? 'all'
     const offset = (page - 1) * limit
 
-    let query = supabase
+    let query = adminDb
       .from('citizens')
       .select('id, full_name, username, phone, email, role, is_active, status, created_at', { count: 'exact' })
       .order('created_at', { ascending: false })
@@ -113,7 +116,7 @@ export async function POST(request: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
     const { data: admin } = await supabase.from('citizens').select('role').eq('id', user.id).single()
-    if (!admin || admin.role !== 'admin') return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
+    if (!admin || !['admin','super_admin','director','branch_director','manager'].includes(admin.role)) return NextResponse.json({ error: 'Không có quyền.' }, { status: 403 })
 
     const body = await request.json()
     const { full_name, phone, role, password } = body
