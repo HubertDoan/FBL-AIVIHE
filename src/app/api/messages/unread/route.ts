@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from('conversations')
       .select('unread_counts')
-      .contains('participants', [user.id])
+      .contains('participant_ids', [user.id])
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 

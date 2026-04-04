@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from('conversations')
       .select('*')
-      .contains('participants', [user.id])
+      .contains('participant_ids', [user.id])
       .order('last_message_at', { ascending: false })
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     // Production: insert conversation + first message
     const { data: conv, error: convErr } = await supabase
       .from('conversations')
-      .insert({ participants: [user.id, recipientId], type, subject, last_message: firstMessage })
+      .insert({ participant_ids: [user.id, recipientId], type, subject, last_message: firstMessage })
       .select()
       .single()
 
