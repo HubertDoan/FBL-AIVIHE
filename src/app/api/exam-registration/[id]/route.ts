@@ -22,7 +22,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!isDemoMode()) return demoResponse({ error: 'Chỉ hoạt động trong demo mode.' }, 501)
+  if (!isDemoMode()) return demoResponse([])
   const user = await getDemoUser(request)
   if (!user) return demoUnauthorized()
   const { id } = await params
@@ -35,7 +35,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!isDemoMode()) return demoResponse({ error: 'Chỉ hoạt động trong demo mode.' }, 501)
+  if (!isDemoMode()) return demoResponse([])
   const user = await getDemoUser(request)
   if (!user) return demoUnauthorized()
 

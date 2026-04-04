@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     return demoResponse({ profile: profile ?? null })
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }
 
 export async function POST(request: NextRequest) {
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     return demoResponse({ profile }, 201)
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }
 
 export async function PUT(request: NextRequest) {
@@ -114,5 +114,5 @@ export async function PUT(request: NextRequest) {
     return demoResponse({ profile: updated })
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }

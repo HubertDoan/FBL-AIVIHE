@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     return demoResponse({ slots, doctor_name: doctorProfile.full_name })
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }
 
 export async function POST(request: NextRequest) {
@@ -73,5 +73,5 @@ export async function POST(request: NextRequest) {
     return demoResponse({ slot }, 201)
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }

@@ -17,7 +17,7 @@ import {
 // GET /api/exam-registration — list registrations based on role
 export async function GET(request: NextRequest) {
   if (!isDemoMode()) {
-    return demoResponse({ error: 'Chỉ hoạt động trong demo mode.' }, 501)
+    return demoResponse({ registrations: [] })
   }
 
   const user = await getDemoUser(request)
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
 // POST /api/exam-registration — create new registration (citizen only)
 export async function POST(request: NextRequest) {
   if (!isDemoMode()) {
-    return demoResponse({ error: 'Chỉ hoạt động trong demo mode.' }, 501)
+    return demoResponse({ registrations: [] })
   }
 
   const user = await getDemoUser(request)

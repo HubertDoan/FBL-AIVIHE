@@ -67,5 +67,5 @@ export async function PATCH(request: NextRequest) {
     return demoResponse({ profile: updated })
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }

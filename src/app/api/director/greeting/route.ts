@@ -58,5 +58,5 @@ export async function PUT(request: NextRequest) {
 
     return demoResponse(current)
   }
-  return NextResponse.json({ error: 'Not implemented' }, { status: 501 })
+  return NextResponse.json({})
 }

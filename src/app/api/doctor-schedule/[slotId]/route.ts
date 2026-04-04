@@ -90,7 +90,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return demoResponse({ error: 'Action không hợp lệ.' }, 400)
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
@@ -112,5 +112,5 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     return demoResponse({ success: true })
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }

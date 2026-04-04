@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     return demoResponse({ assignment: assignment ?? null })
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }
 
 export async function POST(request: NextRequest) {
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     return demoResponse({ assignment }, 201)
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }
 
 export async function PATCH(request: NextRequest) {
@@ -127,5 +127,5 @@ export async function PATCH(request: NextRequest) {
     return demoResponse({ assignment: updated })
   }
 
-  return demoResponse({ error: 'Chỉ hỗ trợ demo mode.' }, 501)
+  return demoResponse([])
 }
