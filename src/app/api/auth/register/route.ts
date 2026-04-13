@@ -123,10 +123,9 @@ export async function POST(request: Request) {
     // Find unique username
     const username = await findUniqueUsername(supabase, baseUsername)
 
-    // Create Supabase auth user
-    const fakeEmail = `${username}@aivihe.local`
+    // Create Supabase auth user — username is already email format (minhnv2026@aivihe.vn)
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: fakeEmail,
+      email: username,
       password: defaultPassword,
       email_confirm: true,
       phone,

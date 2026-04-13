@@ -1,13 +1,13 @@
 import React from 'react'
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer'
 
-// Register Roboto font with Vietnamese support
+// Register Noto Sans — full Vietnamese diacritical marks support
+// Using static TTF files from Google Fonts CDN (variable fonts don't work with react-pdf)
 Font.register({
-  family: 'Roboto',
+  family: 'NotoSans',
   fonts: [
-    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf', fontWeight: 300 },
-    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf', fontWeight: 400 },
-    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf', fontWeight: 700 },
+    { src: 'https://fonts.gstatic.com/s/notosans/v36/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf', fontWeight: 400 },
+    { src: 'https://fonts.gstatic.com/s/notosans/v36/o-0NIpQlx3QUlC5A4PNjXhFlY9aA5Wl6PQ.ttf', fontWeight: 700 },
   ],
 })
 
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     padding: 40,
     paddingBottom: 70,
     fontSize: 11,
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
     lineHeight: 1.6,
   },
   headerBar: {
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 700,
     color: '#2563EB',
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
   },
   headerRight: {
     textAlign: 'right',
@@ -40,12 +40,12 @@ const styles = StyleSheet.create({
   headerDate: {
     fontSize: 9,
     color: '#666',
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
   },
   headerSubtitle: {
     fontSize: 10,
     color: '#64748B',
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
   },
   header: {
     textAlign: 'center',
@@ -56,13 +56,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 700,
     color: '#1E293B',
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 11,
     color: '#64748B',
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
   },
   section: { marginBottom: 14 },
   sectionTitle: {
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     paddingBottom: 4,
     color: '#1E40AF',
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
   },
   row: { flexDirection: 'row', marginBottom: 3 },
   label: { width: 120, fontWeight: 700, color: '#444', fontFamily: 'Roboto' },
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     color: '#92400E',
     marginBottom: 4,
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
   },
   disclaimerText: { fontSize: 9, color: '#92400E', fontFamily: 'Roboto' },
   footer: {
@@ -111,12 +111,12 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 8,
     color: '#94A3B8',
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
   },
   footerPage: {
     fontSize: 8,
     color: '#94A3B8',
-    fontFamily: 'Roboto',
+    fontFamily: 'NotoSans',
   },
 })
 

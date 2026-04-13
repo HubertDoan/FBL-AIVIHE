@@ -8,7 +8,7 @@ import {
 } from '@/lib/demo/demo-api-helper'
 import { DEMO_ACCOUNTS } from '@/lib/demo/demo-accounts'
 
-const DIRECTOR_ROLES = ['director', 'branch_director'] as const
+const DIRECTOR_ROLES = ['super_admin', 'director', 'branch_director'] as const
 
 function isDirectorRole(role: string): boolean {
   return (DIRECTOR_ROLES as readonly string[]).includes(role)

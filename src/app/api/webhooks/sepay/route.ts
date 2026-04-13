@@ -127,12 +127,11 @@ export async function POST(request: NextRequest) {
 
         // Send notification to member
         await supabase.from('notifications').insert({
-          citizen_id: payment.citizen_id,
+          user_id: payment.citizen_id,
           title: 'Đã nhận thanh toán',
-          message: `Chúng tôi đã nhận được thanh toán ${payload.transferAmount.toLocaleString('vi-VN')}đ. Cảm ơn bạn!`,
+          content: `Chúng tôi đã nhận được thanh toán ${payload.transferAmount.toLocaleString('vi-VN')}đ. Cảm ơn bạn!`,
           category: 'admin',
-          read: false,
-          created_at: new Date().toISOString(),
+          is_read: false,
         })
       }
     }

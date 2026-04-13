@@ -63,7 +63,29 @@ export async function GET(request: NextRequest) {
     const { data: branches, error } = await query.order('is_headquarters', { ascending: false })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-    return NextResponse.json({ branches: branches ?? [] })
+    // Enrich with staff_count and director_name
+    const enriched = await Promise.all(
+      (branches ?? []).map(async (b) => {
+        const { count } = await supabase
+          .from('branch_staff')
+          .select('*', { count: 'exact', head: true })
+          .eq('branch_id', b.id)
+
+        let directorName = b.director_name ?? ''
+        if (!directorName && b.director_id) {
+          const { data: dir } = await supabase
+            .from('citizens')
+            .select('full_name')
+            .eq('id', b.director_id)
+            .single()
+          directorName = dir?.full_name ?? ''
+        }
+
+        return { ...b, staff_count: count ?? 0, director_name: directorName }
+      })
+    )
+
+    return NextResponse.json({ branches: enriched })
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Lỗi máy chủ' }, { status: 500 })
   }

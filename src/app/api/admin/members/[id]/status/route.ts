@@ -82,6 +82,25 @@ export async function POST(request: NextRequest, { params }: Params) {
       .eq('id', id)
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+
+    // Send notification to the member on approve
+    if (body.action === 'approve') {
+      const { data: member } = await supabase
+        .from('citizens')
+        .select('username, full_name')
+        .eq('id', id)
+        .single()
+
+      const username = member?.username ?? 'tài khoản của bạn'
+      await supabase.from('notifications').insert({
+        user_id: id,
+        title: 'Chào mừng bạn đến với AIVIHE!',
+        content: `Xin chào ${member?.full_name ?? 'bạn'},\n\nBạn đã được duyệt làm thành viên AIVIHE.\nTài khoản: ${username}\nThẻ Bạc đã kích hoạt. Phí thành viên 1.800.000đ (6 tháng) đã được xác nhận.\n\nQuét mã QR hoặc truy cập website để đăng nhập.`,
+        category: 'admin',
+        is_read: false,
+      })
+    }
+
     return NextResponse.json({ success: true, message: info.message, status: info.status })
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Lỗi máy chủ' }, { status: 500 })
