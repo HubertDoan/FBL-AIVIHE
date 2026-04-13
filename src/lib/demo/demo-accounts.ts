@@ -117,7 +117,7 @@ const SEED_ACCOUNTS: DemoAccount[] = [
     role: 'director',
     citizenId: 'demo-director-tram',
     phone: '0901000008',
-    description: 'Giám đốc công ty FBL',
+    description: 'Giám đốc Thong Dong Life',
   },
   {
     id: 'demo-0009-0000-0000-000000000009',

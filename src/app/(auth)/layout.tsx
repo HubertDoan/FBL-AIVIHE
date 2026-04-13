@@ -5,7 +5,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
-      {/* Header: AIVIHE nhỏ ở giữa trên cùng, FBL bên phải */}
+      {/* Header: AIVIHE nhỏ ở giữa trên cùng, Thong Dong Life bên phải */}
       <header className="relative flex items-center justify-center py-3 px-4">
         <img
           src="/AIVIHE.jpg"
@@ -13,8 +13,8 @@ export default function AuthLayout({
           className="h-10 w-auto object-contain rounded"
         />
         <img
-          src="/fbl-logo.jpg"
-          alt="FBL - For Better Life"
+          src="/thong-dong-life-logo.png"
+          alt="Thong Dong Life"
           className="absolute right-4 h-10 w-auto object-contain"
         />
       </header>

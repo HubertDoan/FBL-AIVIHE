@@ -103,7 +103,7 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
     <div className="flex flex-col h-full">
       {/* Brand logos */}
       <div className="p-3 border-b border-border flex items-center justify-center gap-2">
-        <img src="/fbl-logo.jpg" alt="FBL" className="h-8 w-auto object-contain" />
+        <img src="/thong-dong-life-logo.png" alt="Thong Dong Life" className="h-8 w-auto object-contain" />
         <img src="/AIVIHE.jpg" alt="AIVIHE" className="h-8 w-auto object-contain rounded" />
       </div>
 

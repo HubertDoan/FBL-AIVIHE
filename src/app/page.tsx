@@ -66,11 +66,11 @@ export default function LandingPage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-cyan-500/5" />
         <div className="relative max-w-5xl mx-auto px-4 pt-4 pb-6">
-          {/* Header: FBL trái, AIVIHE chính giữa tuyệt đối */}
+          {/* Header: Thong Dong Life trái, AIVIHE chính giữa tuyệt đối */}
           <div className="relative flex items-center justify-center mb-4 min-h-[56px] md:min-h-[72px]">
             <img
-              src="/fbl-logo.jpg"
-              alt="FBL - For Better Life - Cho cuộc sống tốt hơn"
+              src="/thong-dong-life-logo.png"
+              alt="Thong Dong Life - Sống thong dong"
               className="absolute left-0 h-14 md:h-[72px] w-auto object-contain"
             />
             <img
@@ -307,10 +307,10 @@ export default function LandingPage() {
       <footer className="border-t border-gray-100 bg-white py-8">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <p className="text-gray-500 mb-1" style={{ fontSize: '15px' }}>
-            &copy; 2024 AIVIHE - FBL (For Better Life - Cho cuộc sống tốt hơn)
+            &copy; 2024 AIVIHE - Thong Dong Life (Sống thong dong)
           </p>
           <p className="text-gray-400 text-sm">
-            Được phát triển bởi đội ngũ FBL
+            Được phát triển bởi Thong Dong Tech
           </p>
         </div>
       </footer>

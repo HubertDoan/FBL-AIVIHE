@@ -56,12 +56,12 @@ export function MembershipCard({
         <div className="absolute -top-10 -right-10 size-40 rounded-full bg-white/10" />
         <div className="absolute -bottom-8 -left-8 size-32 rounded-full bg-white/10" />
 
-        {/* Top: FBL logo + Tier badge */}
+        {/* Top: Thong Dong Life logo + Tier badge */}
         <div className="flex items-start justify-between relative z-10">
           <div className="flex items-center gap-2">
             <img
-              src="/fbl-logo.jpg"
-              alt="FBL"
+              src="/thong-dong-life-logo.png"
+              alt="Thong Dong Life"
               className="h-10 w-auto object-contain rounded"
             />
           </div>

@@ -170,7 +170,7 @@ const citizens: Record<string, Citizen> = {
     email: 'tram@demo.aivihe.vn',
     address: 'Quận Ba Đình, Hà Nội',
     ethnicity: 'Kinh',
-    occupation: 'Giám đốc công ty FBL',
+    occupation: 'Giám đốc Thong Dong Life',
     avatar_url: null,
     has_consented: true,
     created_at: '2024-01-05T00:00:00Z',
