@@ -1,16 +1,60 @@
 # AIVIHE — Project Overview
 
 ## Identity
-**AIVIHE** = AI · VI · HE (Artificial Intelligence · Vietnam · Health)
-Health Data Backbone cho hệ sinh thái Thong Dong Life.
 
-## Problem
-Người cao tuổi tại trung tâm Thong Dong cần hệ thống sức khỏe tích hợp: Daycare theo dõi hàng ngày, Bác sỹ gia đình quản lý lâm sàng, PHCN phục hồi chức năng. Dữ liệu phân tán — không ai thấy bức tranh toàn cảnh.
+**AIVIHE** = AI · VI · HE = Trợ lý AI sức khỏe cá nhân
+- Nhánh công nghệ của **Thong Dong Life**, do **Thong Dong Tech** phát triển
+- Thong Dong Life gồm 5 thương hiệu: **Life** (triết lý), **Daycare** (chăm sóc ban ngày), **Home** (không gian sống), **Land** (bất động sản), **Tech** (công nghệ)
+- AIVIHE là sản phẩm chính của Thong Dong Tech
 
-## Solution
-AIVIHE là **nền tảng dữ liệu sức khỏe tổng thể** — Customer Master + Medical EMR + AI Engine. Một khách hàng – một mã TDL – một hồ sơ chung – 11 tabs chuyên môn – dữ liệu liên thông toàn hệ thống.
+**AIVIHE KHÔNG phải**: hồ sơ sức khỏe điện tử (do cơ quan quản lý nhà nước quy định), phần mềm bệnh viện, công cụ chẩn đoán. AI chỉ tổng hợp — không chẩn đoán, không thay thế bác sĩ.
 
-**AIVIHE KHÔNG phải**: hệ thống Daycare (Daycare riêng), phần mềm bệnh viện, công cụ chẩn đoán.
+## Problem & Solution
+
+**Vấn đề:** Dữ liệu sức khỏe phân tán ở nhiều nơi (bệnh viện, phòng khám, ứng dụng) — không ai thấy bức tranh toàn cảnh về sức khỏe của người dùng.
+
+**Giải pháp:** AIVIHE tập trung dữ liệu → AI tổng hợp → cho bức tranh sức khỏe toàn diện → **người dùng tự hiểu và tự quyết định**.
+
+Nguyên tắc cốt lõi: Một khách hàng – một mã TDL – một hồ sơ chung – dữ liệu liên thông.
+
+## User Roles & Workflow
+
+| Role | Vị trí | Workflow |
+|------|--------|---------|
+| super_admin | Quản trị hệ thống | Quản lý toàn bộ, phê duyệt đăng ký |
+| director | Giám đốc (Trần Thị Ngọc Trâm) | Phê duyệt, giám sát toàn hệ thống |
+| branch_director | GĐ chi nhánh (Lưu Tuấn Khanh) | Quản lý chi nhánh |
+| admin | Quản trị viên | Duyệt thành viên, quản lý thông báo |
+| reception | Tiếp đón (Nguyễn Thị Mai) | Tiếp nhận KH, khai hồ sơ ban đầu |
+| doctor | Bác sĩ gia đình (BS. Nguyễn Hải) | Theo dõi sức khỏe, tư vấn, ra chỉ định |
+| exam_doctor | BS khám bệnh (BS. Trần Văn Nam) | Khám lâm sàng, chẩn đoán |
+| specialist | BS chuyên khoa (BS. Phạm Văn Đức) | Tư vấn chuyên khoa sâu (khớp, tim mạch...) |
+| technician | KTV PHCN (Trần Minh) | Đánh giá, trị liệu phục hồi chức năng |
+| nurse | Điều dưỡng (Nguyễn Thị Hương) | Đo chỉ số, nhắc thuốc, ghi chép |
+| manager | Quản lý (Vũ Đình Trung) | Giám sát vận hành |
+| member | Khách hàng/Thành viên | Xem hồ sơ, cập nhật thông tin, sử dụng dịch vụ |
+| citizen | Người đăng ký mới | Chưa được duyệt, chờ phê duyệt |
+| guest | Khách vãng lai | Xem trang chủ, đăng ký |
+| family_viewer | Người thân | Xem báo cáo, nhận cảnh báo |
+
+## Customer Journey / Flow
+
+```
+Kênh 1: Đăng ký trực tiếp trên aivihe.vn
+  KH tìm hiểu → Đăng ký trên web → Admin/GĐ phê duyệt → Kích hoạt tài khoản → Sử dụng
+
+Kênh 2: Từ Thong Dong Daycare
+  KH đến Daycare → Lễ tân khai hồ sơ → KH đồng ý quản lý sức khỏe → Mở quyền AIVIHE → Sử dụng
+```
+
+## Gói dịch vụ
+
+| Gói | Tên | Phí | Bao gồm |
+|-----|-----|-----|---------|
+| 0 | Cơ bản | Miễn phí | Lập hồ sơ, cập nhật thông tin, AI tổng hợp báo cáo đánh giá chung |
+| 1 | Bác sĩ gia đình | Thuê bao tháng + phí/lần | BS gia đình theo dõi, tư vấn, tự chọn BS, đánh giá sao |
+| 2 | PHCN | Thuê bao + phí/buổi | Phục hồi chức năng tại trung tâm hoặc tại nhà |
+| 3 | Chuyên khoa sâu | Phí/lần tư vấn | BS chuyên khoa (khớp, tim mạch, nội tiết...), tư vấn, hỗ trợ đi khám BV |
 
 ## 10 Modules
 
@@ -25,22 +69,31 @@ AIVIHE là **nền tảng dữ liệu sức khỏe tổng thể** — Customer M
 | 7 | Care Plan Engine | Kế hoạch chăm sóc tích hợp liên ngành |
 | 8 | Alert Engine | Cảnh báo theo rule, log sự cố, escalation |
 | 9 | Family Portal | Báo cáo gia đình, thông báo, lịch hẹn |
-| 10 | Device Integration | Wearable, box y tế, smartbed |
+| 10 | Device Integration | Wearable, IoT (huyết áp, nhịp tim, SpO2, đường huyết, ECG) |
 
 ## Hệ sinh thái
 
 ```
-AIVIHE (repo này)              Thong Dong Daycare (repo riêng)
-├── Customer Master ◄──────────── Tạo KH mới, push webhook
-├── Medical EMR                   ├── Daily ops (check-in/out)
-├── AI Engine (OCR, summary)      ├── Vitals recording
-├── 11-tab Customer Profile       ├── Medication tracking
-└── Webhook receiver/sender ◄───► └── Incident reporting
-    REST API + HMAC SHA256
+Thong Dong Life
+├── Daycare (chăm sóc ban ngày) ◄──► AIVIHE (sức khỏe cá nhân)
+├── Home (không gian sống)           ├── Customer Master (mã TDL)
+├── Land (bất động sản)              ├── Medical EMR (BSGD + PHCN)
+└── Tech → AIVIHE (sản phẩm)        ├── AI Engine (OCR, tổng hợp)
+                                     └── IoT devices (wearable)
+
+Tích hợp AIVIHE ↔ Daycare: REST API + Webhooks + HMAC SHA256
 ```
 
 ## Stakeholders
-- **Project owner**: Thầy Hải (Doãn Ngọc Hải) — Super Admin
-- **Target users**: Khách hàng cao tuổi, gia đình, nhân viên Daycare, BSGD, KTV PHCN
-- **Partners**: Thong Dong Life, SmartBed, Bảo Minh (tương lai)
-- **Pilot**: Trung tâm HaPu (GĐ: Trần Thị Ngọc Trâm)
+
+- **PGS.TS. Doãn Ngọc Hải** — Chuyên gia y tế, Chủ mô hình, Super Admin
+- **TS. Trần Thị Nhị Hà** — Cố vấn cao cấp (nguyên GĐ Sở Y tế Hà Nội)
+- **Trần Thị Ngọc Trâm** — Giám đốc Thong Dong Daycare
+- **Partners**: Mirabo Global (VR/AR), Sở Y tế, Trạm Y tế xã/phường, Bạch Niên Thiên Đức, Bảo Minh
+
+## Technical Stack
+
+- **Frontend + Backend**: Next.js 16 (App Router), TypeScript, Tailwind CSS 4, shadcn/ui
+- **Database + Auth**: Supabase (PostgreSQL + Phone OTP Auth + Storage)
+- **AI**: Claude API (Vision OCR + Text summaries)
+- **Charts**: Recharts · **Deploy**: Vercel + Supabase Cloud (Seoul)
