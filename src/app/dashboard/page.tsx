@@ -9,6 +9,8 @@ import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { MedicationReminderCard } from '@/components/dashboard/medication-reminder-card'
 import { useAuth } from '@/hooks/use-auth'
 import { GuestDashboard } from '@/components/membership/guest-dashboard'
+import { CustomerWelcomeAndGuideSection } from '@/components/dashboard/customer-welcome-and-guide-section'
+import { CustomerServicePackagesDashboardCards } from '@/components/dashboard/customer-service-packages-dashboard-cards'
 import { Upload, Clock, Stethoscope } from 'lucide-react'
 import type { ExamRegistration, MedicationReminder } from '@/lib/demo/demo-exam-registration-data'
 
@@ -106,11 +108,18 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      {/* Welcome + Guide for customers */}
+      {(user?.role === 'member' || user?.role === 'citizen') && (
+        <CustomerWelcomeAndGuideSection userName={user?.fullName || 'bạn'} />
+      )}
+
       <div>
         <h1 className="text-2xl font-bold">Tổng quan sức khỏe</h1>
-        <p className="text-lg text-muted-foreground mt-1">
-          Xin chào, {user?.fullName || 'bạn'}!
-        </p>
+        {user?.role !== 'member' && user?.role !== 'citizen' && (
+          <p className="text-lg text-muted-foreground mt-1">
+            Xin chào, {user?.fullName || 'bạn'}!
+          </p>
+        )}
       </div>
 
       <OverviewCards
@@ -123,6 +132,11 @@ export default function DashboardPage() {
       {/* Show medication reminders only for regular members with active prescriptions */}
       {activeReminders.length > 0 && user?.role === 'member' && (
         <MedicationReminderCard reminders={activeReminders} />
+      )}
+
+      {/* Service packages for customers */}
+      {(user?.role === 'member' || user?.role === 'citizen') && (
+        <CustomerServicePackagesDashboardCards />
       )}
 
       <BulletinBoard />
