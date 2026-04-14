@@ -17,9 +17,9 @@ export function IotHealthDevicesSection() {
             Thiết bị IoT theo dõi sức khỏe
           </h2>
           <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed">
-            Bên cạnh trợ lý AI, Thong Dong Tech cung cấp các thiết bị đeo thông minh
-            giúp theo dõi và giám sát chỉ số sức khỏe realtime — dữ liệu tự động
-            cập nhật lên hệ thống AIVIHE.
+            Phối hợp cùng MediExpress — đơn vị tiên phong IoT y tế tại Việt Nam,
+            Thong Dong Tech cung cấp GoTrust Box, thiết bị đeo thông minh
+            giúp theo dõi chỉ số sức khỏe realtime — dữ liệu tự động cập nhật lên AIVIHE.
           </p>
         </div>
 

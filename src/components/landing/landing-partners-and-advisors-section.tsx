@@ -36,7 +36,8 @@ export function PartnersAndAdvisorsSection() {
             title="Đối tác công nghệ"
             items={[
               'Mirabo Global — VR/AR/MR & chuyển đổi số',
-              'Thong Dong Tech — AI sức khỏe & IoT',
+              'MediExpress — tiên phong IoT y tế, GoTrust Box, thiết bị đeo tay',
+              'Thong Dong Tech — AI sức khỏe & nền tảng AIVIHE',
             ]}
           />
           <PartnerCard
