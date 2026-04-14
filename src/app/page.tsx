@@ -15,6 +15,8 @@ import { CommitmentCard } from '@/components/landing/landing-commitment-card'
 import { HowAiHelpsSection } from '@/components/landing/landing-how-ai-helps-section'
 import { HealthInspirationQuote } from '@/components/landing/landing-health-inspiration-quote'
 import { EcosystemCareJourney } from '@/components/landing/landing-ecosystem-care-journey'
+import { PartnersAndAdvisorsSection } from '@/components/landing/landing-partners-and-advisors-section'
+import { IotHealthDevicesSection } from '@/components/landing/landing-iot-health-devices-section'
 
 export default function LandingPage() {
   return (
@@ -122,6 +124,12 @@ export default function LandingPage() {
 
       {/* ===== HÀNH TRÌNH CHĂM SÓC TRONG HỆ SINH THÁI ===== */}
       <EcosystemCareJourney />
+
+      {/* ===== THIẾT BỊ IOT ===== */}
+      <IotHealthDevicesSection />
+
+      {/* ===== ĐỘI NGŨ & ĐỐI TÁC ===== */}
+      <PartnersAndAdvisorsSection />
 
       {/* ===== FINAL CTA ===== */}
       <section className="text-center py-10 bg-gradient-to-b from-white to-teal-50/30">
