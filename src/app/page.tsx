@@ -17,6 +17,7 @@ import { HealthInspirationQuote } from '@/components/landing/landing-health-insp
 import { EcosystemCareJourney } from '@/components/landing/landing-ecosystem-care-journey'
 import { PartnersAndAdvisorsSection } from '@/components/landing/landing-partners-and-advisors-section'
 import { IotHealthDevicesSection } from '@/components/landing/landing-iot-health-devices-section'
+import { ServicePackagesSection } from '@/components/landing/landing-service-packages-section'
 
 export default function LandingPage() {
   return (
@@ -127,6 +128,9 @@ export default function LandingPage() {
 
       {/* ===== THIẾT BỊ IOT ===== */}
       <IotHealthDevicesSection />
+
+      {/* ===== GÓI DỊCH VỤ ===== */}
+      <ServicePackagesSection />
 
       {/* ===== ĐỘI NGŨ & ĐỐI TÁC ===== */}
       <PartnersAndAdvisorsSection />
