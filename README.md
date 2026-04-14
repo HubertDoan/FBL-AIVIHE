@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AIVIHE — Health Data Backbone
 
-## Getting Started
+**AI · VI · HE** = Artificial Intelligence · Vietnam · Health
 
-First, run the development server:
+Nền tảng dữ liệu sức khỏe cho hệ sinh thái Thong Dong Life. Quản lý hồ sơ khách hàng thống nhất, EMR bác sỹ gia đình, PHCN, chỉ số sức khỏe, và AI trợ lý.
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend + Backend | Next.js 16 (App Router) + TypeScript |
+| UI | Tailwind CSS 4 + shadcn/ui |
+| Database + Auth | Supabase (PostgreSQL + Phone OTP + RLS) |
+| AI | Claude API (Vision OCR + Text) |
+| Charts | Recharts |
+| PDF | @react-pdf/renderer |
+| Deploy | Vercel + Supabase Cloud |
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1. Install dependencies
+npm install
+
+# 2. Configure environment
+cp .env.example .env.local
+# Fill in Supabase URL, keys, Claude API key
+
+# 3. Run dev server
+npm run dev          # http://localhost:3000
+
+# 4. Build for production
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Prerequisites**: Node.js 20+, Supabase project
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/              # Next.js App Router
+│   ├── (auth)/       # Login, register, consent
+│   ├── api/          # REST API routes (72+ endpoints)
+│   ├── dashboard/    # User dashboard + modules
+│   └── admin/        # Admin panel
+├── components/       # React components by feature
+├── lib/              # Utilities, constants, validators
+│   ├── permissions/  # RBAC (12 roles, 34 permissions)
+│   └── supabase/     # DB client & auth
+├── hooks/            # React hooks
+└── types/            # TypeScript types
+supabase/
+├── migrations/       # SQL migrations (26+)
+└── seed scripts
+docs/                 # Technical documentation
+```
 
-## Learn More
+## Integration
 
-To learn more about Next.js, take a look at the following resources:
+AIVIHE tích hợp với **Thong Dong Daycare** (repo riêng) qua:
+- REST API: `/api/integration/*` (TDL code, citizens, health summary)
+- Webhooks: `/api/webhooks/daycare-events` (HMAC SHA256 + idempotent)
+- TDL Customer Code: `TDL-{location}-{sequence}` — mã thống nhất toàn hệ thống
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Business specs: `../docs/specs/`
+- Technical docs: `./docs/`
+- Implementation plans: `../plans/`

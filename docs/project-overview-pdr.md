@@ -1,37 +1,46 @@
-# AIVIHE - Project Overview
+# AIVIHE — Project Overview
 
 ## Identity
 **AIVIHE** = AI · VI · HE (Artificial Intelligence · Vietnam · Health)
-Tagline: "Trợ lý AI sức khỏe cá nhân giúp người dân hiểu và quản lý dữ liệu sức khỏe của mình."
+Health Data Backbone cho hệ sinh thái Thong Dong Life.
 
 ## Problem
-Vietnamese citizens visit multiple hospitals — each only knows its part. Health data scattered: lab photos on phones, PDFs lost in folders, old prescriptions in drawers. Nobody sees the complete health picture over time.
+Người cao tuổi tại trung tâm Thong Dong cần hệ thống sức khỏe tích hợp: Daycare theo dõi hàng ngày, Bác sỹ gia đình quản lý lâm sàng, PHCN phục hồi chức năng. Dữ liệu phân tán — không ai thấy bức tranh toàn cảnh.
 
 ## Solution
-AIVIHE is a **Personal Health Copilot** — a digital health notebook for citizens. NOT a hospital system, NOT an EMR, NOT a diagnosis engine.
+AIVIHE là **nền tảng dữ liệu sức khỏe tổng thể** — Customer Master + Medical EMR + AI Engine. Một khách hàng – một mã TDL – một hồ sơ chung – 11 tabs chuyên môn – dữ liệu liên thông toàn hệ thống.
 
-## What AIVIHE Does
-1. Store health data from all sources in one place
-2. AI reads documents, extracts structured data (user confirms)
-3. Show health timeline with trends over time
-4. Prepare visit summaries for doctors
-5. Family members manage health for each other
+**AIVIHE KHÔNG phải**: hệ thống Daycare (Daycare riêng), phần mềm bệnh viện, công cụ chẩn đoán.
 
-## 8 Subsystems
-1. Account & Health Profile (lifetime, emergency card)
-2. Family Health Group (role-based, audit log)
-3. Document Upload (immutable storage)
-4. AI Data Extraction (OCR → confirm → save)
-5. Health Timeline (chronological, charts)
-6. AI Health Summary (with citations)
-7. Visit Preparation (specialty → symptoms → PDF)
-8. Feedback & Notifications
+## 10 Modules
 
-## Phase 1 Scope
-Demo prototype: 13 screens, 4 family seed data, deploy on Vercel + Supabase.
-Pilot location: Xã Sóc Sơn.
+| # | Module | Vai trò |
+|---|--------|---------|
+| 1 | Customer Master | Mã TDL, hồ sơ hành chính, phân loại KH |
+| 2 | Health Summary | Hồ sơ sức khỏe chung, cảnh báo nhanh, summary cho Daycare |
+| 3 | Family Doctor EMR | Khám, bệnh sử, chẩn đoán, bệnh mạn tính, kế hoạch theo dõi |
+| 4 | Rehab EMR | Đánh giá chức năng, trị liệu, tiến triển PHCN |
+| 5 | Vitals Tracking | Time-series chỉ số, biểu đồ, rule cảnh báo ngưỡng |
+| 6 | Medication Management | Danh mục thuốc, nhắc thuốc, xác nhận dùng thuốc |
+| 7 | Care Plan Engine | Kế hoạch chăm sóc tích hợp liên ngành |
+| 8 | Alert Engine | Cảnh báo theo rule, log sự cố, escalation |
+| 9 | Family Portal | Báo cáo gia đình, thông báo, lịch hẹn |
+| 10 | Device Integration | Wearable, box y tế, smartbed |
+
+## Hệ sinh thái
+
+```
+AIVIHE (repo này)              Thong Dong Daycare (repo riêng)
+├── Customer Master ◄──────────── Tạo KH mới, push webhook
+├── Medical EMR                   ├── Daily ops (check-in/out)
+├── AI Engine (OCR, summary)      ├── Vitals recording
+├── 11-tab Customer Profile       ├── Medication tracking
+└── Webhook receiver/sender ◄───► └── Incident reporting
+    REST API + HMAC SHA256
+```
 
 ## Stakeholders
-- Project owner: Thầy Hải
-- Target users: Vietnamese citizens, families, elderly
-- Partners: Trạm y tế xã Sóc Sơn, SmartBed, Thong Dong Life
+- **Project owner**: Thầy Hải (Doãn Ngọc Hải) — Super Admin
+- **Target users**: Khách hàng cao tuổi, gia đình, nhân viên Daycare, BSGD, KTV PHCN
+- **Partners**: Thong Dong Life, SmartBed, Bảo Minh (tương lai)
+- **Pilot**: Trung tâm HaPu (GĐ: Trần Thị Ngọc Trâm)

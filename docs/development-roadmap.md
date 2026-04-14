@@ -1,44 +1,63 @@
 # Development Roadmap
 
-## Phase 1: Foundation (Day 1-2) — IN PROGRESS
-- [x] Init Next.js project + dependencies
-- [ ] Supabase database migrations (22 files)
-- [ ] Auth (Phone OTP) + middleware
-- [ ] App shell (layout, theme, disclaimer banner)
-- [ ] Seed data (4 family members)
+> Cập nhật: 13/04/2026. Theo kiến trúc Federated Coexistence (AIVIHE ↔ Daycare).
 
-## Phase 2: Core Value (Day 3-6)
-- [ ] Document Upload (drag-drop, camera, HEIC support)
-- [ ] AI Extraction pipeline (Claude Vision OCR)
-- [ ] Extraction review + user confirm UI
-- [ ] Health Timeline page + filters
-- [ ] Trend charts (Recharts)
+## Đã hoàn thành: MVP Foundation
 
-## Phase 3: Profile + Family (Day 7-9)
-- [ ] Personal Health Profile (info + emergency card)
-- [ ] Family Group management
-- [ ] Role-based permissions
-- [ ] "Update on behalf" flow
-- [ ] Dashboard page
+- [x] Next.js 16 + Supabase + Tailwind + shadcn/ui
+- [x] 26 database migrations + RLS policies
+- [x] Auth (Phone OTP) + demo mode + 10 accounts
+- [x] Landing page + branding Thong Dong Life + AIVIHE
+- [x] Dashboard (member/admin/doctor/director/reception)
+- [x] Document upload + AI OCR extraction + confirm flow
+- [x] Health timeline + trend charts (Recharts)
+- [x] Profile (3 tabs) + Family Group + notifications
+- [x] Visit preparation (4-step wizard + PDF)
+- [x] Admin panel (members, announcements, branches)
+- [x] RBAC 12 roles, 34 permissions, multi-branch schema
+- [x] Messaging, feedback, membership registration
+- [x] Branding migration FBL → Thong Dong Life
 
-## Phase 4: AI Features (Day 10-12)
-- [ ] AI Health Summary (with citations)
-- [ ] Visit Preparation workflow
-- [ ] PDF export (Vietnamese fonts)
-- [ ] Family Doctor view
+## Sprint 1 (12-25/04) — Integration Contract + Production Deploy
 
-## Phase 5: Polish + Deploy (Day 13-15)
-- [ ] Landing Page
-- [ ] Feedback system
-- [ ] Admin panel
+- [ ] Migration: `tdl_customer_code` + `location_code` + `customer_sequence` trên citizens
+- [ ] Migration: `service_enrollments` table
+- [ ] Migration: `integration_events` audit log
+- [ ] Migration: `daycare_summary_cache` table
+- [ ] API: `POST /api/integration/reserve-tdl-code`
+- [ ] API: `GET /api/integration/citizens/{tdlCode}`
+- [ ] API: `POST /api/webhooks/daycare-events` (5 event types, HMAC auth)
+- [ ] Import 5 Daycare customers (TDL-HN-000001→000005), set sequence=6
+- [ ] Deploy production (Vercel + Supabase thật)
+- [ ] Tắt demo mode → Supabase Auth production
+
+## Sprint 2 (26/04-09/05) — Cross-system Data Flow
+
+- [ ] Migration: `vital_signs` + `vital_thresholds` tables
+- [ ] Migration: `alerts` + `incident_logs` tables
+- [ ] Webhook merger: Daycare vitals → AIVIHE timeline
+- [ ] Auto-alert on severity='red'
+- [ ] Webhook sender: AIVIHE → Daycare (health_summary_updated, alert_raised)
+
+## Sprint 3 (10-23/05) — Medical EMR + BS Gia Đình
+
+- [ ] Family Doctor EMR: encounters, ICD-10, diagnoses
+- [ ] Medications prescribed + webhook push to Daycare
+- [ ] Rehab module: sessions, assessments, progress
+- [ ] Care Plans: BS tạo → tasks auto-assign Daycare
+- [ ] Customer profile unified 11-tab UI (role-based)
+
+## Sprint 4 (24/05-06/06) — Family Portal + SSO + Polish
+
+- [ ] Family Portal (timeline cross Daycare + medical, weekly report AI)
+- [ ] SSO cross-domain (shared JWT between thongdonglife.vn ↔ AIVIHE)
 - [ ] Mobile responsive audit
-- [ ] Elder-friendly audit
-- [ ] Deploy Vercel + Supabase Cloud
-- [ ] E2E testing with seed data
+- [ ] Vietnamese PDF fonts
+- [ ] Performance optimization
 
-## Future (Post Phase 1)
-- SmartBed integration (sleep data)
-- Thong Dong Life connection
+## Future
+
+- Device Integration (SmartBed, wearable, box y tế)
+- Bảo Minh insurance integration
 - Voice input (Google Speech)
 - VNeID integration
-- Professional team handoff
