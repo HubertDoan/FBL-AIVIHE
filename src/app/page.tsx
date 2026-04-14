@@ -13,6 +13,8 @@ import { SolutionCard } from '@/components/landing/landing-solution-card'
 import { AudienceCard } from '@/components/landing/landing-audience-card'
 import { CommitmentCard } from '@/components/landing/landing-commitment-card'
 import { HowAiHelpsSection } from '@/components/landing/landing-how-ai-helps-section'
+import { HealthInspirationQuote } from '@/components/landing/landing-health-inspiration-quote'
+import { EcosystemCareJourney } from '@/components/landing/landing-ecosystem-care-journey'
 
 export default function LandingPage() {
   return (
@@ -115,33 +117,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== THONG DONG LIFE ECOSYSTEM ===== */}
-      <section className="py-10">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-200 rounded-2xl p-8 shadow-sm text-center">
-            <Image src="/thong-dong-life-logo.png" alt="Thong Dong Life" width={200} height={80} className="h-16 w-auto mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-teal-900 mb-3">Hệ sinh thái Thong Dong Life</h2>
-            <p className="text-teal-800 text-lg leading-relaxed max-w-2xl mx-auto mb-4">
-              Xây dựng hành trình sống chủ động và an vui — từ người trẻ đến tuổi nghỉ hưu.
-              Sức khỏe là trụ cột của Thong Dong Life. Thong Dong Tech tạo ra công nghệ phục vụ,
-              và AIVIHE là trợ lý AI sức khỏe cá nhân kết nối toàn bộ hệ sinh thái.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3 text-sm text-teal-700 mb-4">
-              {['🌿 Thong Dong Life', '🏠 Daycare', '🏡 Home', '🌳 Land', '💻 Tech'].map((t) => (
-                <span key={t} className="bg-white/70 px-3 py-1.5 rounded-full border border-teal-200">{t}</span>
-              ))}
-            </div>
-            <a
-              href="https://thongdonglife.vn"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-teal-600 hover:text-teal-800 font-medium text-sm underline underline-offset-2"
-            >
-              Tìm hiểu thêm tại thongdonglife.vn <ArrowRight className="size-3" />
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* ===== CẢM HỨNG: SỨC KHỎE LÀ VỐN QUÝ NHẤT ===== */}
+      <HealthInspirationQuote />
+
+      {/* ===== HÀNH TRÌNH CHĂM SÓC TRONG HỆ SINH THÁI ===== */}
+      <EcosystemCareJourney />
 
       {/* ===== FINAL CTA ===== */}
       <section className="text-center py-10 bg-gradient-to-b from-white to-teal-50/30">
