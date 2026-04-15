@@ -88,6 +88,7 @@ export const PERMISSIONS = {
   MODULE_HEALTH_RECORD_CLINIC: 'module.health_record_clinic',
   MODULE_NOTIFICATIONS: 'module.notifications',
   MODULE_GUIDE: 'module.guide',
+  MODULE_MEDICAL_RECORD: 'module.medical_record',
 } as const
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
@@ -282,6 +283,7 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   'module.health_record_clinic': 'Khám chữa bệnh',
   'module.notifications': 'Thông báo',
   'module.guide': 'Hướng dẫn',
+  'module.medical_record': 'Hồ sơ y tế (11 mục)',
 }
 
 export const ALL_PERMISSIONS: Permission[] = Object.values(PERMISSIONS)

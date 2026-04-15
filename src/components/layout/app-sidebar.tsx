@@ -63,6 +63,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: 'HỒ SƠ SỨC KHỎE',
     items: [
+      { href: '/dashboard/medical-record', label: 'Hồ sơ y tế (11 mục)', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
       { href: '/dashboard/health-record?tab=daycare', label: 'Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE },
       { href: '/dashboard/health-record?tab=family-doctor', label: 'Bác sĩ gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR },
       { href: '/dashboard/health-record?tab=rehab', label: 'Phục hồi chức năng', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB },
