@@ -12,6 +12,11 @@ export default function UploadPage() {
   const citizenId = user?.citizenId ?? null
 
   const handleUploadComplete = (documentId: string) => {
+    // Demo docs: không có record Supabase → back về dashboard, tránh extraction page lỗi
+    if (documentId.startsWith('demo-doc-')) {
+      router.push('/dashboard?uploaded=1')
+      return
+    }
     router.push(`/dashboard/extraction/${documentId}`)
   }
 
