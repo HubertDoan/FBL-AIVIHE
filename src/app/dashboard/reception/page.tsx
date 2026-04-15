@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { ReceptionPatientCard } from '@/components/dashboard/reception-patient-card'
 import { ReceptionPendingMemberRegistrationList } from '@/components/reception/reception-pending-member-registration-list'
 import { ConsultationRequestListForReception } from '@/components/reception/consultation-request-list-for-reception'
+import { StaffServiceCodeCheckAndDeductTool } from '@/components/services/staff-service-code-check-and-deduct-tool'
 import type { ExamRegistration } from '@/lib/demo/demo-exam-registration-data'
 
 const RECEPTION_ACCESS_ROLES = ['reception', 'admin', 'admin_staff', 'manager', 'super_admin', 'director', 'branch_director']
@@ -83,6 +84,8 @@ export default function ReceptionPage() {
           Quản lý hồ sơ khám bệnh và đăng ký thành viên mới
         </p>
       </div>
+
+      <StaffServiceCodeCheckAndDeductTool />
 
       <Tabs defaultValue="consultation">
         <TabsList className="mb-4 flex-wrap h-auto">

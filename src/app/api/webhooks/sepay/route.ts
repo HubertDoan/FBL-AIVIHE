@@ -68,16 +68,36 @@ export async function POST(request: NextRequest) {
     }
     processedTransactions.add(payload.id)
 
-    // Extract username from transfer content (e.g. "AIVIHE minhnv2026")
+    // Extract content + check payment type (AIVIHE membership vs SVC service registration)
     const contentUpper = (payload.content ?? '').toUpperCase()
     const isAivihePayment = contentUpper.includes('AIVIHE')
+    const isServicePayment = contentUpper.includes('SVC')
 
-    if (!isAivihePayment) {
-      // Not an AIVIHE payment, ignore
+    if (!isAivihePayment && !isServicePayment) {
+      // Not an AIVIHE/SVC payment, ignore
       return NextResponse.json({ success: true })
     }
 
-    // Extract member identifier from content after "AIVIHE "
+    // SVC payments — match service registration by payment_content
+    if (isServicePayment) {
+      console.log(
+        `[SePay] Service payment received: ${payload.transferAmount}đ | Content: "${payload.content}"`
+      )
+      if (isDemoMode()) {
+        const { findByPaymentContent, confirmPaymentForServiceRegistration } =
+          await import('@/lib/demo/demo-service-registration-in-memory-store')
+        const reg = findByPaymentContent(payload.content)
+        if (reg && reg.status === 'payment_pending') {
+          const updated = confirmPaymentForServiceRegistration(reg.id, String(payload.id))
+          console.log(`[SePay] Activated service registration ${reg.id} → ${updated?.service_code}`)
+        }
+        return NextResponse.json({ success: true })
+      }
+      // TODO: Supabase — match service_enrollments by payment_content, auto-activate
+      return NextResponse.json({ success: true })
+    }
+
+    // AIVIHE membership payments
     const match = payload.content.match(/AIVIHE\s+(\S+)/i)
     const memberIdentifier = match?.[1] ?? null
 

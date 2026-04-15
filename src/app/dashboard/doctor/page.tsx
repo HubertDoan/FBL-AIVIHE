@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
+import { StaffServiceCodeCheckAndDeductTool } from '@/components/services/staff-service-code-check-and-deduct-tool'
 import type { Citizen, ChronicDisease, Medication } from '@/types/database'
 
 interface PatientView {
@@ -72,6 +73,9 @@ export default function DoctorPage() {
           Danh sách bệnh nhân đã ủy quyền cho bạn
         </p>
       </div>
+
+      {/* Service code check tool — trừ lượt khi khám tại nhà hoặc tư vấn */}
+      <StaffServiceCodeCheckAndDeductTool />
 
       {patients.length === 0 ? (
         <Card>

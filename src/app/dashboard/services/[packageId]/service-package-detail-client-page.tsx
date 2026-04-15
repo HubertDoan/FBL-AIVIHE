@@ -38,7 +38,7 @@ export function ServicePackageDetailClientPage({ pkg }: Props) {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/auth/login')
+      router.push('/login?redirect=/dashboard/services/' + pkg.id)
     }
   }, [loading, user, router])
 
