@@ -149,38 +149,27 @@ export default function DashboardPage() {
         </>
       )}
 
-      <BulletinBoard />
-
-      <RecentActivity
-        recentDocs={recentDocs}
-        pendingExtractions={pendingExtractions}
-      />
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <Button
-          className="h-14 text-base"
-          onClick={() => router.push('/dashboard/upload')}
-        >
-          <Upload className="size-5 mr-2" />
-          Tải tài liệu mới
-        </Button>
-        <Button
-          variant="outline"
-          className="h-14 text-base"
-          onClick={() => router.push('/dashboard/timeline')}
-        >
-          <Clock className="size-5 mr-2" />
-          Xem dòng thời gian
-        </Button>
-        <Button
-          variant="outline"
-          className="h-14 text-base"
-          onClick={() => router.push('/dashboard/visit-prep')}
-        >
-          <Stethoscope className="size-5 mr-2" />
-          Chuẩn bị đi khám
-        </Button>
-      </div>
+      {/* BulletinBoard + RecentActivity + quick actions: chỉ hiện cho staff (không trùng với 7-area grid) */}
+      {user?.role !== 'member' && user?.role !== 'citizen' && (
+        <>
+          <BulletinBoard />
+          <RecentActivity
+            recentDocs={recentDocs}
+            pendingExtractions={pendingExtractions}
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Button className="h-14 text-base" onClick={() => router.push('/dashboard/upload')}>
+              <Upload className="size-5 mr-2" /> Tải tài liệu mới
+            </Button>
+            <Button variant="outline" className="h-14 text-base" onClick={() => router.push('/dashboard/timeline')}>
+              <Clock className="size-5 mr-2" /> Xem dòng thời gian
+            </Button>
+            <Button variant="outline" className="h-14 text-base" onClick={() => router.push('/dashboard/visit-prep')}>
+              <Stethoscope className="size-5 mr-2" /> Chuẩn bị đi khám
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   )
 }

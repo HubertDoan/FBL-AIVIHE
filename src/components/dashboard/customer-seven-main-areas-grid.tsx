@@ -66,7 +66,7 @@ const AREAS: Area[] = [
     description: 'Tin mới từ trung tâm, bác sĩ, gia đình',
     icon: Bell,
     color: 'pink',
-    href: '/dashboard/messages',
+    href: '/dashboard/notifications',
   },
   {
     key: 'guide',
