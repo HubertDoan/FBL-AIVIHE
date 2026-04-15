@@ -78,6 +78,7 @@ Cùng SEQ6 cho tất cả service lines của 1 khách hàng. AIVIHE owns sequen
 - `audit_logs`, `feedbacks`, `visit_preparations`
 
 ### New Tables (Sprint 1-3)
+- `consultation_requests` — yêu cầu tư vấn từ trang chủ (kênh vào khách hàng mới)
 - `service_enrollments` — mã TDL per service line
 - `integration_events` — webhook audit log (idempotent)
 - `daycare_summary_cache` — mirror Daycare daily summary

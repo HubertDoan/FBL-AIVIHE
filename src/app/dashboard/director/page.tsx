@@ -11,6 +11,7 @@ import {
 } from '@/components/director/director-announcements-list'
 import { DirectorFeedbackInbox } from '@/components/director/director-feedback-inbox'
 import { DirectorGreetingEditor } from '@/components/director/director-greeting-editor'
+import { ConsultationRequestListForReception } from '@/components/reception/consultation-request-list-for-reception'
 import type { DirectorAnnouncement } from '@/lib/demo/demo-director-announcement-data'
 import type { DirectorAnnouncementFormData } from '@/components/director/director-announcement-form'
 
@@ -120,8 +121,11 @@ export default function DirectorPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="announcements" className="space-y-4">
-        <TabsList className="grid w-full max-w-md grid-cols-3">
+      <Tabs defaultValue="consultation" className="space-y-4">
+        <TabsList className="flex flex-wrap h-auto gap-1">
+          <TabsTrigger value="consultation" className="text-base gap-1.5">
+            Duyệt yêu cầu tư vấn
+          </TabsTrigger>
           <TabsTrigger value="announcements" className="text-base gap-1.5">
             <Megaphone className="size-4" />
             Thông báo
@@ -134,6 +138,10 @@ export default function DirectorPage() {
             Lời chào
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="consultation">
+          <ConsultationRequestListForReception userRole={userRole} />
+        </TabsContent>
 
         <TabsContent value="announcements">
           <DirectorAnnouncementsList

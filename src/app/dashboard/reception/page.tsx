@@ -9,7 +9,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { ReceptionPatientCard } from '@/components/dashboard/reception-patient-card'
 import { ReceptionPendingMemberRegistrationList } from '@/components/reception/reception-pending-member-registration-list'
+import { ConsultationRequestListForReception } from '@/components/reception/consultation-request-list-for-reception'
 import type { ExamRegistration } from '@/lib/demo/demo-exam-registration-data'
+
+const RECEPTION_ACCESS_ROLES = ['reception', 'admin', 'admin_staff', 'manager', 'super_admin', 'director', 'branch_director']
 
 function ExamReceptionTab() {
   const { user, loading: authLoading } = useAuth()
@@ -64,7 +67,7 @@ function ExamReceptionTab() {
 export default function ReceptionPage() {
   const { user, loading: authLoading } = useAuth()
 
-  if (!authLoading && user?.role !== 'reception') {
+  if (!authLoading && !RECEPTION_ACCESS_ROLES.includes(user?.role || '')) {
     return (
       <div className="flex items-center justify-center py-20">
         <p className="text-muted-foreground text-lg">Bạn không có quyền truy cập trang này.</p>
@@ -81,8 +84,11 @@ export default function ReceptionPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="exam">
-        <TabsList className="mb-4">
+      <Tabs defaultValue="consultation">
+        <TabsList className="mb-4 flex-wrap h-auto">
+          <TabsTrigger value="consultation" className="text-base min-h-[44px]">
+            Yêu cầu tư vấn
+          </TabsTrigger>
           <TabsTrigger value="exam" className="text-base min-h-[44px]">
             Tiếp nhận khám
           </TabsTrigger>
@@ -90,6 +96,10 @@ export default function ReceptionPage() {
             Đăng ký thành viên
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="consultation">
+          <ConsultationRequestListForReception userRole={user?.role || ''} />
+        </TabsContent>
 
         <TabsContent value="exam">
           <ExamReceptionTab />

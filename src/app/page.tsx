@@ -18,6 +18,8 @@ import { EcosystemCareJourney } from '@/components/landing/landing-ecosystem-car
 import { PartnersAndAdvisorsSection } from '@/components/landing/landing-partners-and-advisors-section'
 import { IotHealthDevicesSection } from '@/components/landing/landing-iot-health-devices-section'
 import { ServicePackagesSection } from '@/components/landing/landing-service-packages-section'
+import { LandingConsultationRequestForm } from '@/components/landing/landing-consultation-request-form'
+import { LandingAccessChannelsSection } from '@/components/landing/landing-access-channels-section'
 
 export default function LandingPage() {
   return (
@@ -60,9 +62,9 @@ export default function LandingPage() {
           </p>
 
           <div className="flex items-center justify-center gap-3">
-            <Link href="/login" className={buttonVariants({ size: 'lg', className: 'text-base px-6 py-4 rounded-xl min-h-[48px] gap-2 bg-teal-600 hover:bg-teal-700' })}>
-              Bắt đầu sử dụng <ArrowRight className="size-4" />
-            </Link>
+            <a href="#dang-ky-tu-van" className={buttonVariants({ size: 'lg', className: 'text-base px-6 py-4 rounded-xl min-h-[48px] gap-2 bg-teal-600 hover:bg-teal-700' })}>
+              Đăng ký tư vấn <ArrowRight className="size-4" />
+            </a>
             <Link href="/login" className={buttonVariants({ variant: 'outline', size: 'lg', className: 'text-base px-6 py-4 rounded-xl min-h-[48px]' })}>
               Đăng nhập
             </Link>
@@ -132,16 +134,28 @@ export default function LandingPage() {
       {/* ===== GÓI DỊCH VỤ ===== */}
       <ServicePackagesSection />
 
+      {/* ===== 3 KÊNH TIẾP CẬN ===== */}
+      <LandingAccessChannelsSection />
+
       {/* ===== ĐỘI NGŨ & ĐỐI TÁC ===== */}
       <PartnersAndAdvisorsSection />
 
-      {/* ===== FINAL CTA ===== */}
-      <section className="text-center py-10 bg-gradient-to-b from-white to-teal-50/30">
-        <h2 className="text-2xl font-bold text-gray-900 mb-3">Bắt đầu quản lý sức khỏe ngay hôm nay</h2>
-        <p className="text-gray-500 mb-6 text-lg">Miễn phí. Không cần thẻ tín dụng.</p>
-        <Link href="/login" className={buttonVariants({ size: 'lg', className: 'text-lg px-10 py-6 rounded-xl min-h-[52px] gap-2 bg-teal-600 hover:bg-teal-700' })}>
-          Bắt đầu sử dụng <ArrowRight className="size-5" />
-        </Link>
+      {/* ===== FORM ĐĂNG KÝ TƯ VẤN ===== */}
+      <section id="dang-ky-tu-van" className="py-12 bg-gradient-to-b from-teal-50/40 to-white scroll-mt-6">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              Bắt đầu hành trình sống khỏe
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              AIVIHE là nền tảng quản lý sức khỏe — khách hàng tiếp cận qua
+              <span className="font-semibold text-teal-700"> Thong Dong Daycare, Phòng khám Bác sĩ gia đình, </span>
+              hoặc <span className="font-semibold text-teal-700">Phòng khám Phục hồi chức năng</span>.
+              Để lại tên và số điện thoại, chúng tôi sẽ liên hệ tư vấn kênh phù hợp với bạn.
+            </p>
+          </div>
+          <LandingConsultationRequestForm />
+        </div>
       </section>
 
       {/* ===== FOOTER ===== */}

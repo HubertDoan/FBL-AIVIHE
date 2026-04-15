@@ -37,15 +37,32 @@ Nguyên tắc cốt lõi: Một khách hàng – một mã TDL – một hồ s�
 | guest | Khách vãng lai | Xem trang chủ, đăng ký |
 | family_viewer | Người thân | Xem báo cáo, nhận cảnh báo |
 
-## Customer Journey / Flow
+## Customer Acquisition — 3 Kênh Tiếp Cận
+
+**Nguyên tắc**: AIVIHE KHÔNG có điểm tiếp xúc vật lý riêng. Khách hàng tiếp cận qua 3 kênh vật lý của hệ sinh thái:
 
 ```
-Kênh 1: Đăng ký trực tiếp trên aivihe.vn
-  KH tìm hiểu → Đăng ký trên web → Admin/GĐ phê duyệt → Kích hoạt tài khoản → Sử dụng
+Kênh 1: Thong Dong Daycare
+  KH đến Daycare sinh hoạt → Lễ tân khai hồ sơ → Mở tài khoản AIVIHE → Liên thông dữ liệu hàng ngày
 
-Kênh 2: Từ Thong Dong Daycare
-  KH đến Daycare → Lễ tân khai hồ sơ → KH đồng ý quản lý sức khỏe → Mở quyền AIVIHE → Sử dụng
+Kênh 2: Phòng khám Bác sĩ gia đình
+  KH đến PK → BS gia đình khám, đánh giá → Mở tài khoản AIVIHE → BS theo dõi liên tục
+
+Kênh 3: Phòng khám Phục hồi chức năng
+  KH đến PK PHCN → KTV đánh giá chức năng → Mở tài khoản AIVIHE → Lập kế hoạch trị liệu
 ```
+
+**Trang chủ aivihe.vn** chỉ nhận **đăng ký tư vấn** (chỉ cần tên + SĐT):
+
+```
+Trang chủ → Form đăng ký tư vấn (tên + SĐT + kênh quan tâm)
+  → Reception/Hành chính gọi điện bổ sung thông tin
+    → Giám đốc công ty duyệt
+      → Hướng dẫn khách đến 1 trong 3 kênh vật lý
+        → Tạo tài khoản AIVIHE đầy đủ
+```
+
+Chi tiết flow: `docs/specs/aivihe-customer-acquisition-channels-and-consultation-flow.md`
 
 ## Gói dịch vụ
 
