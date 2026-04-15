@@ -166,17 +166,24 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
     .filter(section => section.items.length > 0)
 
   const sidebarContent = (
-    <div className="flex flex-col h-full">
-      {/* Brand logos */}
-      <div className="p-3 border-b border-border flex items-center justify-center gap-2">
-        <img src="/thong-dong-life-logo.png" alt="Thong Dong Life" className="h-8 w-auto object-contain" />
-        <img src="/AIVIHE.jpg" alt="AIVIHE" className="h-8 w-auto object-contain rounded" />
+    <div className="flex flex-col h-full bg-slate-900 text-slate-200">
+      {/* Red gradient brand header */}
+      <div className="bg-gradient-to-br from-red-600 to-rose-600 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <div className="size-9 rounded-lg bg-white/20 flex items-center justify-center text-xl shrink-0">
+            ❤️
+          </div>
+          <div className="min-w-0">
+            <p className="font-bold text-white text-sm truncate">Sổ SK Điện Tử</p>
+            <p className="text-white/80 text-xs">AIVIHE · Thong Dong Tech</p>
+          </div>
+        </div>
       </div>
 
       {/* User info */}
-      <div className="p-4 border-b border-border">
+      <div className="p-3 border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-lg shrink-0">
+          <div className="size-10 rounded-full bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center text-white font-bold text-lg shrink-0">
             {userAvatar ? (
               <img src={userAvatar} alt="" className="size-10 rounded-full object-cover" />
             ) : (
@@ -184,8 +191,10 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
             )}
           </div>
           <div className="min-w-0">
-            <p className="font-medium truncate">{userName ?? 'Người dùng'}</p>
-            <p className="text-sm text-muted-foreground">AIVIHE</p>
+            <p className="font-semibold text-white truncate text-sm">{userName ?? 'Người dùng'}</p>
+            <p className="text-xs text-slate-400 truncate">
+              {userRole === 'citizen' || userRole === 'member' ? 'Thành viên' : userRole || 'AIVIHE'}
+            </p>
           </div>
         </div>
       </div>
@@ -193,13 +202,12 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
       {/* Navigation — grouped by sections */}
       <nav className="flex-1 p-2 overflow-y-auto">
         {visibleSections.map((section) => (
-          <div key={section.title} className="mb-3">
-            <p className="px-3 pt-3 pb-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground/70">
+          <div key={section.title} className="mb-2">
+            <p className="px-3 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
               {section.title}
             </p>
             <div className="space-y-0.5">
               {section.items.map((item) => {
-                // so sánh pathname với đường dẫn không có query string
                 const hrefPath = item.href.split('?')[0]
                 const isActive =
                   pathname === hrefPath ||
@@ -210,18 +218,18 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
                     href={item.href}
                     onClick={onClose}
                     className={cn(
-                      'flex items-center gap-3 px-3 py-2.5 rounded-lg text-base transition-colors',
+                      'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
                       isActive
-                        ? 'bg-primary text-primary-foreground font-medium'
+                        ? 'bg-red-600 text-white font-semibold shadow-sm'
                         : item.highlight
-                          ? 'text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/30 hover:bg-purple-100 dark:hover:bg-purple-950/50 font-medium'
-                          : 'text-foreground hover:bg-accent hover:text-accent-foreground'
+                          ? 'text-amber-300 hover:bg-slate-800'
+                          : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                     )}
                   >
-                    <item.icon className="size-5 shrink-0" />
-                    <span className="flex-1">{item.label}</span>
+                    <item.icon className="size-4 shrink-0" />
+                    <span className="flex-1 truncate">{item.label}</span>
                     {item.href === '/dashboard/messages' && unreadMessageCount > 0 && (
-                      <span className="size-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                      <span className="size-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                         {unreadMessageCount > 9 ? '9+' : unreadMessageCount}
                       </span>
                     )}
@@ -232,13 +240,37 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
           </div>
         ))}
       </nav>
+
+      {/* Footer actions */}
+      <div className="p-2 border-t border-slate-800 space-y-1">
+        <Link
+          href="/dashboard/medical-record"
+          onClick={onClose}
+          className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition"
+        >
+          <FileText className="size-4" />
+          Xuất báo cáo PDF
+        </Link>
+        <Link
+          href="/api/demo/logout"
+          onClick={(e) => {
+            e.preventDefault()
+            fetch('/api/demo/logout', { method: 'POST' }).finally(() => {
+              window.location.href = '/'
+            })
+          }}
+          className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-red-600/20 hover:bg-red-600/30 text-red-300 text-sm font-medium transition border border-red-600/40"
+        >
+          Đăng xuất
+        </Link>
+      </div>
     </div>
   )
 
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r lg:border-border lg:bg-muted/30 lg:fixed lg:inset-y-0">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:z-30">
         {sidebarContent}
       </aside>
 
@@ -250,11 +282,11 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
             onClick={onClose}
             aria-hidden="true"
           />
-          <aside className="fixed inset-y-0 left-0 z-50 w-72 bg-background shadow-xl">
-            <div className="flex items-center justify-end p-2">
+          <aside className="fixed inset-y-0 left-0 z-50 w-72 shadow-xl">
+            <div className="absolute top-2 right-2 z-10">
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-accent min-h-0"
+                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
                 aria-label="Đóng menu"
               >
                 <X className="size-5" />
