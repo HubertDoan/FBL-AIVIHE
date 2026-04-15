@@ -25,6 +25,7 @@ const HEALTH_RECORD_AREAS_FULL: Permission[] = [
   PERMISSIONS.MODULE_GUIDE,
   PERMISSIONS.MODULE_MEDICAL_RECORD,
   PERMISSIONS.MODULE_CONSULTATION,
+  PERMISSIONS.MODULE_AI_SUMMARY,
 ]
 
 // Modules dành cho thành viên (citizen)
@@ -39,6 +40,7 @@ const CITIZEN_MODULES: Permission[] = [
   PERMISSIONS.MODULE_GUIDE,
   PERMISSIONS.MODULE_MEDICAL_RECORD, // hồ sơ 11 section — ai cũng xem được của mình
   PERMISSIONS.MODULE_CONSULTATION,    // Hỏi BS — luôn mở cho citizen
+  PERMISSIONS.MODULE_AI_SUMMARY,      // AI phân tích — luôn mở cho citizen
   // Modules hỗ trợ
   PERMISSIONS.MODULE_MEMBERSHIP,
   PERMISSIONS.MODULE_FAMILY,

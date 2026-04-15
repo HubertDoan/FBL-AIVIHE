@@ -90,6 +90,7 @@ export const PERMISSIONS = {
   MODULE_GUIDE: 'module.guide',
   MODULE_MEDICAL_RECORD: 'module.medical_record',
   MODULE_CONSULTATION: 'module.consultation',
+  MODULE_AI_SUMMARY: 'module.ai_summary',
 } as const
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
@@ -286,6 +287,7 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   'module.guide': 'Hướng dẫn',
   'module.medical_record': 'Hồ sơ y tế (11 mục)',
   'module.consultation': 'Hỏi Bác sĩ',
+  'module.ai_summary': 'AI Phân tích',
 }
 
 export const ALL_PERMISSIONS: Permission[] = Object.values(PERMISSIONS)
