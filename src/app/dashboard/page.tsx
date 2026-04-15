@@ -12,6 +12,7 @@ import { GuestDashboard } from '@/components/membership/guest-dashboard'
 import { CustomerWelcomeAndGuideSection } from '@/components/dashboard/customer-welcome-and-guide-section'
 import { CustomerServicePackagesDashboardCards } from '@/components/dashboard/customer-service-packages-dashboard-cards'
 import { CustomerServiceRegistrationListWithQrPayment } from '@/components/services/customer-service-registration-list-with-qr-payment'
+import { CustomerSevenMainAreasGrid } from '@/components/dashboard/customer-seven-main-areas-grid'
 import { Upload, Clock, Stethoscope } from 'lucide-react'
 import type { ExamRegistration, MedicationReminder } from '@/lib/demo/demo-exam-registration-data'
 
@@ -123,12 +124,17 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <OverviewCards
-        documentCount={counts.documents}
-        visitCount={counts.visits}
-        pendingCount={counts.pending}
-        familyCount={counts.family}
-      />
+      {/* 7 khu vực chính cho KH */}
+      {(user?.role === 'member' || user?.role === 'citizen') ? (
+        <CustomerSevenMainAreasGrid />
+      ) : (
+        <OverviewCards
+          documentCount={counts.documents}
+          visitCount={counts.visits}
+          pendingCount={counts.pending}
+          familyCount={counts.family}
+        />
+      )}
 
       {/* Show medication reminders only for regular members with active prescriptions */}
       {activeReminders.length > 0 && user?.role === 'member' && (

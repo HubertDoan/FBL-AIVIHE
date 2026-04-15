@@ -73,6 +73,19 @@ Chi tiết flow: `docs/specs/aivihe-customer-acquisition-channels-and-consultati
 | 2 | PHCN | Thuê bao + phí/buổi | Phục hồi chức năng tại trung tâm hoặc tại nhà |
 | 3 | Chuyên khoa sâu | Phí/lần tư vấn | BS chuyên khoa (khớp, tim mạch, nội tiết...), tư vấn, hỗ trợ đi khám BV |
 
+## Hồ sơ AIVIHE — 4 mục chính trong tài khoản khách hàng
+
+Trang `/dashboard/health-record` hiển thị 4 mục hồ sơ cho KH (subset của 11-tab architecture):
+
+| Mục | Nguồn dữ liệu | Ai ghi |
+|-----|---------------|--------|
+| **Daycare** | Mirror từ Thong Dong Daycare qua webhook `daycare_daily_summary` | Lễ tân, NV chăm sóc, y tá tại trung tâm |
+| **Bác sĩ gia đình** | `family_doctor_encounters` (AIVIHE) | BS gia đình sau mỗi lần khám |
+| **Phục hồi chức năng** | `rehab_sessions` (AIVIHE) | KTV PHCN sau mỗi buổi |
+| **Khám chữa bệnh** | `clinic_visits` (AIVIHE, link `source_documents`) | KH upload + BS chuyên khoa xem |
+
+Mỗi mục có icon + số lượng records, hiển thị theo dạng card timeline.
+
 ## 10 Modules
 
 | # | Module | Vai trò |
