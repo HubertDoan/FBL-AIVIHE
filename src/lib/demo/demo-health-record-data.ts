@@ -191,3 +191,33 @@ export function getRehabSessions(citizenId: string): RehabSession[] {
 export function getClinicVisits(citizenId: string): ClinicVisit[] {
   return getStore().clinicVisits.filter(d => d.citizen_id === citizenId).sort((a, b) => b.date.localeCompare(a.date))
 }
+
+// Helpers to add records after upload + user verification
+let _idCounter = 0
+function makeRecordId(prefix: string): string {
+  return `${prefix}-${Date.now()}-${++_idCounter}`
+}
+
+export function addClinicVisit(data: Omit<ClinicVisit, 'id'>): ClinicVisit {
+  const record: ClinicVisit = { ...data, id: makeRecordId('cv') }
+  getStore().clinicVisits.unshift(record)
+  return record
+}
+
+export function addFamilyDoctorEncounter(data: Omit<FamilyDoctorEncounter, 'id'>): FamilyDoctorEncounter {
+  const record: FamilyDoctorEncounter = { ...data, id: makeRecordId('fd') }
+  getStore().familyDoctor.unshift(record)
+  return record
+}
+
+export function addRehabSession(data: Omit<RehabSession, 'id'>): RehabSession {
+  const record: RehabSession = { ...data, id: makeRecordId('rh') }
+  getStore().rehab.unshift(record)
+  return record
+}
+
+export function addDaycareActivity(data: Omit<DaycareActivity, 'id'>): DaycareActivity {
+  const record: DaycareActivity = { ...data, id: makeRecordId('dc') }
+  getStore().daycare.unshift(record)
+  return record
+}
