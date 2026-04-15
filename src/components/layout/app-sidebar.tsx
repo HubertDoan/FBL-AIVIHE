@@ -92,6 +92,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: 'GIAO TIẾP',
     items: [
+      { href: '/dashboard/consultation', label: 'Hỏi Bác sĩ', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_CONSULTATION, highlight: true },
       { href: '/dashboard/notifications', label: 'Thông báo', icon: Bell, requiredPermission: PERMISSIONS.MODULE_NOTIFICATIONS },
       { href: '/dashboard/messages', label: 'Tin nhắn', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_MESSAGES },
       { href: '/dashboard/family', label: 'Gia đình', icon: Users, requiredPermission: PERMISSIONS.MODULE_FAMILY },
