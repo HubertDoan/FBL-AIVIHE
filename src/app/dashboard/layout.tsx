@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { AppHeader } from '@/components/layout/app-header'
 import { ActOnBehalfBanner } from '@/components/family/act-on-behalf-banner'
+import { FloatingAiChatButtonWithPanel } from '@/components/ai-chat/floating-ai-chat-button-with-panel'
 import { ActingAsProvider } from '@/hooks/use-acting-as'
 import { useAuth } from '@/hooks/use-auth'
 import type { Permission } from '@/lib/permissions/permission-definitions'
@@ -128,6 +129,9 @@ export default function DashboardLayout({
             {children}
           </main>
         </div>
+
+        {/* AI chat floating button — hiện trên mọi trang dashboard */}
+        <FloatingAiChatButtonWithPanel />
       </div>
     </ActingAsProvider>
   )
