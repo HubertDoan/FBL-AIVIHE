@@ -4,10 +4,26 @@
 import { NextResponse } from 'next/server'
 import { isDemoMode, getDemoUser } from '@/lib/demo/demo-api-helper'
 import { getCustomPermissions } from '@/lib/demo/demo-user-custom-permissions-store'
+import { getServiceRegistrations } from '@/lib/demo/demo-service-registration-in-memory-store'
 import { getDefaultPermissions } from '@/lib/permissions/role-default-permissions'
 import { getEffectivePermissions } from '@/lib/permissions/permission-checker'
 import { createClient } from '@/lib/supabase/server'
-import type { Permission } from '@/lib/permissions/permission-definitions'
+import { PERMISSIONS, type Permission } from '@/lib/permissions/permission-definitions'
+
+/**
+ * Compute extra permissions based on active service registrations.
+ * Khi KH có active registration cho package_type=1 (BSGĐ) → grant MODULE_HEALTH_RECORD_FAMILY_DOCTOR
+ * Tương tự cho PHCN (2), Chuyên khoa (3)
+ */
+function computeExtraPermissionsFromRegistrations(citizenId: string): Permission[] {
+  const regs = getServiceRegistrations(citizenId)
+  const activeTypes = new Set(regs.filter(r => r.status === 'active').map(r => r.package_type))
+  const extras: Permission[] = []
+  if (activeTypes.has(1)) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR)
+  if (activeTypes.has(2)) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_REHAB)
+  if (activeTypes.has(3)) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC)
+  return extras
+}
 
 export async function GET(request: Request) {
   // ── Demo mode ──────────────────────────────────────────────────────────────
@@ -18,14 +34,16 @@ export async function GET(request: Request) {
     }
 
     const custom = getCustomPermissions(user.id)
+    const extras = computeExtraPermissionsFromRegistrations(user.id)
+    const allCustom = [...custom, ...extras]
     const defaults = getDefaultPermissions(user.role)
-    const effective = getEffectivePermissions(user.role, custom)
+    const effective = getEffectivePermissions(user.role, allCustom)
 
     return NextResponse.json({
       role: user.role,
       userId: user.id,
       defaultPermissions: defaults,
-      customPermissions: custom,
+      customPermissions: allCustom,
       effectivePermissions: effective,
     })
   }

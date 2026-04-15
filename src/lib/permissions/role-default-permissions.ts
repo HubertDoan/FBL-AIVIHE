@@ -15,9 +15,27 @@ const COMMON_MODULES: Permission[] = [
   PERMISSIONS.MODULE_SETTINGS,
 ]
 
+// 4 khu vực health record — staff (doctor/reception/director/admin) luôn xem được (để theo dõi KH)
+const HEALTH_RECORD_AREAS_FULL: Permission[] = [
+  PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE,
+  PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR,
+  PERMISSIONS.MODULE_HEALTH_RECORD_REHAB,
+  PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC,
+  PERMISSIONS.MODULE_NOTIFICATIONS,
+  PERMISSIONS.MODULE_GUIDE,
+]
+
 // Modules dành cho thành viên (citizen)
+// Default: chỉ Daycare + Notifications + Guide + Profile
+// BSGĐ/PHCN/Khám chuyên khoa: GRANT khi KH có service registration active cho package tương ứng
+// (xem computeExtraPermissionsFromRegistrations)
 const CITIZEN_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  // Default khu vực (luôn mở)
+  PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE,
+  PERMISSIONS.MODULE_NOTIFICATIONS,
+  PERMISSIONS.MODULE_GUIDE,
+  // Modules hỗ trợ
   PERMISSIONS.MODULE_MEMBERSHIP,
   PERMISSIONS.MODULE_FAMILY,
   PERMISSIONS.MODULE_UPLOAD,
@@ -34,6 +52,7 @@ const CITIZEN_MODULES: Permission[] = [
 // Modules dành cho bác sĩ
 const DOCTOR_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_DOCTOR_REGISTER,
   PERMISSIONS.MODULE_DOCTOR_PROFILE,
   PERMISSIONS.MODULE_DOCTOR_REVIEW,
@@ -44,6 +63,7 @@ const DOCTOR_MODULES: Permission[] = [
 // Modules dành cho BS chuyên khoa
 const SPECIALIST_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_DOCTOR_REVIEW,
   PERMISSIONS.MODULE_MESSAGES,
 ]
@@ -51,6 +71,7 @@ const SPECIALIST_MODULES: Permission[] = [
 // Modules dành cho BS khám bệnh
 const EXAM_DOCTOR_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_EXAM_SCHEDULE,
   PERMISSIONS.MODULE_MESSAGES,
 ]
@@ -58,6 +79,7 @@ const EXAM_DOCTOR_MODULES: Permission[] = [
 // Modules dành cho tiếp đón
 const RECEPTION_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_RECEPTION,
   PERMISSIONS.MODULE_MESSAGES,
 ]
@@ -65,6 +87,7 @@ const RECEPTION_MODULES: Permission[] = [
 // Modules dành cho admin
 const ADMIN_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_ADMIN,
   PERMISSIONS.MODULE_MESSAGES,
 ]
@@ -72,6 +95,7 @@ const ADMIN_MODULES: Permission[] = [
 // Modules dành cho giám đốc
 const DIRECTOR_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_ADMIN,
   PERMISSIONS.MODULE_DIRECTOR,
   PERMISSIONS.MODULE_PERMISSIONS,
@@ -82,6 +106,7 @@ const DIRECTOR_MODULES: Permission[] = [
 // Modules dành cho GĐ chi nhánh
 const BRANCH_DIRECTOR_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_ADMIN,
   PERMISSIONS.MODULE_DIRECTOR,
   PERMISSIONS.MODULE_PERMISSIONS,
@@ -104,12 +129,14 @@ const ACCOUNTANT_MODULES: Permission[] = [
 // Modules dành cho hành chính (admin_staff)
 const ADMIN_STAFF_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_MESSAGES,
 ]
 
 // Modules dành cho quản lý (manager)
 const MANAGER_MODULES: Permission[] = [
   ...COMMON_MODULES,
+  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_ADMIN,
   PERMISSIONS.MODULE_MESSAGES,
   PERMISSIONS.MODULE_TASK_ASSIGNMENT,

@@ -27,6 +27,11 @@ import {
   CalendarCheck,
   Megaphone,
   ShieldCheck,
+  Home,
+  Activity,
+  Hospital,
+  Bell,
+  BookOpen,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PERMISSIONS, type Permission } from '@/lib/permissions/permission-definitions'
@@ -45,7 +50,14 @@ interface NavItem {
 // Mỗi menu item ánh xạ tới một module permission
 const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard, requiredPermission: PERMISSIONS.MODULE_DASHBOARD },
-  { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE },
+  // 7 khu vực chính cho khách hàng (citizen/member)
+  { href: '/dashboard/health-record?tab=daycare', label: 'Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE },
+  { href: '/dashboard/health-record?tab=family-doctor', label: 'Bác sĩ gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR },
+  { href: '/dashboard/health-record?tab=rehab', label: 'Phục hồi chức năng', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB },
+  { href: '/dashboard/health-record?tab=clinic', label: 'Khám chữa bệnh', icon: Hospital, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC },
+  { href: '/dashboard/notifications', label: 'Thông báo', icon: Bell, requiredPermission: PERMISSIONS.MODULE_NOTIFICATIONS },
+  { href: '/dashboard/guide', label: 'Hướng dẫn', icon: BookOpen, requiredPermission: PERMISSIONS.MODULE_GUIDE },
+  { href: '/dashboard/profile', label: 'Thông tin tài khoản', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE },
   { href: '/dashboard/register-member', label: 'Đăng ký thành viên', icon: Crown, requiredPermission: PERMISSIONS.MODULE_REGISTER_MEMBER, highlight: true },
   { href: '/dashboard/admin', label: 'Quản trị', icon: Shield, requiredPermission: PERMISSIONS.MODULE_ADMIN },
   { href: '/dashboard/director', label: 'Truyền thông', icon: Megaphone, requiredPermission: PERMISSIONS.MODULE_DIRECTOR },

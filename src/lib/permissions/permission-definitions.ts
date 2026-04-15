@@ -82,6 +82,12 @@ export const PERMISSIONS = {
   MODULE_PERMISSIONS: 'module.permissions',
   MODULE_SYSTEM: 'module.system',
   MODULE_TASK_ASSIGNMENT: 'module.task_assignment',
+  MODULE_HEALTH_RECORD_DAYCARE: 'module.health_record_daycare',
+  MODULE_HEALTH_RECORD_FAMILY_DOCTOR: 'module.health_record_family_doctor',
+  MODULE_HEALTH_RECORD_REHAB: 'module.health_record_rehab',
+  MODULE_HEALTH_RECORD_CLINIC: 'module.health_record_clinic',
+  MODULE_NOTIFICATIONS: 'module.notifications',
+  MODULE_GUIDE: 'module.guide',
 } as const
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
@@ -194,6 +200,17 @@ export const PERMISSION_GROUPS: Record<string, { label: string; permissions: Per
       PERMISSIONS.MODULE_TASK_ASSIGNMENT,
     ],
   },
+  health_record_areas: {
+    label: '7 khu vực tài khoản KH',
+    permissions: [
+      PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE,
+      PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR,
+      PERMISSIONS.MODULE_HEALTH_RECORD_REHAB,
+      PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC,
+      PERMISSIONS.MODULE_NOTIFICATIONS,
+      PERMISSIONS.MODULE_GUIDE,
+    ],
+  },
 }
 
 // Nhãn hiển thị cho từng quyền
@@ -259,6 +276,12 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   'module.permissions': 'Phân quyền',
   'module.system': 'Hệ thống',
   'module.task_assignment': 'Giao việc',
+  'module.health_record_daycare': 'Daycare',
+  'module.health_record_family_doctor': 'Bác sĩ gia đình',
+  'module.health_record_rehab': 'Phục hồi chức năng',
+  'module.health_record_clinic': 'Khám chữa bệnh',
+  'module.notifications': 'Thông báo',
+  'module.guide': 'Hướng dẫn',
 }
 
 export const ALL_PERMISSIONS: Permission[] = Object.values(PERMISSIONS)
