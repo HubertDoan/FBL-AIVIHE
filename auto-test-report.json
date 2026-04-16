@@ -1,0 +1,217 @@
+{
+  "timestamp": "2026-04-15T16:37:21.642Z",
+  "results": [
+    {
+      "account": "minhnv2026@aivihe.vn",
+      "role": "citizen",
+      "tests": [
+        {
+          "name": "login",
+          "status": "pass"
+        },
+        {
+          "name": "me",
+          "status": "pass"
+        },
+        {
+          "name": "permissions",
+          "status": "pass",
+          "count": 24
+        },
+        {
+          "name": "medical-record",
+          "status": "pass",
+          "summary": "admin=true vitals=2 labs=4 chronic=2"
+        },
+        {
+          "name": "health-record",
+          "status": "pass",
+          "summary": "daycare=3 fd=1 rehab=1 clinic=1"
+        },
+        {
+          "name": "consultation-list",
+          "status": "pass",
+          "count": 1
+        },
+        {
+          "name": "upload-pdf",
+          "status": "pass",
+          "documentId": "demo-doc-1776271029505-p3bf73"
+        },
+        {
+          "name": "classify",
+          "status": "pass",
+          "category": "clinic"
+        },
+        {
+          "name": "save-record",
+          "status": "pass"
+        },
+        {
+          "name": "service-registration",
+          "status": "pass"
+        },
+        {
+          "name": "ai-chat",
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "account": "hain2026@aivihe.vn",
+      "role": "doctor",
+      "tests": [
+        {
+          "name": "login",
+          "status": "pass"
+        },
+        {
+          "name": "me",
+          "status": "pass"
+        },
+        {
+          "name": "permissions",
+          "status": "pass",
+          "count": 21
+        },
+        {
+          "name": "medical-record",
+          "status": "pass",
+          "summary": "admin=false vitals=0 labs=0 chronic=0"
+        },
+        {
+          "name": "health-record",
+          "status": "pass",
+          "summary": "daycare=0 fd=0 rehab=0 clinic=0"
+        },
+        {
+          "name": "consultation-list",
+          "status": "pass",
+          "count": 0
+        },
+        {
+          "name": "ai-chat",
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "account": "tramttn2026@aivihe.vn",
+      "role": "director",
+      "tests": [
+        {
+          "name": "login",
+          "status": "pass"
+        },
+        {
+          "name": "me",
+          "status": "pass"
+        },
+        {
+          "name": "permissions",
+          "status": "pass",
+          "count": 69
+        },
+        {
+          "name": "medical-record",
+          "status": "pass",
+          "summary": "admin=false vitals=0 labs=0 chronic=0"
+        },
+        {
+          "name": "health-record",
+          "status": "pass",
+          "summary": "daycare=0 fd=0 rehab=0 clinic=0"
+        },
+        {
+          "name": "consultation-list",
+          "status": "pass",
+          "count": 0
+        },
+        {
+          "name": "ai-chat",
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "account": "admina2026@aivihe.vn",
+      "role": "admin",
+      "tests": [
+        {
+          "name": "login",
+          "status": "pass"
+        },
+        {
+          "name": "me",
+          "status": "pass"
+        },
+        {
+          "name": "permissions",
+          "status": "pass",
+          "count": 31
+        },
+        {
+          "name": "medical-record",
+          "status": "pass",
+          "summary": "admin=false vitals=0 labs=0 chronic=0"
+        },
+        {
+          "name": "health-record",
+          "status": "pass",
+          "summary": "daycare=0 fd=0 rehab=0 clinic=0"
+        },
+        {
+          "name": "consultation-list",
+          "status": "pass",
+          "count": 0
+        },
+        {
+          "name": "ai-chat",
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "account": "maint2026@aivihe.vn",
+      "role": "reception",
+      "tests": [
+        {
+          "name": "login",
+          "status": "pass"
+        },
+        {
+          "name": "me",
+          "status": "pass"
+        },
+        {
+          "name": "permissions",
+          "status": "pass",
+          "count": 23
+        },
+        {
+          "name": "medical-record",
+          "status": "pass",
+          "summary": "admin=false vitals=0 labs=0 chronic=0"
+        },
+        {
+          "name": "health-record",
+          "status": "pass",
+          "summary": "daycare=0 fd=0 rehab=0 clinic=0"
+        },
+        {
+          "name": "consultation-list",
+          "status": "pass",
+          "count": 0
+        },
+        {
+          "name": "ai-chat",
+          "status": "pass"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "passCount": 39,
+    "failCount": 0
+  }
+}

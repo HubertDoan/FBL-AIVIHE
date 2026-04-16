@@ -166,24 +166,26 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
     .filter(section => section.items.length > 0)
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-slate-900 text-slate-200">
-      {/* Red gradient brand header */}
-      <div className="bg-gradient-to-br from-red-600 to-rose-600 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div className="size-9 rounded-lg bg-white/20 flex items-center justify-center text-xl shrink-0">
-            ❤️
-          </div>
+    <div className="flex flex-col h-full bg-gradient-to-b from-slate-50 via-white to-blue-50/30 text-gray-800">
+      {/* Brand header — AIVIHE logo + slogan */}
+      <div className="bg-white px-4 py-3 border-b border-gray-100">
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/AIVIHE.jpg"
+            alt="AIVIHE"
+            className="h-11 w-auto object-contain rounded-lg shrink-0"
+          />
           <div className="min-w-0">
-            <p className="font-bold text-white text-sm truncate">Sổ SK Điện Tử</p>
-            <p className="text-white/80 text-xs">AIVIHE · Thong Dong Tech</p>
+            <p className="font-bold text-gray-900 text-base truncate leading-tight">AIVIHE</p>
+            <p className="text-teal-600 text-xs leading-snug">Trợ lý AI sức khỏe cá nhân</p>
           </div>
         </div>
       </div>
 
       {/* User info */}
-      <div className="p-3 border-b border-slate-800">
+      <div className="p-3 border-b border-gray-100 bg-white/60">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-full bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center text-white font-bold text-lg shrink-0">
+          <div className="size-10 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-sm">
             {userAvatar ? (
               <img src={userAvatar} alt="" className="size-10 rounded-full object-cover" />
             ) : (
@@ -191,8 +193,8 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
             )}
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-white truncate text-sm">{userName ?? 'Người dùng'}</p>
-            <p className="text-xs text-slate-400 truncate">
+            <p className="font-semibold text-gray-900 truncate text-sm">{userName ?? 'Người dùng'}</p>
+            <p className="text-xs text-gray-500 truncate">
               {userRole === 'citizen' || userRole === 'member' ? 'Thành viên' : userRole || 'AIVIHE'}
             </p>
           </div>
@@ -203,7 +205,7 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
       <nav className="flex-1 p-2 overflow-y-auto">
         {visibleSections.map((section) => (
           <div key={section.title} className="mb-2">
-            <p className="px-3 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            <p className="px-3 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
               {section.title}
             </p>
             <div className="space-y-0.5">
@@ -220,10 +222,10 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
                     className={cn(
                       'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
                       isActive
-                        ? 'bg-red-600 text-white font-semibold shadow-sm'
+                        ? 'bg-teal-600 text-white font-semibold shadow-sm'
                         : item.highlight
-                          ? 'text-amber-300 hover:bg-slate-800'
-                          : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                          ? 'text-amber-700 hover:bg-amber-50'
+                          : 'text-gray-700 hover:bg-teal-50 hover:text-teal-700'
                     )}
                   >
                     <item.icon className="size-4 shrink-0" />
@@ -242,11 +244,11 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
       </nav>
 
       {/* Footer actions */}
-      <div className="p-2 border-t border-slate-800 space-y-1">
+      <div className="p-2 border-t border-gray-100 bg-white/60 space-y-1">
         <Link
           href="/dashboard/medical-record"
           onClick={onClose}
-          className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition"
+          className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium transition shadow-sm"
         >
           <FileText className="size-4" />
           Xuất báo cáo PDF
@@ -259,7 +261,7 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
               window.location.href = '/'
             })
           }}
-          className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-red-600/20 hover:bg-red-600/30 text-red-300 text-sm font-medium transition border border-red-600/40"
+          className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-white hover:bg-red-50 text-red-600 text-sm font-medium transition border border-red-200"
         >
           Đăng xuất
         </Link>
