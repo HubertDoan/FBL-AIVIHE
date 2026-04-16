@@ -53,65 +53,72 @@ interface NavSection {
   items: NavItem[]
 }
 
-// Sidebar chia theo section — tương tự Thong Dong Daycare
+// Sidebar đơn giản — mỗi mục ẩn/hiện theo permission
+// Admin phân quyền: KH chỉ thấy mục đã đăng ký
+// KH hồ sơ y tế ít → thấy ít mục. KH hồ sơ nhiều → thấy nhiều mục.
 const NAV_SECTIONS: NavSection[] = [
   {
-    title: 'TỔNG QUAN',
+    title: '',  // Không header — Dashboard luôn hiện
     items: [
-      { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard, requiredPermission: PERMISSIONS.MODULE_DASHBOARD },
+      { href: '/dashboard', label: 'Dashboard tổng hợp', icon: LayoutDashboard, requiredPermission: PERMISSIONS.MODULE_DASHBOARD },
     ],
   },
   {
-    title: 'HỒ SƠ CÁ NHÂN',
+    title: 'HỒ SƠ Y TẾ CÁ NHÂN',
     items: [
-      { href: '/dashboard/medical-record', label: 'Hồ sơ', icon: User, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
-      { href: '/dashboard/timeline', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
-      { href: '/dashboard/health-record?tab=daycare', label: 'Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE },
-      { href: '/dashboard/health-record?tab=family-doctor', label: 'Bác sĩ gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR },
-      { href: '/dashboard/health-record?tab=rehab', label: 'Phục hồi chức năng', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB },
-      { href: '/dashboard/health-record?tab=clinic', label: 'Khám chữa bệnh', icon: Hospital, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC },
+      { href: '/dashboard/medical-record', label: 'Hồ sơ y tế', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
+      { href: '/dashboard/upload', label: 'Upload tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
+      { href: '/dashboard/ai-summary', label: 'AI tổng hợp', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true },
+      { href: '/dashboard/timeline', label: 'Theo dõi sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
     ],
   },
   {
-    title: 'CÔNG CỤ',
+    title: 'DAYCARE',  // Ẩn nếu KH chưa đăng ký Daycare
     items: [
-      { href: '/dashboard/ai-summary', label: 'AI Summary', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true },
-      { href: '/dashboard/upload', label: 'Upload thông minh', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
-      { href: '/dashboard/summary', label: 'Tóm tắt sức khỏe', icon: FileText, requiredPermission: PERMISSIONS.MODULE_SUMMARY },
+      { href: '/dashboard/health-record?tab=daycare', label: 'Hoạt động Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE },
     ],
   },
   {
-    title: 'DỊCH VỤ',
+    title: 'BÁC SĨ GIA ĐÌNH',  // Ẩn nếu KH chưa đăng ký BSGĐ
     items: [
-      { href: '/dashboard/membership', label: 'Thành viên', icon: Crown, requiredPermission: PERMISSIONS.MODULE_MEMBERSHIP },
-      { href: '/dashboard/register-member', label: 'Đăng ký thành viên', icon: Crown, requiredPermission: PERMISSIONS.MODULE_REGISTER_MEMBER, highlight: true },
-      { href: '/dashboard/choose-doctor', label: 'BS gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_CHOOSE_DOCTOR },
-      { href: '/dashboard/book-appointment', label: 'Đặt lịch khám', icon: CalendarCheck, requiredPermission: PERMISSIONS.MODULE_BOOK_APPOINTMENT },
-      { href: '/dashboard/visit-prep', label: 'Đăng ký khám bệnh', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_VISIT_PREP },
+      { href: '/dashboard/health-record?tab=family-doctor', label: 'Hồ sơ BSGĐ', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR },
+      { href: '/dashboard/consultation', label: 'Hỏi Bác sĩ', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_CONSULTATION },
+      { href: '/dashboard/choose-doctor', label: 'Chọn BS gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_CHOOSE_DOCTOR },
+    ],
+  },
+  {
+    title: 'PHỤC HỒI CHỨC NĂNG',  // Ẩn nếu KH chưa đăng ký PHCN
+    items: [
+      { href: '/dashboard/health-record?tab=rehab', label: 'Hồ sơ PHCN', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB },
+    ],
+  },
+  {
+    title: 'KHÁM CHỮA BỆNH',  // Ẩn nếu KH chưa đăng ký chuyên khoa
+    items: [
+      { href: '/dashboard/health-record?tab=clinic', label: 'Bệnh đã khám & điều trị', icon: Hospital, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC },
+      { href: '/dashboard/visit-prep', label: 'Đi khám bệnh', icon: CalendarCheck, requiredPermission: PERMISSIONS.MODULE_VISIT_PREP },
       { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TREATMENT },
     ],
   },
   {
     title: 'GIAO TIẾP',
     items: [
-      { href: '/dashboard/consultation', label: 'Hỏi Bác sĩ', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_CONSULTATION, highlight: true },
       { href: '/dashboard/notifications', label: 'Thông báo', icon: Bell, requiredPermission: PERMISSIONS.MODULE_NOTIFICATIONS },
       { href: '/dashboard/messages', label: 'Tin nhắn', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_MESSAGES },
       { href: '/dashboard/family', label: 'Gia đình', icon: Users, requiredPermission: PERMISSIONS.MODULE_FAMILY },
-      { href: '/dashboard/feedback', label: 'Góp ý', icon: MessageSquare, requiredPermission: PERMISSIONS.MODULE_FEEDBACK },
     ],
   },
   {
-    title: 'BÁC SĨ',
+    title: 'BÁC SĨ',  // Chỉ hiện cho role doctor/specialist
     items: [
       { href: '/dashboard/doctor-register', label: 'Đăng ký BS', icon: UserPlus, requiredPermission: PERMISSIONS.MODULE_DOCTOR_REGISTER, doctorNotRegistered: true },
       { href: '/dashboard/doctor-profile', label: 'Hồ sơ chuyên môn', icon: Award, requiredPermission: PERMISSIONS.MODULE_DOCTOR_PROFILE, doctorApproved: true },
       { href: '/dashboard/doctor-review', label: 'Xem xét khám', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_DOCTOR_REVIEW },
-      { href: '/dashboard/doctor-schedule', label: 'Lịch khám BS', icon: CalendarDays, requiredPermission: PERMISSIONS.MODULE_DOCTOR_SCHEDULE },
+      { href: '/dashboard/doctor-schedule', label: 'Lịch khám', icon: CalendarDays, requiredPermission: PERMISSIONS.MODULE_DOCTOR_SCHEDULE },
     ],
   },
   {
-    title: 'VẬN HÀNH',
+    title: 'VẬN HÀNH',  // Chỉ hiện cho staff
     items: [
       { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, requiredPermission: PERMISSIONS.MODULE_RECEPTION },
       { href: '/dashboard/exam-schedule', label: 'Lịch khám BN', icon: Calendar, requiredPermission: PERMISSIONS.MODULE_EXAM_SCHEDULE },
@@ -119,7 +126,7 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: 'QUẢN TRỊ',
+    title: 'QUẢN TRỊ',  // Chỉ hiện cho admin/director
     items: [
       { href: '/dashboard/admin', label: 'Quản trị', icon: Shield, requiredPermission: PERMISSIONS.MODULE_ADMIN },
       { href: '/dashboard/director', label: 'Truyền thông', icon: Megaphone, requiredPermission: PERMISSIONS.MODULE_DIRECTOR },
@@ -197,11 +204,13 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
 
       {/* Navigation — grouped by sections */}
       <nav className="flex-1 p-2 overflow-y-auto">
-        {visibleSections.map((section) => (
-          <div key={section.title} className="mb-2">
-            <p className="px-3 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
-              {section.title}
-            </p>
+        {visibleSections.map((section, sIdx) => (
+          <div key={section.title || `s-${sIdx}`} className="mb-2">
+            {section.title && (
+              <p className="px-3 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                {section.title}
+              </p>
+            )}
             <div className="space-y-0.5">
               {section.items.map((item) => {
                 const hrefPath = item.href.split('?')[0]
