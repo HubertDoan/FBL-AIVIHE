@@ -12,27 +12,24 @@
  * Sidebar cho staff khác hoàn toàn sidebar KH — đơn giản, vào thẳng công việc.
  */
 
-import { useState, useEffect, useCallback } from 'react'
-import { Loader2, ClipboardList, PhoneCall, UserCheck, CheckCircle, QrCode } from 'lucide-react'
+import { useState } from 'react'
+import { PhoneCall, UserCheck, CheckCircle, Home, Activity, Users } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { useAuth } from '@/hooks/use-auth'
 import { ConsultationRequestListForReception } from '@/components/reception/consultation-request-list-for-reception'
-import { StaffServiceCodeCheckAndDeductTool } from '@/components/services/staff-service-code-check-and-deduct-tool'
 import { ReceptionPendingMemberRegistrationList } from '@/components/reception/reception-pending-member-registration-list'
-import { ReceptionPatientCard } from '@/components/dashboard/reception-patient-card'
-import type { ExamRegistration } from '@/lib/demo/demo-exam-registration-data'
 
 const RECEPTION_ACCESS_ROLES = ['reception', 'admin', 'admin_staff', 'manager', 'super_admin', 'director', 'branch_director']
 
-type ActiveView = 'pending' | 'contacted' | 'approved' | 'service-code' | 'exam' | 'members'
+type ActiveView = 'pending' | 'contacted' | 'approved' | 'handoff-daycare' | 'handoff-phcn' | 'members'
 
 const MENU_ITEMS: { key: ActiveView; label: string; icon: React.ComponentType<{ className?: string }>; desc: string }[] = [
   { key: 'pending', label: 'Chờ tư vấn', icon: PhoneCall, desc: 'Yêu cầu mới từ website' },
   { key: 'contacted', label: 'Đã tư vấn & Trình duyệt', icon: UserCheck, desc: 'Đã liên hệ, chờ GĐ duyệt' },
-  { key: 'approved', label: 'Đã duyệt', icon: CheckCircle, desc: 'GĐ đã duyệt, thông báo KH' },
-  { key: 'service-code', label: 'Check mã dịch vụ', icon: QrCode, desc: 'KH đến trung tâm, trừ lượt' },
-  { key: 'exam', label: 'Tiếp nhận khám', icon: ClipboardList, desc: 'Hồ sơ khám đang xử lý' },
-  { key: 'members', label: 'Đăng ký thành viên', icon: UserCheck, desc: 'Chờ duyệt thành viên' },
+  { key: 'approved', label: 'Đã duyệt', icon: CheckCircle, desc: 'GĐ đã duyệt → thông báo KH' },
+  { key: 'handoff-daycare', label: 'Chuyển lễ tân Daycare', icon: Home, desc: 'KH đăng ký Daycare → chuyển thông tin' },
+  { key: 'handoff-phcn', label: 'Chuyển lễ tân PHCN', icon: Activity, desc: 'KH đăng ký PHCN → chuyển thông tin' },
+  { key: 'members', label: 'Danh sách khách hàng', icon: Users, desc: 'KH đã tư vấn thành công' },
 ]
 
 export default function ReceptionPage() {
@@ -119,23 +116,47 @@ export default function ReceptionPage() {
           </div>
         )}
 
-        {activeView === 'service-code' && (
+        {activeView === 'handoff-daycare' && (
           <div className="space-y-3">
-            <ViewHeader title="Check mã dịch vụ" desc="KH đến trung tâm — nhập mã SVC-HN-xxx để trừ lượt sử dụng" />
-            <StaffServiceCodeCheckAndDeductTool />
+            <ViewHeader title="Chuyển lễ tân Thong Dong Daycare" desc="KH đã duyệt + đăng ký Daycare → chuyển thông tin sang lễ tân Daycare tại thongdonglife.vn" />
+            <HandoffCard
+              title="Quy trình chuyển KH sang Daycare"
+              steps={[
+                'KH đã được GĐ duyệt → xác nhận đăng ký gói Daycare',
+                'NV hành chính gọi điện KH xác nhận lịch đến trung tâm',
+                'Chuyển thông tin KH (tên, SĐT, ghi chú) sang lễ tân Daycare',
+                'Lễ tân Daycare tại thongdonglife.vn tiếp nhận và khai hồ sơ Daycare',
+                'Hồ sơ sức khỏe trên AIVIHE tự động liên thông khi KH check-in Daycare',
+              ]}
+              link="https://thongdonglife.vn"
+              linkLabel="Mở Thong Dong Daycare"
+            />
+            <ConsultationRequestListForReception userRole={user?.role || ''} />
           </div>
         )}
 
-        {activeView === 'exam' && (
+        {activeView === 'handoff-phcn' && (
           <div className="space-y-3">
-            <ViewHeader title="Tiếp nhận khám" desc="Hồ sơ khám bệnh đang chờ xử lý" />
-            <ExamReceptionContent />
+            <ViewHeader title="Chuyển lễ tân PHCN" desc="KH đã duyệt + đăng ký PHCN → chuyển thông tin sang phòng khám PHCN" />
+            <HandoffCard
+              title="Quy trình chuyển KH sang PHCN"
+              steps={[
+                'KH đã được GĐ duyệt → xác nhận đăng ký gói Phục hồi chức năng',
+                'NV hành chính liên hệ KH xác nhận nhu cầu (tại trung tâm hoặc tại nhà)',
+                'Chuyển thông tin KH sang KTV PHCN (tên, SĐT, tình trạng, ghi chú)',
+                'KTV PHCN liên hệ KH để đặt lịch đánh giá chức năng ban đầu',
+                'Hồ sơ PHCN trên AIVIHE tự động cập nhật sau mỗi buổi trị liệu',
+              ]}
+              link={undefined}
+              linkLabel=""
+            />
+            <ConsultationRequestListForReception userRole={user?.role || ''} />
           </div>
         )}
 
         {activeView === 'members' && (
           <div className="space-y-3">
-            <ViewHeader title="Đăng ký thành viên" desc="Danh sách đăng ký thành viên chờ duyệt" />
+            <ViewHeader title="Danh sách khách hàng" desc="KH đã tư vấn thành công + đang sử dụng AIVIHE" />
             <ReceptionPendingMemberRegistrationList />
           </div>
         )}
@@ -153,43 +174,32 @@ function ViewHeader({ title, desc }: { title: string; desc: string }) {
   )
 }
 
-function ExamReceptionContent() {
-  const { loading: authLoading } = useAuth()
-  const [registrations, setRegistrations] = useState<ExamRegistration[]>([])
-  const [loading, setLoading] = useState(true)
-
-  const loadData = useCallback(async () => {
-    try {
-      const res = await fetch('/api/exam-registration')
-      if (!res.ok) return
-      const data = await res.json()
-      setRegistrations(data.registrations ?? [])
-    } catch { /* silent */ }
-    finally { setLoading(false) }
-  }, [])
-
-  useEffect(() => {
-    if (!authLoading) loadData()
-  }, [authLoading, loadData])
-
-  if (loading) return <div className="flex items-center justify-center py-8"><Loader2 className="size-6 animate-spin" /></div>
-
-  if (registrations.length === 0) {
-    return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-8 text-center">
-          <ClipboardList className="size-10 text-gray-300 mb-2" />
-          <p className="text-gray-500">Không có hồ sơ nào đang chờ</p>
-        </CardContent>
-      </Card>
-    )
-  }
-
+function HandoffCard({ title, steps, link, linkLabel }: {
+  title: string; steps: string[]; link?: string; linkLabel: string
+}) {
   return (
-    <div className="space-y-3">
-      {registrations.map(reg => (
-        <ReceptionPatientCard key={reg.id} reg={reg} onUpdated={loadData} />
-      ))}
-    </div>
+    <Card className="border-teal-200 bg-teal-50/30">
+      <CardContent className="pt-4 pb-4">
+        <h3 className="font-bold text-teal-900 mb-2">{title}</h3>
+        <ol className="space-y-1.5 text-sm text-teal-800">
+          {steps.map((s, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <span className="size-5 rounded-full bg-teal-600 text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+              <span>{s}</span>
+            </li>
+          ))}
+        </ol>
+        {link && (
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 mt-3 px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium transition"
+          >
+            {linkLabel} →
+          </a>
+        )}
+      </CardContent>
+    </Card>
   )
 }
