@@ -121,7 +121,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: 'VẬN HÀNH',  // Chỉ hiện cho staff
     items: [
-      { href: '/dashboard/reception', label: 'Tiếp đón', icon: ClipboardList, requiredPermission: PERMISSIONS.MODULE_RECEPTION },
+      { href: '/dashboard/reception', label: 'Hành chính', icon: ClipboardList, requiredPermission: PERMISSIONS.MODULE_RECEPTION },
       { href: '/dashboard/exam-schedule', label: 'Lịch khám BN', icon: Calendar, requiredPermission: PERMISSIONS.MODULE_EXAM_SCHEDULE },
       { href: '/dashboard/task-assignment', label: 'Giao việc', icon: ClipboardCheck, requiredPermission: PERMISSIONS.MODULE_TASK_ASSIGNMENT },
     ],
