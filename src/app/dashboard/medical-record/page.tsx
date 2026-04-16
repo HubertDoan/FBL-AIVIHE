@@ -2,18 +2,20 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Loader2, ArrowLeft, FileText } from 'lucide-react'
+import { Loader2, ArrowLeft } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
+import { MedicalRecordPatientHeaderGradientCard } from '@/components/medical-record/medical-record-patient-header-gradient-card'
+import { MedicalRecordDashboardKpiGrid } from '@/components/medical-record/medical-record-dashboard-kpi-grid'
 import { MedicalRecord11SectionsAccordion } from '@/components/medical-record/medical-record-eleven-sections-accordion'
+import { MedicalRecordLatestVitalsAndAbnormalPanel } from '@/components/medical-record/medical-record-latest-vitals-and-abnormal-panel'
 import type { MedicalRecord11Sections } from '@/lib/demo/demo-medical-record-eleven-sections-data'
 
 /**
- * Hồ sơ y tế 11 sections theo Thông tư 13/2025/TT-BYT
- *
- * I. Hành chính · II. Dị ứng · III. Tiền sử bệnh · IV. Tiền sử gia đình
- * V. Sinh hiệu & Khám toàn thân · VI. Khám cơ quan · VII. Bệnh mạn tính
- * VIII. Cận lâm sàng · IX. Chẩn đoán hình ảnh · X. Thăm dò chức năng
- * XI. Tiêm chủng
+ * Hồ sơ y tế — redesign theo SSK-VNeID v10:
+ * 1. Patient header gradient card (red, name + DOB + BHYT + recent events)
+ * 2. 12 KPI module cards grid (color-coded borders)
+ * 3. Chỉ số gần nhất + Bất thường panel
+ * 4. 11 sections accordion (expandable)
  */
 export default function MedicalRecordPage() {
   const { user, loading: authLoading } = useAuth()
@@ -37,10 +39,14 @@ export default function MedicalRecordPage() {
   }
 
   if (!record) {
-    return (
-      <div className="text-center py-12 text-destructive">Không tải được hồ sơ</div>
-    )
+    return <div className="text-center py-12 text-destructive">Không tải được hồ sơ</div>
   }
+
+  // Recent events for header badges
+  const recentEvents = [
+    ...record.organ_exams.slice(0, 2).map(e => `${e.examined_by} — ${e.date}`),
+    ...record.imaging.slice(0, 1).map(i => `${i.modality.toUpperCase()} ${i.body_part}`),
+  ]
 
   return (
     <div className="space-y-5 max-w-5xl">
@@ -48,22 +54,23 @@ export default function MedicalRecordPage() {
         <ArrowLeft className="size-4" /> Về tổng quan
       </Link>
 
-      <div className="flex items-center gap-3">
-        <div className="size-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
-          <FileText className="size-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold">Hồ sơ y tế chuẩn TT 13/2025</h1>
-          <p className="text-muted-foreground">
-            11 mục theo Bộ Y tế · {record.administrative?.full_name || 'Chưa có thông tin'}
-          </p>
-        </div>
-      </div>
+      {/* Patient header — red gradient */}
+      <MedicalRecordPatientHeaderGradientCard
+        admin={record.administrative}
+        recentEvents={recentEvents}
+      />
 
+      {/* 12 KPI cards grid */}
+      <MedicalRecordDashboardKpiGrid record={record} />
+
+      {/* Vitals + Abnormal panel */}
+      <MedicalRecordLatestVitalsAndAbnormalPanel record={record} />
+
+      {/* 11 sections accordion */}
       <MedicalRecord11SectionsAccordion record={record} />
 
       <div className="text-xs text-gray-500 border-t pt-3">
-        <strong>Nguồn chuẩn:</strong> Thông tư 13/2025/TT-BYT của Bộ Y tế quy định cấu trúc hồ sơ bệnh án điện tử.
+        <strong>Nguồn chuẩn:</strong> Thông tư 13/2025/TT-BYT · QĐ 1332 + 2733/QĐ-BYT.
         Dữ liệu do KH/BSGĐ/BS chuyên khoa cập nhật và xác thực trước khi lưu.
       </div>
     </div>
