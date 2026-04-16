@@ -67,9 +67,9 @@ const NAV_SECTIONS: NavSection[] = [
     title: 'HỒ SƠ Y TẾ CÁ NHÂN',
     items: [
       { href: '/dashboard/medical-record', label: 'Hồ sơ y tế', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
+      { href: '/dashboard/vitals', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
       { href: '/dashboard/upload', label: 'Upload tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
       { href: '/dashboard/ai-summary', label: 'AI tổng hợp', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true },
-      { href: '/dashboard/timeline', label: 'Theo dõi sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
     ],
   },
   {
