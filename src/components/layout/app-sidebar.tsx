@@ -62,10 +62,10 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: 'HỒ SƠ SỨC KHỎE',
+    title: 'HỒ SƠ CÁ NHÂN',
     items: [
-      { href: '/dashboard/medical-record', label: 'Hồ sơ y tế (11 mục)', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
-      { href: '/dashboard/ai-summary', label: 'AI Phân tích', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true },
+      { href: '/dashboard/medical-record', label: 'Hồ sơ', icon: User, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
+      { href: '/dashboard/timeline', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
       { href: '/dashboard/health-record?tab=daycare', label: 'Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE },
       { href: '/dashboard/health-record?tab=family-doctor', label: 'Bác sĩ gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR },
       { href: '/dashboard/health-record?tab=rehab', label: 'Phục hồi chức năng', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB },
@@ -73,10 +73,10 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: 'TÀI LIỆU & CHỈ SỐ',
+    title: 'CÔNG CỤ',
     items: [
-      { href: '/dashboard/upload', label: 'Tải tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
-      { href: '/dashboard/timeline', label: 'Dòng thời gian', icon: Clock, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
+      { href: '/dashboard/ai-summary', label: 'AI Summary', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true },
+      { href: '/dashboard/upload', label: 'Upload thông minh', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
       { href: '/dashboard/summary', label: 'Tóm tắt sức khỏe', icon: FileText, requiredPermission: PERMISSIONS.MODULE_SUMMARY },
     ],
   },
