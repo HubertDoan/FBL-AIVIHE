@@ -134,6 +134,7 @@ export function LandingConsultationRequestForm() {
                 { value: 'daycare', label: '🏠 Thong Dong Daycare' },
                 { value: 'family-doctor', label: '👨‍⚕️ BS gia đình' },
                 { value: 'rehabilitation', label: '🏥 PHCN' },
+                { value: 'aivihe', label: '🤖 AIVIHE Trợ lý AI sức khỏe' },
                 { value: 'unsure', label: '💭 Chưa rõ, cần tư vấn' },
               ].map((opt) => (
                 <button

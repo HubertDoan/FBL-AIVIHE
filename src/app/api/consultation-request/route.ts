@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const validChannels = ['daycare', 'family-doctor', 'rehabilitation', 'unsure']
+    const validChannels = ['daycare', 'family-doctor', 'rehabilitation', 'aivihe', 'unsure']
     const normalizedChannel = validChannels.includes(channel) ? channel : null
 
     // Demo mode: store in-memory
