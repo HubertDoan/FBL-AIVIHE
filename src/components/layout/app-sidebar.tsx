@@ -70,6 +70,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: '/dashboard/vitals', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
       { href: '/dashboard/upload', label: 'Upload tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
       { href: '/dashboard/ai-summary', label: 'AI tổng hợp', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true },
+      { href: '/dashboard/health-report', label: 'Báo cáo sức khỏe', icon: FileText, requiredPermission: PERMISSIONS.MODULE_SUMMARY },
     ],
   },
   {
