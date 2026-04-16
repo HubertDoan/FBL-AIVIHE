@@ -82,11 +82,12 @@ const EXAM_DOCTOR_MODULES: Permission[] = [
   PERMISSIONS.MODULE_MESSAGES,
 ]
 
-// Modules dành cho tiếp đón
+// Modules dành cho tiếp đón — sidebar chỉ công việc, KHÔNG có hồ sơ y tế cá nhân
+// Reception truy cập hồ sơ KH qua trang Tiếp đón, không qua sidebar riêng
 const RECEPTION_MODULES: Permission[] = [
   ...COMMON_MODULES,
-  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_RECEPTION,
+  PERMISSIONS.MODULE_NOTIFICATIONS,
   PERMISSIONS.MODULE_MESSAGES,
 ]
 
@@ -132,18 +133,20 @@ const ACCOUNTANT_MODULES: Permission[] = [
   PERMISSIONS.MODULE_MESSAGES,
 ]
 
-// Modules dành cho hành chính (admin_staff)
+// Modules dành cho hành chính (admin_staff) — sidebar gọn, chỉ công việc
 const ADMIN_STAFF_MODULES: Permission[] = [
   ...COMMON_MODULES,
-  ...HEALTH_RECORD_AREAS_FULL,
+  PERMISSIONS.MODULE_RECEPTION,
+  PERMISSIONS.MODULE_NOTIFICATIONS,
   PERMISSIONS.MODULE_MESSAGES,
 ]
 
-// Modules dành cho quản lý (manager)
+// Modules dành cho quản lý (manager) — có admin + thông báo
 const MANAGER_MODULES: Permission[] = [
   ...COMMON_MODULES,
-  ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_ADMIN,
+  PERMISSIONS.MODULE_RECEPTION,
+  PERMISSIONS.MODULE_NOTIFICATIONS,
   PERMISSIONS.MODULE_MESSAGES,
   PERMISSIONS.MODULE_TASK_ASSIGNMENT,
 ]

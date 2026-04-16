@@ -97,6 +97,12 @@ export default function DashboardPage() {
     return <GuestDashboard />
   }
 
+  // Staff roles → redirect thẳng tới trang công việc
+  if (user?.role === 'reception' || user?.role === 'admin_staff') {
+    router.push('/dashboard/reception')
+    return null
+  }
+
   if (dataLoading) {
     return (
       <div className="flex items-center justify-center py-12">
