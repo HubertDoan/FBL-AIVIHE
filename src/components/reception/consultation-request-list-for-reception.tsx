@@ -21,11 +21,18 @@ const CHANNEL_LABEL: Record<string, string> = {
   unsure: '💭 Chưa rõ',
 }
 
-export function ConsultationRequestListForReception({ userRole }: { userRole: string }) {
+export function ConsultationRequestListForReception({
+  userRole,
+  defaultFilter = 'all',
+}: {
+  userRole: string
+  /** Filter initial status (mapped từ activeView của parent): 'new' | 'contacted' | 'info_completed' | 'approved' | 'all' */
+  defaultFilter?: string
+}) {
   const [requests, setRequests] = useState<ConsultationRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState<ConsultationRequest | null>(null)
-  const [filter, setFilter] = useState<string>('all')
+  const [filter, setFilter] = useState<string>(defaultFilter)
 
   async function load() {
     setLoading(true)

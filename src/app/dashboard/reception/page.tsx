@@ -98,21 +98,21 @@ export default function ReceptionPage() {
         {activeView === 'pending' && (
           <div className="space-y-3">
             <ViewHeader title="Chờ tư vấn" desc="Yêu cầu mới từ trang web và các nguồn — gọi điện liên hệ KH" />
-            <ConsultationRequestListForReception userRole={user?.role || ''} />
+            <ConsultationRequestListForReception userRole={user?.role || ''} defaultFilter="new" />
           </div>
         )}
 
         {activeView === 'contacted' && (
           <div className="space-y-3">
             <ViewHeader title="Đã tư vấn & Trình duyệt" desc="Đã liên hệ KH, bổ sung đầy đủ thông tin — chuyển GĐ duyệt" />
-            <ConsultationRequestListForReception userRole={user?.role || ''} />
+            <ConsultationRequestListForReception userRole={user?.role || ''} defaultFilter="contacted" />
           </div>
         )}
 
         {activeView === 'approved' && (
           <div className="space-y-3">
             <ViewHeader title="Đã duyệt" desc="GĐ đã duyệt — liên hệ KH thông báo kết quả, hướng dẫn tạo tài khoản" />
-            <ConsultationRequestListForReception userRole={user?.role || ''} />
+            <ConsultationRequestListForReception userRole={user?.role || ''} defaultFilter="approved" />
           </div>
         )}
 
