@@ -46,7 +46,8 @@ export default function LandingPage() {
 
           {/* AIVIHE badge — Nền tảng quản lý thông tin sức khỏe cá nhân */}
           <div className="inline-flex items-center gap-2 bg-white/80 border border-blue-100 rounded-full px-4 py-2 mb-6 shadow-sm">
-            <Image src="/AIVIHE.jpg" alt="AIVIHE" width={80} height={32} className="h-8 w-auto rounded" />
+            <span className="text-base font-bold text-blue-700 tracking-wide">AIVIHE</span>
+            <span className="text-gray-300">|</span>
             <span className="text-sm text-blue-700 font-medium">Nền tảng quản lý thông tin sức khỏe cá nhân</span>
           </div>
 
@@ -183,7 +184,7 @@ export default function LandingPage() {
           <div className="flex items-center justify-center gap-3 mb-2">
             <Image src="/thong-dong-life-logo.png" alt="Thong Dong Life" width={100} height={40} className="h-8 w-auto" />
             <span className="text-gray-300">|</span>
-            <Image src="/AIVIHE.jpg" alt="AIVIHE" width={60} height={24} className="h-6 w-auto rounded" />
+            <span className="text-base font-bold text-blue-700 tracking-wide">AIVIHE</span>
           </div>
           <p className="text-gray-500 text-sm">&copy; 2024 AIVIHE — Thong Dong Life (Sống thong dong)</p>
           <p className="text-gray-400 text-xs mt-1">Được phát triển bởi Thong Dong Tech</p>
