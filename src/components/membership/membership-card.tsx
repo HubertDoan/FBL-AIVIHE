@@ -11,11 +11,11 @@ import {
 } from 'lucide-react'
 
 const BENEFITS = [
-  { icon: FileText, text: 'Quản lý hồ sơ sức khỏe trọn đời' },
+  { icon: FileText, text: 'Quản lý thông tin sức khỏe trọn đời' },
   { icon: Brain, text: 'AI trích xuất dữ liệu y tế' },
   { icon: TrendingUp, text: 'Theo dõi xu hướng sức khỏe' },
   { icon: Stethoscope, text: 'Chuẩn bị đi khám bệnh' },
-  { icon: Users, text: 'Chia sẻ hồ sơ gia đình' },
+  { icon: Users, text: 'Chia sẻ thông tin sức khỏe khi được cho phép' },
   { icon: HeartPulse, text: 'Tư vấn bác sĩ gia đình' },
 ]
 

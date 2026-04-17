@@ -160,7 +160,7 @@ export function HealthProfileForm({ profile, editing, onSave }: HealthProfileFor
 
       {editing && (
         <Button className="w-full h-12 text-lg mt-4" onClick={handleSave} disabled={saving}>
-          {saving ? 'Đang lưu...' : 'Lưu hồ sơ sức khỏe'}
+          {saving ? 'Đang lưu...' : 'Lưu thông tin sức khỏe'}
         </Button>
       )}
     </div>

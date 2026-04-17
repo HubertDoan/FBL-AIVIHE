@@ -18,11 +18,11 @@ import {
 } from 'lucide-react'
 
 const BENEFITS = [
-  { icon: FileText, text: 'Quản lý hồ sơ sức khỏe trọn đời' },
+  { icon: FileText, text: 'Quản lý thông tin sức khỏe trọn đời' },
   { icon: Brain, text: 'AI trích xuất dữ liệu y tế' },
   { icon: TrendingUp, text: 'Theo dõi xu hướng sức khỏe' },
   { icon: Stethoscope, text: 'Chuẩn bị đi khám bệnh' },
-  { icon: Users, text: 'Chia sẻ hồ sơ gia đình' },
+  { icon: Users, text: 'Chia sẻ thông tin sức khỏe khi được cho phép' },
 ]
 
 const ROLE_OPTIONS = [
@@ -478,7 +478,7 @@ export default function RegisterMemberPage() {
                 onClick={() => setAgreed(!agreed)}
               >
                 Tôi đồng ý với điều khoản sử dụng AIVIHE.
-                Dữ liệu sức khỏe thuộc về người dùng và chỉ được chia sẻ khi có sự cho phép của chủ hồ sơ.
+                Dữ liệu sức khỏe thuộc về người dùng và chỉ được chia sẻ khi có sự cho phép của chủ tài khoản.
               </label>
             </div>
 

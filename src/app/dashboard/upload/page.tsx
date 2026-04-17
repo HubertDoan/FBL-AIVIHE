@@ -44,7 +44,7 @@ export default function UploadPage() {
   if (!citizenId) {
     return (
       <div className="text-center py-12">
-        <p className="text-lg text-destructive">Không tìm thấy hồ sơ. Vui lòng hoàn tất đăng ký.</p>
+        <p className="text-lg text-destructive">Không tìm thấy tài khoản AIVIHE. Vui lòng hoàn tất đăng ký.</p>
       </div>
     )
   }
@@ -67,9 +67,9 @@ export default function UploadPage() {
               <Clipboard className="size-8" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Nhập hồ sơ y tế bằng AI</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Nhập thông tin sức khỏe bằng AI</h1>
               <p className="text-muted-foreground text-sm md:text-base mt-1">
-                Upload tài liệu y tế — AI tự động trích xuất và điền vào hồ sơ
+                Upload tài liệu y tế — AI tự động trích xuất và điền vào tài khoản AIVIHE
               </p>
             </div>
           </div>

@@ -25,8 +25,8 @@ export function CustomerServicePackagesDashboardCards() {
           name="Cơ bản"
           tag="Miễn phí"
           tagColor="green"
-          desc="Hồ sơ sức khỏe + AI tổng hợp báo cáo"
-          features={['Lập hồ sơ sức khỏe', 'AI phân tích miễn phí']}
+          desc="Thông tin sức khỏe + AI tổng hợp báo cáo"
+          features={['Khởi tạo tài khoản AIVIHE', 'AI phân tích miễn phí']}
           active
         />
         <PackageCard

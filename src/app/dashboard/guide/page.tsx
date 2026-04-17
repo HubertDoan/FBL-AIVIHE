@@ -36,7 +36,7 @@ export default function GuidePage() {
             <StepCard
               step={1}
               icon={Upload}
-              title="Cập nhật hồ sơ"
+              title="Cập nhật thông tin sức khỏe"
               desc="Tải lên kết quả xét nghiệm, đơn thuốc, phiếu khám. AI tự đọc và trích xuất thông tin."
             />
             <StepCard
@@ -64,7 +64,7 @@ export default function GuidePage() {
       {/* 7 khu vực */}
       <Card>
         <CardContent className="pt-5 pb-5 space-y-3">
-          <h2 className="text-lg font-bold">7 khu vực trong tài khoản của bạn</h2>
+          <h2 className="text-lg font-bold">7 khu vực trong tài khoản AIVIHE của bạn</h2>
           <div className="space-y-2">
             <AreaItem icon={Home} color="text-teal-600" title="Daycare" desc="Xem hoạt động hằng ngày tại Thong Dong Daycare — check-in/out, hoạt động, chỉ số đo tại trung tâm, ghi chú NV." />
             <AreaItem icon={Stethoscope} color="text-blue-600" title="Bác sĩ gia đình" desc="Theo dõi các lần khám BSGĐ — chẩn đoán, đơn thuốc, khuyến nghị, kế hoạch tái khám." />
@@ -92,7 +92,7 @@ export default function GuidePage() {
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle className="size-4 shrink-0 mt-0.5 text-amber-700" />
-              <span>Dữ liệu sức khỏe <strong>thuộc về bạn</strong> và chỉ được chia sẻ khi có sự cho phép của chủ hồ sơ.</span>
+              <span>Dữ liệu sức khỏe <strong>thuộc về bạn</strong> và chỉ được chia sẻ khi có sự cho phép của chủ tài khoản.</span>
             </li>
           </ul>
         </CardContent>

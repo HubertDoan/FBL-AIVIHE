@@ -110,17 +110,17 @@ export function VisitPrepPaymentAndResultsSection({ reg, onUpdated }: Props) {
 
         {!saved ? (
           <Button
-            onClick={() => { setSaved(true); toast.success('Đã lưu vào hồ sơ sức khỏe.') }}
+            onClick={() => { setSaved(true); toast.success('Đã lưu vào tài khoản AIVIHE.') }}
             variant="outline"
             className="min-h-[48px] text-base gap-2 w-full"
           >
             <CheckCircle className="size-4" />
-            Lưu vào hồ sơ sức khỏe
+            Lưu vào tài khoản AIVIHE
           </Button>
         ) : (
           <div className="flex items-center gap-2 text-green-700 text-sm font-medium py-2">
             <CheckCircle className="size-4" />
-            Đã lưu vào hồ sơ sức khỏe
+            Đã lưu vào tài khoản AIVIHE
           </div>
         )}
       </section>

@@ -34,7 +34,7 @@ const INITIAL_PROGRAMS: Program[] = [
     description: 'Truy cập cơ bản vào hệ thống quản lý sức khỏe cá nhân.',
     price: 'Miễn phí',
     features: [
-      'Lưu trữ hồ sơ sức khỏe',
+      'Lưu trữ thông tin sức khỏe',
       'Xem lịch sử khám bệnh',
       'Nhận thông báo từ hệ thống',
     ],
@@ -61,7 +61,7 @@ const INITIAL_PROGRAMS: Program[] = [
     features: [
       'Tất cả tính năng Nâng cao',
       'Tối đa 6 thành viên gia đình',
-      'Chia sẻ hồ sơ gia đình',
+      'Chia sẻ thông tin sức khỏe khi được cho phép',
       'Báo cáo sức khỏe gia đình',
       'Ưu tiên hỗ trợ',
     ],
@@ -307,7 +307,7 @@ export function ProgramManager() {
               <Textarea
                 value={featuresText}
                 onChange={(e) => setFeaturesText(e.target.value)}
-                placeholder="Lưu trữ hồ sơ&#10;Tư vấn bác sĩ&#10;..."
+                placeholder="Lưu trữ thông tin sức khỏe&#10;Tư vấn bác sĩ&#10;..."
                 className="min-h-24 text-base"
               />
             </div>

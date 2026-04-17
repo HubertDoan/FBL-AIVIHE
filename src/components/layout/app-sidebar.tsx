@@ -64,9 +64,9 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: 'HỒ SƠ Y TẾ CÁ NHÂN',
+    title: 'THÔNG TIN SỨC KHỎE CÁ NHÂN',
     items: [
-      { href: '/dashboard/medical-record', label: 'Hồ sơ y tế', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
+      { href: '/dashboard/medical-record', label: 'Thông tin sức khỏe của tôi', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
       { href: '/dashboard/vitals', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
       { href: '/dashboard/upload', label: 'Upload tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
       { href: '/dashboard/ai-summary', label: 'AI tổng hợp', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true },
@@ -82,7 +82,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: 'BÁC SĨ GIA ĐÌNH',  // Ẩn nếu KH chưa đăng ký BSGĐ
     items: [
-      { href: '/dashboard/health-record?tab=family-doctor', label: 'Hồ sơ BSGĐ', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR },
+      { href: '/dashboard/health-record?tab=family-doctor', label: 'Thông tin BSGĐ', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR },
       { href: '/dashboard/consultation', label: 'Hỏi Bác sĩ', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_CONSULTATION },
       { href: '/dashboard/choose-doctor', label: 'Chọn BS gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_CHOOSE_DOCTOR },
     ],
@@ -90,7 +90,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: 'PHỤC HỒI CHỨC NĂNG',  // Ẩn nếu KH chưa đăng ký PHCN
     items: [
-      { href: '/dashboard/health-record?tab=rehab', label: 'Hồ sơ PHCN', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB },
+      { href: '/dashboard/health-record?tab=rehab', label: 'Nhật ký trị liệu', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB },
     ],
   },
   {
@@ -113,7 +113,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: 'BÁC SĨ',  // Chỉ hiện cho role doctor/specialist
     items: [
       { href: '/dashboard/doctor-register', label: 'Đăng ký BS', icon: UserPlus, requiredPermission: PERMISSIONS.MODULE_DOCTOR_REGISTER, doctorNotRegistered: true },
-      { href: '/dashboard/doctor-profile', label: 'Hồ sơ chuyên môn', icon: Award, requiredPermission: PERMISSIONS.MODULE_DOCTOR_PROFILE, doctorApproved: true },
+      { href: '/dashboard/doctor-profile', label: 'Thông tin chuyên môn', icon: Award, requiredPermission: PERMISSIONS.MODULE_DOCTOR_PROFILE, doctorApproved: true },
       { href: '/dashboard/doctor-review', label: 'Xem xét khám', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_DOCTOR_REVIEW },
       { href: '/dashboard/doctor-schedule', label: 'Lịch khám', icon: CalendarDays, requiredPermission: PERMISSIONS.MODULE_DOCTOR_SCHEDULE },
     ],

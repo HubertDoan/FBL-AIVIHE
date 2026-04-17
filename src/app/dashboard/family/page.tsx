@@ -208,7 +208,7 @@ export default function FamilyPage() {
                   }
                 >
                   <Heart className="size-4 mr-2" />
-                  Xem hồ sơ sức khỏe
+                  Xem thông tin sức khỏe
                 </Button>
               )}
             </div>

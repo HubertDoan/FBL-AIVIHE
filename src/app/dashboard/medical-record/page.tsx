@@ -33,13 +33,13 @@ export default function MedicalRecordPage() {
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center py-20 text-gray-500">
-        <Loader2 className="size-6 animate-spin mr-2" /> Đang tải hồ sơ y tế...
+        <Loader2 className="size-6 animate-spin mr-2" /> Đang tải thông tin sức khỏe...
       </div>
     )
   }
 
   if (!record) {
-    return <div className="text-center py-12 text-destructive">Không tải được hồ sơ</div>
+    return <div className="text-center py-12 text-destructive">Không tải được thông tin sức khỏe</div>
   }
 
   // Recent events for header badges
