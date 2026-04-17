@@ -10,9 +10,29 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AIVIHE - Trợ lý AI sức khỏe cá nhân",
+  title: "AIVIHE – Nền tảng quản lý thông tin sức khỏe cá nhân | Thong Dong Life",
   description:
-    "Trợ lý AI sức khỏe cá nhân giúp người dân hiểu và quản lý dữ liệu sức khỏe của mình.",
+    "AIVIHE giúp khách hàng và gia đình quản lý thông tin sức khỏe cá nhân, kết nối Daycare, bác sĩ gia đình và phục hồi chức năng trong một hành trình chăm sóc liên tục, an toàn và dễ hiểu.",
+  keywords: [
+    "quản lý thông tin sức khỏe cá nhân",
+    "trợ lý AI sức khỏe",
+    "chăm sóc sức khỏe chủ động",
+    "bác sĩ gia đình",
+    "phục hồi chức năng",
+    "Thong Dong Daycare",
+    "Thong Dong Life",
+    "theo dõi sức khỏe gia đình",
+    "nhật ký sức khỏe cá nhân",
+    "AIVIHE",
+  ],
+  openGraph: {
+    title: "AIVIHE – Nền tảng quản lý thông tin sức khỏe cá nhân",
+    description:
+      "Cùng khách hàng, gia đình, Daycare, bác sĩ gia đình và phục hồi chức năng theo dõi một hành trình sức khỏe liên tục, an toàn và dễ hiểu.",
+    type: "website",
+    locale: "vi_VN",
+    siteName: "AIVIHE",
+  },
 };
 
 export default function RootLayout({

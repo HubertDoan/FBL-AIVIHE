@@ -1,18 +1,34 @@
 const STEPS = [
-  { icon: '📸', label: 'Chụp ảnh tài liệu', desc: 'Chụp kết quả xét nghiệm, đơn thuốc, phiếu khám bằng điện thoại.' },
-  { icon: '🤖', label: 'AI đọc và trích xuất', desc: 'AI tự nhận dạng và trích xuất thông tin quan trọng từ tài liệu.' },
-  { icon: '✅', label: 'Bạn xác nhận', desc: 'Kiểm tra dữ liệu AI trích xuất trước khi lưu vào hồ sơ.' },
-  { icon: '📊', label: 'Theo dõi liên tục', desc: 'Xem timeline sức khỏe, biểu đồ xu hướng và chuẩn bị đi khám.' },
+  {
+    icon: '📸',
+    label: 'Tải lên hoặc chụp ảnh tài liệu',
+    desc: 'Chụp kết quả xét nghiệm, đơn thuốc, phiếu khám, giấy hẹn, chỉ số theo dõi hoặc tài liệu sức khỏe liên quan.',
+  },
+  {
+    icon: '🤖',
+    label: 'AI hỗ trợ đọc và trích xuất',
+    desc: 'AI nhận diện nội dung, trích xuất chỉ số quan trọng, phân nhóm thông tin và gợi ý bản tóm tắt dễ hiểu.',
+  },
+  {
+    icon: '✅',
+    label: 'Người dùng kiểm tra và xác nhận',
+    desc: 'AIVIHE chỉ lưu thông tin sau khi bạn kiểm tra và xác nhận. Bạn có thể chỉnh sửa, bổ sung hoặc không lưu.',
+  },
+  {
+    icon: '📊',
+    label: 'Theo dõi trên hành trình sức khỏe',
+    desc: 'Thông tin đã xác nhận hiển thị theo thời gian, giúp khách hàng, gia đình và đội ngũ chăm sóc theo dõi liên tục khi được phân quyền.',
+  },
 ]
 
 export function HowAiHelpsSection() {
   return (
-    <section className="max-w-5xl mx-auto px-4 py-10">
+    <section id="cach-aivihe-hoat-dong" className="max-w-5xl mx-auto px-4 py-10 scroll-mt-6">
       <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-2">
-        AI hỗ trợ bạn như thế nào?
+        AIVIHE hoạt động như thế nào?
       </h2>
       <p className="text-center text-gray-500 mb-8 text-base">
-        4 bước đơn giản để bắt đầu
+        4 bước đơn giản để quản lý thông tin sức khỏe cá nhân
       </p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {STEPS.map((s, i) => (

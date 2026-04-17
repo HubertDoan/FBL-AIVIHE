@@ -13,11 +13,11 @@ export function LandingAccessChannelsSection() {
       <div className="max-w-5xl mx-auto px-4">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            3 kênh tiếp cận AIVIHE
+            Khách hàng tiếp cận AIVIHE qua 3 điểm chạm của hệ sinh thái Thong Dong
           </h2>
           <p className="text-gray-500 max-w-2xl mx-auto">
-            AIVIHE là nền tảng quản lý sức khỏe trực tuyến — khách hàng được giới thiệu
-            và hỗ trợ mở tài khoản tại 3 điểm vật lý của hệ sinh thái Thong Dong Life
+            AIVIHE là nền tảng quản lý thông tin sức khỏe cá nhân trực tuyến — khách hàng được giới thiệu
+            và hỗ trợ khởi tạo tài khoản tại 3 điểm vật lý của hệ sinh thái Thong Dong Life
           </p>
         </div>
 
@@ -26,36 +26,36 @@ export function LandingAccessChannelsSection() {
             icon={Home}
             number={1}
             title="Thong Dong Daycare"
-            desc="Khách đến trung tâm Daycare sinh hoạt hàng ngày. Lễ tân khai hồ sơ, giới thiệu AIVIHE để quản lý sức khỏe cá nhân liên tục."
+            desc="Khách đến trung tâm Daycare sinh hoạt hàng ngày. Lễ tân hỗ trợ khởi tạo tài khoản AIVIHE để quản lý thông tin sức khỏe cá nhân liên tục."
             steps={[
               'Khách đến Daycare',
-              'Lễ tân khai hồ sơ',
-              'Mở tài khoản AIVIHE',
-              'Liên thông dữ liệu hàng ngày',
+              'Lễ tân hỗ trợ khởi tạo tài khoản AIVIHE',
+              'Cập nhật sinh hoạt, chỉ số và ghi chú chăm sóc hằng ngày khi khách hàng đồng ý',
+              'Gia đình theo dõi khi được cho phép',
             ]}
           />
           <ChannelCard
             icon={Stethoscope}
             number={2}
             title="Phòng khám Bác sĩ gia đình"
-            desc="BS gia đình gặp khách, đánh giá sức khỏe tổng thể và giới thiệu AIVIHE để theo dõi định kỳ, dự phòng bệnh tật từ sớm."
+            desc="BS gia đình gặp khách, đánh giá sức khỏe tổng thể và giới thiệu AIVIHE để theo dõi định kỳ, tư vấn dự phòng."
             steps={[
               'Khách đến PK BS gia đình',
               'BS khám, đánh giá',
-              'Mở tài khoản AIVIHE',
-              'BS theo dõi liên tục',
+              'Khách hàng khởi tạo tài khoản AIVIHE',
+              'BS theo dõi thông tin được chia sẻ và tư vấn dự phòng theo định kỳ',
             ]}
           />
           <ChannelCard
             icon={Activity}
             number={3}
             title="Phòng khám Phục hồi chức năng"
-            desc="KTV PHCN đánh giá chức năng vận động, chỉ định trị liệu. AIVIHE lưu hồ sơ trị liệu và tiến triển theo thời gian."
+            desc="KTV PHCN đánh giá chức năng vận động, chỉ định trị liệu. AIVIHE hỗ trợ ghi nhận nhật ký trị liệu, bài tập và tiến triển PHCN."
             steps={[
               'Khách đến PK PHCN',
               'KTV đánh giá chức năng',
-              'Mở tài khoản AIVIHE',
-              'Lập kế hoạch trị liệu',
+              'Khởi tạo tài khoản AIVIHE',
+              'Ghi nhận nhật ký trị liệu và tiến triển PHCN',
             ]}
           />
         </div>

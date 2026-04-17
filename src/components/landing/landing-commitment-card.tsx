@@ -4,12 +4,14 @@ const BG_MAP: Record<string, string> = {
   amber: 'bg-amber-50 border-amber-200',
   blue: 'bg-blue-50 border-blue-200',
   green: 'bg-green-50 border-green-200',
+  teal: 'bg-teal-50 border-teal-200',
 }
 
 const ICON_MAP: Record<string, string> = {
   amber: 'bg-amber-100 text-amber-600',
   blue: 'bg-blue-100 text-blue-600',
   green: 'bg-green-100 text-green-600',
+  teal: 'bg-teal-100 text-teal-600',
 }
 
 interface CommitmentCardProps {

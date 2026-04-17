@@ -1,14 +1,15 @@
 import Image from 'next/image'
-import { ArrowRight, Brain, Stethoscope, Activity, ShieldCheck } from 'lucide-react'
+import { ArrowRight, UserPlus, FileText, Brain, CheckCircle, Users } from 'lucide-react'
 
 /**
- * Section mô tả hành trình chăm sóc sức khỏe trong hệ sinh thái Thong Dong Life:
- * AI tổng hợp → Bác sĩ gia đình → Chuyên khoa PHCN → Chuyên khoa sâu
+ * Section "Hành trình chăm sóc liên tục" — 5 điểm chạm trong hệ sinh thái Thong Dong:
+ * Khởi tạo tài khoản AIVIHE → Cập nhật tài liệu/chỉ số → AI tóm tắt →
+ * Người dùng xác nhận → Gia đình/Daycare/BS gia đình/PHCN phối hợp khi được phân quyền.
  */
 export function EcosystemCareJourney() {
   return (
     <section className="py-12 bg-gradient-to-b from-teal-50/30 to-white">
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
 
         {/* Header */}
         <div className="text-center mb-10">
@@ -20,40 +21,46 @@ export function EcosystemCareJourney() {
             className="h-12 w-auto mx-auto mb-3"
           />
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-            Hệ sinh thái Thong Dong Life đồng hành cùng bạn
+            Một hành trình sức khỏe – nhiều điểm chạm chăm sóc
           </h2>
-          <p className="max-w-2xl mx-auto text-lg text-gray-600 leading-relaxed">
-            Khi dữ liệu sức khỏe được tập trung, trợ lý AI sẽ tổng hợp và cho bạn
-            bức tranh toàn cảnh về sức khỏe — để bạn tự quyết định cần làm gì
-            với chính sức khỏe của mình.
+          <p className="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed">
+            AIVIHE kết nối các điểm chạm trong hệ sinh thái Thong Dong: từ Daycare, bác sĩ gia đình,
+            phục hồi chức năng đến gia đình. Mỗi hoạt động được ghi nhận phù hợp, giúp việc chăm sóc
+            không bị đứt gãy thông tin.
           </p>
         </div>
 
-        {/* Journey steps */}
-        <div className="grid md:grid-cols-4 gap-6">
+        {/* 5 Journey steps */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <JourneyStep
+            icon={UserPlus}
+            step={1}
+            title="Khởi tạo tài khoản AIVIHE"
+            desc="Khách hàng khởi tạo tài khoản AIVIHE để bắt đầu quản lý thông tin sức khỏe cá nhân."
+          />
+          <JourneyStep
+            icon={FileText}
+            step={2}
+            title="Cập nhật tài liệu & chỉ số"
+            desc="Tài liệu khám, đơn thuốc, xét nghiệm và chỉ số theo dõi được cập nhật liên tục."
+          />
           <JourneyStep
             icon={Brain}
-            step={1}
-            title="AI tổng hợp"
-            desc="Dữ liệu tập trung một nơi, AI vẽ ra bức tranh sức khỏe toàn diện cho bạn."
-          />
-          <JourneyStep
-            icon={Stethoscope}
-            step={2}
-            title="Bác sĩ gia đình"
-            desc="Theo dõi sự thay đổi sức khỏe theo thời gian, ảnh hưởng của lối sống, ăn uống, tuổi tác và môi trường. Phát hiện từ sớm, từ xa, dự phòng."
-          />
-          <JourneyStep
-            icon={Activity}
             step={3}
-            title="Chuyên khoa & PHCN"
-            desc="Bác sĩ chuyên khoa, phục hồi chức năng — dự phòng, phát hiện sớm, phục hồi sức khỏe khi cần."
+            title="AI hỗ trợ đọc và tóm tắt"
+            desc="AI nhận diện, trích xuất và diễn giải thông tin bằng ngôn ngữ dễ hiểu."
           />
           <JourneyStep
-            icon={ShieldCheck}
+            icon={CheckCircle}
             step={4}
-            title="Mỗi ngày hạnh phúc"
-            desc="Tất cả để đảm bảo mỗi ngày của bạn là một ngày khỏe mạnh, an vui và có ý nghĩa."
+            title="Người dùng xác nhận"
+            desc="Thông tin chỉ được lưu sau khi người dùng kiểm tra và xác nhận."
+          />
+          <JourneyStep
+            icon={Users}
+            step={5}
+            title="Đội ngũ phối hợp chăm sóc"
+            desc="Gia đình, Daycare, bác sĩ gia đình và PHCN cùng phối hợp khi được phân quyền."
           />
         </div>
 
@@ -85,14 +92,14 @@ function JourneyStep({ icon: Icon, step, title, desc }: {
   desc: string
 }) {
   return (
-    <div className="relative bg-white rounded-2xl border border-teal-100 p-6 text-center hover:shadow-md transition-shadow">
+    <div className="relative bg-white rounded-2xl border border-teal-100 p-5 text-center hover:shadow-md transition-shadow">
       <div className="absolute -top-3 -right-2 size-8 rounded-full bg-teal-600 text-white text-sm font-bold flex items-center justify-center shadow">
         {step}
       </div>
-      <div className="inline-flex items-center justify-center size-14 rounded-2xl bg-teal-50 text-teal-600 mb-4">
-        <Icon className="size-7" />
+      <div className="inline-flex items-center justify-center size-12 rounded-2xl bg-teal-50 text-teal-600 mb-3">
+        <Icon className="size-6" />
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+      <h3 className="text-base font-semibold text-gray-900 mb-2">{title}</h3>
       <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
     </div>
   )

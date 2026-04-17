@@ -27,9 +27,10 @@ export function ServicePackagesSection() {
             price="Miễn phí"
             highlight={false}
             features={[
-              'Lập hồ sơ sức khỏe cá nhân',
-              'Cập nhật đơn thuốc, kết quả khám',
-              'AI tổng hợp báo cáo đánh giá chung',
+              'Khởi tạo tài khoản AIVIHE',
+              'Quản lý thông tin sức khỏe cá nhân',
+              'Cập nhật đơn thuốc, kết quả khám, xét nghiệm và tài liệu sức khỏe',
+              'AI hỗ trợ tóm tắt thông tin đã được xác nhận',
               'Không giới hạn thời gian',
             ]}
           />
@@ -42,9 +43,9 @@ export function ServicePackagesSection() {
             highlight
             features={[
               'Tất cả gói Cơ bản',
-              'BS gia đình theo dõi sức khỏe',
-              'Tư vấn lối sống, ăn uống, dự phòng',
-              'Phát hiện sớm, từ xa',
+              'BS gia đình theo dõi thông tin sức khỏe khi khách hàng cho phép',
+              'Tư vấn lối sống, dự phòng, quản lý bệnh nền',
+              'Chuẩn bị khi cần đi khám chuyên khoa',
               'Tự chọn BS — đánh giá sao',
             ]}
           />
@@ -59,7 +60,7 @@ export function ServicePackagesSection() {
               'Tất cả gói BSGD',
               'Đánh giá chức năng chuyên sâu',
               'Trị liệu tại trung tâm hoặc tại nhà',
-              'Theo dõi tiến triển theo buổi',
+              'Nhật ký trị liệu và tiến triển PHCN',
               'Bài tập cá nhân hóa',
             ]}
           />
@@ -73,7 +74,7 @@ export function ServicePackagesSection() {
             features={[
               'Tất cả gói PHCN',
               'BS chuyên khoa: khớp, tim mạch, nội tiết...',
-              'Xem hồ sơ + tư vấn chuyên sâu',
+              'Xem bản tóm tắt thông tin sức khỏe và tài liệu liên quan khi khách hàng cho phép',
               'Hỗ trợ đi khám tại bệnh viện',
               'Phối hợp BS gia đình + chuyên khoa',
             ]}

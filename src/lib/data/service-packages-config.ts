@@ -21,15 +21,16 @@ export const SERVICE_PACKAGES: ServicePackage[] = [
     price: 'Miễn phí',
     tagColor: 'green',
     icon: 'Heart',
-    shortDesc: 'Hồ sơ sức khỏe + AI tổng hợp báo cáo',
+    shortDesc: 'Tài khoản AIVIHE + AI tóm tắt thông tin sức khỏe',
     benefits: [
-      'Lập hồ sơ sức khỏe cá nhân',
-      'Cập nhật đơn thuốc, kết quả khám',
-      'AI tổng hợp báo cáo đánh giá chung',
+      'Khởi tạo tài khoản AIVIHE',
+      'Quản lý thông tin sức khỏe cá nhân',
+      'Cập nhật đơn thuốc, kết quả khám, xét nghiệm và tài liệu sức khỏe',
+      'AI hỗ trợ tóm tắt thông tin đã được xác nhận',
       'Không giới hạn thời gian sử dụng',
     ],
     details:
-      'Gói Cơ bản miễn phí cho phép bạn lập hồ sơ sức khỏe, tải lên tài liệu y tế, và nhận báo cáo tổng hợp từ trợ lý AI. Phù hợp cho những người muốn bắt đầu quản lý sức khỏe chủ động.',
+      'Gói Cơ bản miễn phí cho phép bạn khởi tạo tài khoản AIVIHE, tải lên tài liệu sức khỏe và nhận bản tóm tắt thông tin do AI hỗ trợ. Phù hợp cho những người muốn bắt đầu quản lý thông tin sức khỏe chủ động.',
   },
   {
     id: 'family-doctor',
@@ -82,12 +83,12 @@ export const SERVICE_PACKAGES: ServicePackage[] = [
       'Tất cả quyền lợi gói PHCN',
       'Bác sĩ chuyên khoa theo lĩnh vực của bạn',
       'Chuyên khoa: khớp, tim mạch, nội tiết, thần kinh...',
-      'Được xem hồ sơ sức khỏe + tư vấn chuyên sâu',
+      'Xem bản tóm tắt thông tin sức khỏe và tài liệu liên quan khi khách hàng cho phép',
       'Hỗ trợ đi khám tại bệnh viện đối tác',
       'Phối hợp BS gia đình + BS chuyên khoa',
     ],
     details:
-      'Bác sĩ chuyên khoa sâu sẽ được phép xem hồ sơ sức khỏe của bạn (có phân quyền), tư vấn chuyên sâu và hỗ trợ khi cần đi khám tại bệnh viện. Ví dụ: bệnh khớp có BS khớp, bệnh tim mạch có BS tim mạch.',
+      'Bác sĩ chuyên khoa sâu sẽ được phép xem bản tóm tắt thông tin sức khỏe của bạn (có phân quyền), tư vấn chuyên sâu và hỗ trợ khi cần đi khám tại bệnh viện. Ví dụ: bệnh khớp có BS khớp, bệnh tim mạch có BS tim mạch.',
   },
 ]
 

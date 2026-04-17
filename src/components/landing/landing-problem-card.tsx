@@ -4,6 +4,7 @@ const COLOR_MAP: Record<string, string> = {
   red: 'bg-red-50 border-red-200 text-red-600',
   amber: 'bg-amber-50 border-amber-200 text-amber-600',
   orange: 'bg-orange-50 border-orange-200 text-orange-600',
+  blue: 'bg-blue-50 border-blue-200 text-blue-600',
 }
 
 interface ProblemCardProps {
