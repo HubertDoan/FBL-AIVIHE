@@ -2,12 +2,14 @@
 
 ## Identity
 
-**AIVIHE** = AI · VI · HE = Trợ lý AI sức khỏe cá nhân
+**AIVIHE** = AI · VI · HE = Nền tảng quản lý thông tin sức khỏe cá nhân của hệ sinh thái Thong Dong
 - Nhánh công nghệ của **Thong Dong Life**, do **Thong Dong Tech** phát triển
 - Thong Dong Life gồm 5 thương hiệu: **Life** (triết lý), **Daycare** (chăm sóc ban ngày), **Home** (không gian sống), **Land** (bất động sản), **Tech** (công nghệ)
 - AIVIHE là sản phẩm chính của Thong Dong Tech
 
-**AIVIHE KHÔNG phải**: hồ sơ sức khỏe điện tử (do cơ quan quản lý nhà nước quy định), phần mềm bệnh viện, công cụ chẩn đoán. AI chỉ tổng hợp — không chẩn đoán, không thay thế bác sĩ.
+**Positioning (cập nhật 2026-04-17)**: AIVIHE giúp khách hàng, gia đình, Thong Dong Daycare, bác sĩ gia đình và phục hồi chức năng cùng theo dõi một hành trình sức khỏe liên tục, an toàn và dễ hiểu. AI chỉ hỗ trợ đọc, tóm tắt và giải thích — không chẩn đoán, không kê đơn và không thay thế bác sĩ.
+
+**AIVIHE KHÔNG phải**: hồ sơ sức khỏe điện tử (EHR), hồ sơ y tế điện tử, bệnh án điện tử (thuộc phạm vi quản lý nhà nước), phần mềm bệnh viện, công cụ chẩn đoán. Public-facing text: không dùng cụm "hồ sơ sức khỏe điện tử", "hồ sơ y tế", "bệnh án điện tử". Dùng thay: "thông tin sức khỏe cá nhân", "tài khoản AIVIHE", "nhật ký sức khỏe", "bản tóm tắt thông tin sức khỏe".
 
 ## Problem & Solution
 
