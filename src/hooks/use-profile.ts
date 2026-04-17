@@ -24,7 +24,7 @@ export function useProfile() {
       const res = await fetch('/api/profile')
       if (!res.ok) {
         const body = await res.json()
-        throw new Error(body.error ?? 'Không thể tải hồ sơ.')
+        throw new Error(body.error ?? 'Không thể tải thông tin sức khỏe.')
       }
       const data = await res.json()
       setState({ citizen: data.citizen, healthProfile: data.healthProfile, loading: false, error: null })
@@ -43,7 +43,7 @@ export function useProfile() {
       })
       if (!res.ok) {
         const body = await res.json()
-        throw new Error(body.error ?? 'Cập nhật hồ sơ thất bại.')
+        throw new Error(body.error ?? 'Cập nhật thông tin thất bại.')
       }
       const updated = await res.json()
       setState((s) => ({ ...s, citizen: updated, loading: false }))
@@ -64,7 +64,7 @@ export function useProfile() {
       })
       if (!res.ok) {
         const body = await res.json()
-        throw new Error(body.error ?? 'Cập nhật hồ sơ sức khỏe thất bại.')
+        throw new Error(body.error ?? 'Cập nhật thông tin sức khỏe thất bại.')
       }
       const updated = await res.json()
       setState((s) => ({ ...s, healthProfile: updated, loading: false }))

@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   // ── Demo mode: read-only ──
   if (isDemoMode()) {
-    return demoResponse({ error: 'Chế độ demo không hỗ trợ cập nhật hồ sơ sức khỏe.' }, 400)
+    return demoResponse({ error: 'Chế độ demo không hỗ trợ cập nhật thông tin sức khỏe.' }, 400)
   }
 
   try {
@@ -102,7 +102,7 @@ export async function PUT(request: NextRequest) {
 
     if (upsertErr) {
       return NextResponse.json(
-        { error: 'Cập nhật hồ sơ sức khỏe thất bại: ' + upsertErr.message },
+        { error: 'Cập nhật thông tin sức khỏe thất bại: ' + upsertErr.message },
         { status: 500 },
       )
     }

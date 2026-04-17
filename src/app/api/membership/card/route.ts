@@ -8,11 +8,11 @@ import {
 import { createClient } from '@/lib/supabase/server'
 
 const BENEFITS = [
-  'Quản lý hồ sơ sức khỏe trọn đời',
+  'Quản lý thông tin sức khỏe trọn đời',
   'AI trích xuất dữ liệu y tế',
   'Theo dõi xu hướng sức khỏe',
   'Chuẩn bị đi khám bệnh',
-  'Chia sẻ hồ sơ gia đình',
+  'Chia sẻ thông tin sức khỏe khi được cho phép',
   'Tư vấn bác sĩ gia đình',
 ]
 

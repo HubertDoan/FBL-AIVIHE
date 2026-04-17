@@ -58,7 +58,7 @@ Nếu đau ngực đột ngột, khó thở, đau lan cánh tay → gọi 115 ng
   }
 
   // Default
-  return `Cảm ơn bạn đã hỏi. Tôi là trợ lý AI sức khỏe của AIVIHE, có thể giúp bạn:\n
+  return `Cảm ơn bạn đã hỏi. Tôi là AIVIHE - nền tảng quản lý thông tin sức khỏe cá nhân, có thể giúp bạn:\n
 • Giải thích kết quả xét nghiệm
 • Hướng dẫn cách đo các chỉ số tại nhà
 • Tư vấn chế độ ăn uống, tập luyện
