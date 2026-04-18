@@ -1,7 +1,7 @@
 // Demo accounts for testing without Supabase
 // Only used when NEXT_PUBLIC_DEMO_MODE=true
 
-export type DemoRole = 'guest' | 'citizen' | 'doctor' | 'specialist' | 'admin' | 'director' | 'branch_director' | 'super_admin' | 'reception' | 'exam_doctor' | 'staff' | 'accountant' | 'admin_staff' | 'manager' | 'technician' | 'tech_assistant' | 'nurse' | 'support_staff' | 'intern'
+export type DemoRole = 'guest' | 'citizen' | 'member' | 'doctor' | 'specialist' | 'admin' | 'director' | 'branch_director' | 'super_admin' | 'reception' | 'exam_doctor' | 'staff' | 'accountant' | 'admin_staff' | 'manager' | 'technician' | 'tech_assistant' | 'nurse' | 'support_staff' | 'intern'
 
 // Loại tài khoản hiển thị trên form đăng nhập
 export const ACCOUNT_TYPES = [

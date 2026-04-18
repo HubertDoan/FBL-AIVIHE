@@ -362,6 +362,7 @@ export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, Permission[]> = {
   support_staff: SUPPORT_STAFF_PERMISSIONS,
   intern: INTERN_PERMISSIONS,
   citizen: CITIZEN_PERMISSIONS,
+  member: CITIZEN_PERMISSIONS, // member = citizen permissions (thành viên đã có gói)
   guest: GUEST_PERMISSIONS,
 }
 

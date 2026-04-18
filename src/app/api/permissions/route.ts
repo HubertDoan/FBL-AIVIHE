@@ -73,14 +73,35 @@ export async function GET(request: Request) {
       .eq('user_id', citizen.id)
 
     const custom: Permission[] = (customRows ?? []).map((r: { permission: string }) => r.permission as Permission)
+
+    // Tự động unlock module theo gói dịch vụ đã đăng ký
+    // FD (BS gia đình) → MODULE_HEALTH_RECORD_FAMILY_DOCTOR
+    // RH (PHCN)        → MODULE_HEALTH_RECORD_REHAB
+    // SP/clinic        → MODULE_HEALTH_RECORD_CLINIC
+    const extras: Permission[] = []
+    try {
+      const { data: enrollments } = await supabase
+        .from('service_enrollments')
+        .select('service_type,status')
+        .eq('citizen_id', citizen.id)
+        .eq('status', 'active')
+      const activeTypes = new Set((enrollments ?? []).map((e: { service_type: string }) => e.service_type))
+      if (activeTypes.has('FD')) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR)
+      if (activeTypes.has('RH')) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_REHAB)
+      if (activeTypes.has('SP')) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC)
+    } catch {
+      // bảng service_enrollments chưa migrate — bỏ qua
+    }
+
+    const allCustom = [...custom, ...extras]
     const defaults = getDefaultPermissions(citizen.role)
-    const effective = getEffectivePermissions(citizen.role, custom)
+    const effective = getEffectivePermissions(citizen.role, allCustom)
 
     return NextResponse.json({
       role: citizen.role,
       userId: citizen.id,
       defaultPermissions: defaults,
-      customPermissions: custom,
+      customPermissions: allCustom,
       effectivePermissions: effective,
     })
   } catch {

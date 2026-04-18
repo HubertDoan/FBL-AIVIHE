@@ -175,13 +175,14 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-gradient-to-b from-slate-50 via-white to-blue-50/30 text-gray-800">
-      {/* Brand header — AIVIHE logo (đã có sẵn tên + slogan trong logo) */}
-      <div className="bg-white px-4 py-3 border-b border-gray-100 flex items-center justify-center">
-        <img
-          src="/AIVIHE.jpg"
-          alt="AIVIHE - Trợ lý AI sức khỏe cá nhân"
-          className="h-14 w-auto object-contain"
-        />
+      {/* Brand header — AIVIHE text logo (thay ảnh cũ có tagline đã deprecated) */}
+      <div className="bg-white px-4 py-4 border-b border-gray-100 flex flex-col items-center justify-center gap-0.5">
+        <span className="text-2xl font-bold tracking-wide bg-gradient-to-r from-blue-700 to-teal-600 bg-clip-text text-transparent">
+          AIVIHE
+        </span>
+        <span className="text-[10px] text-gray-500 text-center leading-tight">
+          Nền tảng quản lý thông tin sức khỏe cá nhân
+        </span>
       </div>
 
       {/* User info */}
