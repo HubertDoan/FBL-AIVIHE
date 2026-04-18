@@ -194,24 +194,20 @@ const BRANCH_DIRECTOR_PERMISSIONS: Permission[] = [
   ...BRANCH_DIRECTOR_MODULES,
 ]
 
-// Quyền của admin (quản lý thành viên, thông báo, nhật ký — KHÔNG phân quyền)
+// Quyền của admin (QUẢN LÝ KỸ THUẬT — system config, phân quyền, bảo trì)
+// KHÔNG có quyền duyệt (duyệt là của director/super_admin).
+// Admin là technical admin, không phải executive admin.
 const ADMIN_PERMISSIONS: Permission[] = [
-  PERMISSIONS.MEMBERS_VIEW,
-  PERMISSIONS.MEMBERS_CREATE,
-  PERMISSIONS.MEMBERS_EDIT,
-  PERMISSIONS.MEMBERS_DELETE,
-  PERMISSIONS.MEMBERS_APPROVE,
-  PERMISSIONS.MEMBERS_SUSPEND,
-  PERMISSIONS.ANNOUNCEMENTS_VIEW,
-  PERMISSIONS.ANNOUNCEMENTS_CREATE,
-  PERMISSIONS.ANNOUNCEMENTS_EDIT,
-  PERMISSIONS.ANNOUNCEMENTS_DELETE,
-  PERMISSIONS.ANNOUNCEMENTS_SEND_ALL,
-  PERMISSIONS.ANNOUNCEMENTS_SEND_GROUP,
-  PERMISSIONS.ANNOUNCEMENTS_SEND_INDIVIDUAL,
-  PERMISSIONS.EXAM_REGISTRATION_REVIEW,
-  PERMISSIONS.REPORTS_VIEW_BRANCH,
+  // System config & technical management
   PERMISSIONS.SETTINGS_VIEW,
+  PERMISSIONS.SETTINGS_EDIT_SYSTEM,
+  // Members — view/edit only, KHÔNG approve/suspend/delete (executive decisions)
+  PERMISSIONS.MEMBERS_VIEW,
+  PERMISSIONS.MEMBERS_EDIT,
+  // Announcements — view only (director tạo & gửi)
+  PERMISSIONS.ANNOUNCEMENTS_VIEW,
+  // Reports & payments — view only
+  PERMISSIONS.REPORTS_VIEW_BRANCH,
   PERMISSIONS.PAYMENTS_VIEW,
   ...ADMIN_MODULES,
 ]
