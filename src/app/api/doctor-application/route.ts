@@ -4,6 +4,11 @@ import {
   getAllDoctorRegistrationRequests,
   createDoctorRegistrationRequest,
 } from '@/lib/demo/demo-doctor-registration-request-in-memory-store'
+import {
+  checkRateLimit,
+  getClientIp,
+} from '@/lib/security/rate-limit-upstash-sliding-window'
+import { verifyTurnstileToken } from '@/lib/security/cloudflare-turnstile-server-verify'
 
 /**
  * API đăng ký BS gia đình từ trang chủ aivihe.vn
@@ -18,12 +23,27 @@ const INTERNAL_ROLES = ['super_admin', 'director', 'branch_director', 'admin', '
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 3 lần/giờ/IP
+    const clientIp = getClientIp(request)
+    const limited = await checkRateLimit('doctorApplicationByIp', clientIp)
+    if (limited) return limited
+
     const body = await request.json()
     const {
       full_name, phone, email, license_number,
       doctor_type, specialties, main_qualification,
       additional_certifications, employment_type,
+      turnstile_token,
     } = body
+
+    // Turnstile bot protection
+    const turnstile = await verifyTurnstileToken(turnstile_token, clientIp)
+    if (!turnstile.success) {
+      return NextResponse.json(
+        { error: 'Xác thực bảo mật thất bại. Vui lòng thử lại.' },
+        { status: 400 }
+      )
+    }
 
     // Validation
     if (!full_name || typeof full_name !== 'string' || full_name.trim().length < 2) {

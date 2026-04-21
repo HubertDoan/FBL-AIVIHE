@@ -5,6 +5,11 @@ import {
   findUniqueDemoUsername,
   addDemoAccount,
 } from '@/lib/demo/demo-accounts'
+import {
+  checkRateLimit,
+  getClientIp,
+} from '@/lib/security/rate-limit-upstash-sliding-window'
+import { verifyTurnstileToken } from '@/lib/security/cloudflare-turnstile-server-verify'
 
 /**
  * Bỏ dấu tiếng Việt: Nguyễn → Nguyen, Minh → Minh, Đức → Duc
@@ -42,9 +47,24 @@ function generateUsername(fullName: string): string {
 
 export async function POST(request: Request) {
   try {
+    // Rate limit: 3 lần/giờ/IP (chống spam tài khoản giả)
+    const clientIp = getClientIp(request)
+    const limited = await checkRateLimit('registerByIp', clientIp)
+    if (limited) return limited
+
     const body = await request.json()
     const phone = (body.phone ?? '').trim()
     const fullName = (body.full_name ?? '').trim()
+    const turnstileToken = body.turnstile_token as string | undefined
+
+    // Turnstile bot protection (bypass nếu chưa config secret)
+    const turnstile = await verifyTurnstileToken(turnstileToken, clientIp)
+    if (!turnstile.success) {
+      return NextResponse.json(
+        { error: 'Xác thực bảo mật thất bại. Vui lòng thử lại.' },
+        { status: 400 }
+      )
+    }
 
     // Validate phone
     if (!phone || !/^0\d{9}$/.test(phone)) {

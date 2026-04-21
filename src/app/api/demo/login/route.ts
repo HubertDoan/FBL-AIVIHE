@@ -4,6 +4,10 @@ import {
   isDemoMode,
   DEMO_COOKIE_NAME,
 } from '@/lib/demo/demo-accounts'
+import {
+  checkRateLimit,
+  getClientIp,
+} from '@/lib/security/rate-limit-upstash-sliding-window'
 
 export async function POST(request: NextRequest) {
   if (!isDemoMode()) {
@@ -12,6 +16,11 @@ export async function POST(request: NextRequest) {
       { status: 403 }
     )
   }
+
+  // Rate limit: 5 lần/15 phút/IP (chống brute force)
+  const clientIp = getClientIp(request)
+  const limited = await checkRateLimit('loginByIp', clientIp)
+  if (limited) return limited
 
   try {
     const body = await request.json()

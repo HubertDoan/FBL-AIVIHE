@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { CheckCircle, PhoneCall, Loader2, Home } from 'lucide-react'
+import { TurnstileWidget } from '@/components/security/cloudflare-turnstile-widget-client'
 
 /**
  * Form đăng ký tư vấn trên trang chủ aivihe.vn
@@ -22,6 +23,7 @@ export function LandingConsultationRequestForm() {
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [countdown, setCountdown] = useState(3)
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
 
   // Auto-redirect về trang chủ sau 3s khi submitted
   useEffect(() => {
@@ -56,6 +58,7 @@ export function LandingConsultationRequestForm() {
           full_name: fullName.trim(),
           phone: phone.trim(),
           channel: channel || null,
+          turnstile_token: turnstileToken || null,
         }),
       })
       if (!res.ok) {
@@ -173,6 +176,8 @@ export function LandingConsultationRequestForm() {
               ))}
             </div>
           </div>
+
+          <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
 
           {error && (
             <p className="text-sm text-destructive text-center bg-destructive/10 rounded-md p-2.5">

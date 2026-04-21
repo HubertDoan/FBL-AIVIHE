@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { TurnstileWidget } from '@/components/security/cloudflare-turnstile-widget-client'
 
 function removeDiacritics(str: string): string {
   return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
@@ -33,6 +34,7 @@ export default function RegisterPage() {
     fullName: string
     message?: string
   } | null>(null)
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
   const router = useRouter()
 
   const usernamePreview = useMemo(() => previewUsername(fullName), [fullName])
@@ -55,7 +57,11 @@ export default function RegisterPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name: fullName.trim(), phone: phone.trim() }),
+        body: JSON.stringify({
+          full_name: fullName.trim(),
+          phone: phone.trim(),
+          turnstile_token: turnstileToken || null,
+        }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -192,6 +198,8 @@ export default function RegisterPage() {
             <p className="text-sm text-muted-foreground">
               Mật khẩu mặc định: <strong>123456</strong> — hãy đổi sau khi đăng nhập
             </p>
+
+            <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
 
             {error && (
               <p className="text-sm text-destructive text-center rounded-md bg-destructive/10 p-3">

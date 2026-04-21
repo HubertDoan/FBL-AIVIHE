@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { CheckCircle, Stethoscope, Loader2 } from 'lucide-react'
+import { TurnstileWidget } from '@/components/security/cloudflare-turnstile-widget-client'
 
 /**
  * Form đăng ký BS gia đình từ trang chủ aivihe.vn (public, không cần auth)
@@ -39,6 +40,7 @@ export function LandingDoctorApplicationForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -71,6 +73,7 @@ export function LandingDoctorApplicationForm() {
           main_qualification: mainQualification.trim() || undefined,
           additional_certifications: additionalCertsArr,
           employment_type: employmentType,
+          turnstile_token: turnstileToken || null,
         }),
       })
       if (!res.ok) {
@@ -264,6 +267,8 @@ export function LandingDoctorApplicationForm() {
               Dữ liệu được bảo mật, chỉ dùng cho mục đích tuyển dụng mạng lưới bác sĩ. <span className="text-destructive">*</span>
             </span>
           </label>
+
+          <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
 
           {error && (
             <p className="text-sm text-destructive text-center bg-destructive/10 rounded-md p-2.5">
