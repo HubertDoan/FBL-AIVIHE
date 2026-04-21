@@ -1,17 +1,11 @@
 import React from 'react'
 
-const BG_MAP: Record<string, string> = {
-  amber: 'bg-amber-50 border-amber-200',
-  blue: 'bg-blue-50 border-blue-200',
-  green: 'bg-green-50 border-green-200',
-  teal: 'bg-teal-50 border-teal-200',
-}
-
-const ICON_MAP: Record<string, string> = {
-  amber: 'bg-amber-100 text-amber-600',
-  blue: 'bg-blue-100 text-blue-600',
-  green: 'bg-green-100 text-green-600',
-  teal: 'bg-teal-100 text-teal-600',
+// Tech-modern Commitment card: subtle colored accent, minimalist
+const ACCENT_MAP: Record<string, { border: string; icon: string; dot: string }> = {
+  amber: { border: 'hover:border-amber-300', icon: 'bg-amber-100 text-amber-600', dot: 'bg-amber-400' },
+  blue:  { border: 'hover:border-blue-300',  icon: 'bg-blue-100 text-blue-600',   dot: 'bg-blue-400' },
+  green: { border: 'hover:border-green-300', icon: 'bg-green-100 text-green-600', dot: 'bg-green-400' },
+  teal:  { border: 'hover:border-teal-300',  icon: 'bg-teal-100 text-teal-600',   dot: 'bg-teal-400' },
 }
 
 interface CommitmentCardProps {
@@ -22,13 +16,15 @@ interface CommitmentCardProps {
 }
 
 export function CommitmentCard({ icon: Icon, color, title, desc }: CommitmentCardProps) {
+  const c = ACCENT_MAP[color] || ACCENT_MAP.blue
   return (
-    <div className={`rounded-2xl border p-5 ${BG_MAP[color] || BG_MAP.blue}`}>
-      <div className={`inline-flex items-center justify-center size-10 rounded-xl mb-3 ${ICON_MAP[color] || ICON_MAP.blue}`}>
-        <Icon className="size-5" />
+    <div className={`relative rounded-xl border border-slate-200 bg-white p-4 transition-all hover:shadow-md ${c.border}`}>
+      <span className={`absolute top-3 right-3 size-1.5 rounded-full ${c.dot}`} />
+      <div className={`inline-flex items-center justify-center size-9 rounded-lg mb-2.5 ${c.icon}`}>
+        <Icon className="size-4.5" />
       </div>
-      <h3 className="font-semibold text-gray-900 mb-1">{title}</h3>
-      <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
+      <h3 className="text-sm font-semibold text-slate-900 mb-1">{title}</h3>
+      <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
     </div>
   )
 }
