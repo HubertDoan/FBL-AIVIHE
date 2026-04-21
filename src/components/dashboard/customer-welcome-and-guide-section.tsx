@@ -30,7 +30,7 @@ export function CustomerWelcomeAndGuideSection({ userName }: { userName: string 
                 Chào mừng {userName} đến với AIVIHE!
               </h3>
               <p className="text-teal-800 mt-1 leading-relaxed">
-                AIVIHE là trợ lý AI sức khỏe cá nhân trong hệ sinh thái Thong Dong Life.
+                AIVIHE là nền tảng quản lý thông tin sức khỏe cá nhân của hệ sinh thái Thong Dong.
                 Tại đây, bạn có thể quản lý thông tin sức khỏe, theo dõi chỉ số,
                 và được hỗ trợ bởi đội ngũ bác sĩ gia đình chuyên nghiệp.
               </p>

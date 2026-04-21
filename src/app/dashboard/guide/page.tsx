@@ -24,7 +24,7 @@ export default function GuidePage() {
           Hướng dẫn sử dụng AIVIHE
         </h1>
         <p className="text-muted-foreground mt-1">
-          AIVIHE là trợ lý AI sức khỏe cá nhân trong hệ sinh thái Thong Dong Life
+          AIVIHE là nền tảng quản lý thông tin sức khỏe cá nhân của hệ sinh thái Thong Dong
         </p>
       </div>
 
