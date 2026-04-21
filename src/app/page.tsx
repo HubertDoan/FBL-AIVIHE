@@ -18,6 +18,7 @@ import { LandingDoctorApplicationSection } from '@/components/landing/landing-do
 import { LandingPainPointsCentralSection } from '@/components/landing/landing-pain-points-central-section'
 import { LandingBenefitsByUserGroupTabs } from '@/components/landing/landing-benefits-by-user-group-tabs'
 import { LandingInformationJourneyFlowDiagram } from '@/components/landing/landing-information-journey-flow-diagram'
+import { LandingMediExpressHealthStationPartnershipSection } from '@/components/landing/landing-mediexpress-health-station-partnership-section'
 
 // Healthcare-inspired palette (BV Thu Cúc / Hồng Ngọc / ĐH Y tế Công Cộng):
 // - Primary: teal-600 (#0d9488) — trust + health
@@ -199,6 +200,9 @@ export default function LandingPage() {
 
       {/* ===== 9. THIẾT BỊ IOT — viết lại thận trọng ===== */}
       <IotHealthDevicesSection />
+
+      {/* ===== 9.1 ĐỐI TÁC MEDIEXPRESS — trạm đo SK + wearable, không cảm giác bệnh viện ===== */}
+      <LandingMediExpressHealthStationPartnershipSection />
 
       {/* ===== 10. GÓI DỊCH VỤ ===== */}
       <ServicePackagesSection />
