@@ -1,131 +1,350 @@
-# AIVIHE — Project Overview
+# AIVIHE — Project Overview & PDR
 
-## Identity
+**Cập nhật:** 21/04/2026 | **Phiên bản:** 1.2
 
-**AIVIHE** = AI · VI · HE = Nền tảng quản lý thông tin sức khỏe cá nhân của hệ sinh thái Thong Dong
-- Nhánh công nghệ của **Thong Dong Life**, do **Thong Dong Tech** phát triển
-- Thong Dong Life gồm 5 thương hiệu: **Life** (triết lý), **Daycare** (chăm sóc ban ngày), **Home** (không gian sống), **Land** (bất động sản), **Tech** (công nghệ)
-- AIVIHE là sản phẩm chính của Thong Dong Tech
+---
 
-**Positioning (cập nhật 2026-04-17)**: AIVIHE giúp khách hàng, gia đình, Thong Dong Daycare, bác sĩ gia đình và phục hồi chức năng cùng theo dõi một hành trình sức khỏe liên tục, an toàn và dễ hiểu. AI chỉ hỗ trợ đọc, tóm tắt và giải thích — không chẩn đoán, không kê đơn và không thay thế bác sĩ.
+## Identity & Core Purpose
 
-**AIVIHE KHÔNG phải**: hồ sơ sức khỏe điện tử (EHR), hồ sơ y tế điện tử, bệnh án điện tử (thuộc phạm vi quản lý nhà nước), phần mềm bệnh viện, công cụ chẩn đoán. Public-facing text: không dùng cụm "hồ sơ sức khỏe điện tử", "hồ sơ y tế", "bệnh án điện tử". Dùng thay: "thông tin sức khỏe cá nhân", "tài khoản AIVIHE", "nhật ký sức khỏe", "bản tóm tắt thông tin sức khỏe".
+**AIVIHE** = **AI · VI · HE** = Artificial Intelligence · Vietnam · Health
 
-## Problem & Solution
+**AIVIHE là nền tảng quản lý thông tin sức khỏe cá nhân** trong hệ sinh thái **Thong Dong Life** — một hệ thống chăm sóc sức khỏe toàn diện cho người cao tuổi.
 
-**Vấn đề:** Dữ liệu sức khỏe phân tán ở nhiều nơi (bệnh viện, phòng khám, ứng dụng) — không ai thấy bức tranh toàn cảnh về sức khỏe của người dùng.
+**3 câu cốt lõi (bắt buộc hiển thị):**
+1. *"Trợ lý AI sức khỏe cá nhân giúp người dân hiểu và quản lý dữ liệu sức khỏe của mình."*
+2. *"AI chỉ hỗ trợ tổng hợp và giải thích thông tin từ dữ liệu người dùng cung cấp, không thay thế bác sĩ và không chẩn đoán bệnh."*
+3. *"Dữ liệu sức khỏe thuộc về người dùng và chỉ được chia sẻ khi có sự cho phép của chủ hồ sơ."*
 
-**Giải pháp:** AIVIHE tập trung dữ liệu → AI tổng hợp → cho bức tranh sức khỏe toàn diện → **người dùng tự hiểu và tự quyết định**.
+**3 hard rules (NON-NEGOTIABLE):**
+1. **AI KHÔNG chẩn đoán hay kê đơn** — chỉ tổng hợp, giải thích, gợi ý dữ liệu có sẵn
+2. **User PHẢI xác nhận trước khi AI-extracted data được lưu** — không auto-save
+3. **Mọi record phải link nguồn** (3-layer traceability: source → extracted → confirmed)
 
-Nguyên tắc cốt lõi: Một khách hàng – một mã TDL – một hồ sơ chung – dữ liệu liên thông.
-
-## User Roles & Workflow
-
-| Role | Vị trí | Workflow |
-|------|--------|---------|
-| super_admin | Quản trị hệ thống | Quản lý toàn bộ, phê duyệt đăng ký |
-| director | Giám đốc (Trần Thị Ngọc Trâm) | Phê duyệt, giám sát toàn hệ thống |
-| branch_director | GĐ chi nhánh (Lưu Tuấn Khanh) | Quản lý chi nhánh |
-| admin | Quản trị viên | Duyệt thành viên, quản lý thông báo |
-| reception | Tiếp đón (Nguyễn Thị Mai) | Tiếp nhận KH, khai hồ sơ ban đầu |
-| doctor | Bác sĩ gia đình (BS. Nguyễn Hải) | Theo dõi sức khỏe, tư vấn, ra chỉ định |
-| exam_doctor | BS khám bệnh (BS. Trần Văn Nam) | Khám lâm sàng, chẩn đoán |
-| specialist | BS chuyên khoa (BS. Phạm Văn Đức) | Tư vấn chuyên khoa sâu (khớp, tim mạch...) |
-| technician | KTV PHCN (Trần Minh) | Đánh giá, trị liệu phục hồi chức năng |
-| nurse | Điều dưỡng (Nguyễn Thị Hương) | Đo chỉ số, nhắc thuốc, ghi chép |
-| manager | Quản lý (Vũ Đình Trung) | Giám sát vận hành |
-| member | Khách hàng/Thành viên | Xem hồ sơ, cập nhật thông tin, sử dụng dịch vụ |
-| citizen | Người đăng ký mới | Chưa được duyệt, chờ phê duyệt |
-| guest | Khách vãng lai | Xem trang chủ, đăng ký |
-| family_viewer | Người thân | Xem báo cáo, nhận cảnh báo |
-
-## Customer Acquisition — 3 Kênh Tiếp Cận
-
-**Nguyên tắc**: AIVIHE KHÔNG có điểm tiếp xúc vật lý riêng. Khách hàng tiếp cận qua 3 kênh vật lý của hệ sinh thái:
-
-```
-Kênh 1: Thong Dong Daycare
-  KH đến Daycare sinh hoạt → Lễ tân khai hồ sơ → Mở tài khoản AIVIHE → Liên thông dữ liệu hàng ngày
-
-Kênh 2: Phòng khám Bác sĩ gia đình
-  KH đến PK → BS gia đình khám, đánh giá → Mở tài khoản AIVIHE → BS theo dõi liên tục
-
-Kênh 3: Phòng khám Phục hồi chức năng
-  KH đến PK PHCN → KTV đánh giá chức năng → Mở tài khoản AIVIHE → Lập kế hoạch trị liệu
-```
-
-**Trang chủ aivihe.vn** chỉ nhận **đăng ký tư vấn** (chỉ cần tên + SĐT):
-
-```
-Trang chủ → Form đăng ký tư vấn (tên + SĐT + kênh quan tâm)
-  → Reception/Hành chính gọi điện bổ sung thông tin
-    → Giám đốc công ty duyệt
-      → Hướng dẫn khách đến 1 trong 3 kênh vật lý
-        → Tạo tài khoản AIVIHE đầy đủ
-```
-
-Chi tiết flow: `docs/specs/aivihe-customer-acquisition-channels-and-consultation-flow.md`
-
-## Gói dịch vụ
-
-| Gói | Tên | Phí | Bao gồm |
-|-----|-----|-----|---------|
-| 0 | Cơ bản | Miễn phí | Lập hồ sơ, cập nhật thông tin, AI tổng hợp báo cáo đánh giá chung |
-| 1 | Bác sĩ gia đình | Thuê bao tháng + phí/lần | BS gia đình theo dõi, tư vấn, tự chọn BS, đánh giá sao |
-| 2 | PHCN | Thuê bao + phí/buổi | Phục hồi chức năng tại trung tâm hoặc tại nhà |
-| 3 | Chuyên khoa sâu | Phí/lần tư vấn | BS chuyên khoa (khớp, tim mạch, nội tiết...), tư vấn, hỗ trợ đi khám BV |
-
-## Hồ sơ AIVIHE — 4 mục chính trong tài khoản khách hàng
-
-Trang `/dashboard/health-record` hiển thị 4 mục hồ sơ cho KH (subset của 11-tab architecture):
-
-| Mục | Nguồn dữ liệu | Ai ghi |
-|-----|---------------|--------|
-| **Daycare** | Mirror từ Thong Dong Daycare qua webhook `daycare_daily_summary` | Lễ tân, NV chăm sóc, y tá tại trung tâm |
-| **Bác sĩ gia đình** | `family_doctor_encounters` (AIVIHE) | BS gia đình sau mỗi lần khám |
-| **Phục hồi chức năng** | `rehab_sessions` (AIVIHE) | KTV PHCN sau mỗi buổi |
-| **Khám chữa bệnh** | `clinic_visits` (AIVIHE, link `source_documents`) | KH upload + BS chuyên khoa xem |
-
-Mỗi mục có icon + số lượng records, hiển thị theo dạng card timeline.
+---
 
 ## 10 Modules
 
-| # | Module | Vai trò |
-|---|--------|---------|
-| 1 | Customer Master | Mã TDL, hồ sơ hành chính, phân loại KH |
-| 2 | Health Summary | Hồ sơ sức khỏe chung, cảnh báo nhanh, summary cho Daycare |
-| 3 | Family Doctor EMR | Khám, bệnh sử, chẩn đoán, bệnh mạn tính, kế hoạch theo dõi |
-| 4 | Rehab EMR | Đánh giá chức năng, trị liệu, tiến triển PHCN |
-| 5 | Vitals Tracking | Time-series chỉ số, biểu đồ, rule cảnh báo ngưỡng |
-| 6 | Medication Management | Danh mục thuốc, nhắc thuốc, xác nhận dùng thuốc |
-| 7 | Care Plan Engine | Kế hoạch chăm sóc tích hợp liên ngành |
-| 8 | Alert Engine | Cảnh báo theo rule, log sự cố, escalation |
-| 9 | Family Portal | Báo cáo gia đình, thông báo, lịch hẹn |
-| 10 | Device Integration | Wearable, IoT (huyết áp, nhịp tim, SpO2, đường huyết, ECG) |
+| # | Module | Vai Trò | Trạng Thái |
+|---|--------|---------|-----------|
+| 1 | **Customer Master** | Mã TDL, hồ sơ hành chính, phân loại KH | ✅ Done |
+| 2 | **Health Summary** | Hồ sơ sức khỏe chung, cảnh báo, summary Daycare | ✅ Done |
+| 3 | **Family Doctor EMR** | Khám, bệnh sử, chẩn đoán, bệnh mạn tính | 🚧 In Progress |
+| 4 | **Rehab EMR** | Đánh giá chức năng, trị liệu PHCN | ⏳ Planned |
+| 5 | **Vitals Tracking** | Time-series chỉ số, biểu đồ, rule cảnh báo | 🚧 In Progress |
+| 6 | **Medication Management** | Danh mục thuốc, nhắc thuốc, xác nhận | ⏳ Planned |
+| 7 | **Care Plan Engine** | Kế hoạch chăm sóc liên ngành | ⏳ Planned |
+| 8 | **Alert Engine** | Cảnh báo rule-based, escalation, log | ⏳ Planned |
+| 9 | **Family Portal** | Báo cáo gia đình, thông báo, lịch hẹn | ⏳ Planned |
+| 10 | **Device Integration** | Wearable, IoT (huyết áp, nhịp tim, SpO₂, glucose) | ⏳ Planned |
 
-## Hệ sinh thái
+---
+
+## RBAC — 12 Roles & Permissions
+
+### Roles
+| Role | Scope | Quyền Hạn |
+|------|-------|---------|
+| **super_admin** | Toàn hệ thống | Quản lý tất cả, phê duyệt đăng ký, config system |
+| **director** | GĐ công ty | Phê duyệt, giám sát toàn hệ, dashboard KPI |
+| **branch_director** | GĐ chi nhánh | Quản lý chi nhánh, staff, khách hàng |
+| **admin** | Quản lý hành chính | Duyệt thành viên, quản lý announcements, thống kê |
+| **doctor** | Bác sĩ gia đình | Khám, tư vấn, kê đơn, theo dõi KH |
+| **specialist** | Bác sĩ chuyên khoa | Tư vấn chuyên sâu, ghi chép khám |
+| **nurse** | Điều dưỡng | Đo chỉ số, ghi chép, nhắc thuốc |
+| **reception** | Lễ tân | Tiếp nhận KH, khai hồ sơ ban đầu |
+| **manager** | Quản lý vận hành | Giám sát KPI, dashboard stats |
+| **member** | Khách hàng/Thành viên | Xem hồ sơ, cập nhật, sử dụng dịch vụ |
+| **citizen** | Công dân (chưa duyệt) | Đăng ký, chờ phê duyệt |
+| **family_viewer** | Người thân | Xem báo cáo, nhận cảnh báo (read-only) |
+
+### Field-Level Permissions
+- **Daycare staff:** R/W only `scope='general_care'`
+- **Family doctor:** R/W only `scope='clinical'`
+- **Rehab tech:** R/W only `scope='rehab'`
+- **Member:** R/W own data + family data with permission
+- **Family viewer:** R only shared reports
+
+**Xem chi tiết:** `src/lib/permissions/role-permission-matrix.ts` (34 permissions)
+
+---
+
+## Customer Acquisition — 3 Channels
+
+**Nguyên tắc:** AIVIHE không có điểm tiếp xúc vật lý riêng. Khách hàng tiếp cận qua 3 kênh của hệ sinh thái:
 
 ```
-Thong Dong Life
-├── Daycare (chăm sóc ban ngày) ◄──► AIVIHE (sức khỏe cá nhân)
-├── Home (không gian sống)           ├── Customer Master (mã TDL)
-├── Land (bất động sản)              ├── Medical EMR (BSGD + PHCN)
-└── Tech → AIVIHE (sản phẩm)        ├── AI Engine (OCR, tổng hợp)
-                                     └── IoT devices (wearable)
-
-Tích hợp AIVIHE ↔ Daycare: REST API + Webhooks + HMAC SHA256
+┌─────────────────────────────────────────────────────────────┐
+│ Landing Page (aivihe.vn)                                    │
+│ → Form Đăng Ký Tư Vấn (tên + SĐT)                          │
+└──────────┬──────────────────────────────────────────────────┘
+           │
+     ┌─────┴─────┬─────────────────┬──────────────────────┐
+     ▼           ▼                 ▼                      ▼
+  Daycare    BSGD Gia Đình    PHCN Phục Hồi       (Tương lai)
+  (Kênh 1)    (Kênh 2)         (Kênh 3)            Bệnh Viện
+     │           │                 │
+     └───────────┴─────────────────┴──────► AIVIHE Account
+                                           + Mã TDL
 ```
 
-## Stakeholders
+| Kênh | Workflow | Khách Hàng |
+|-----|----------|-----------|
+| **Kênh 1: Daycare** | KH đến Daycare → Lễ tân khai hồ sơ → Mở AIVIHE → Liên thông hàng ngày | Người cao tuổi chăm sóc ban ngày |
+| **Kênh 2: BSGD** | KH đến PK → BS khám, đánh giá → Mở AIVIHE → BS theo dõi liên tục | Khách hàng ngoài Daycare |
+| **Kênh 3: PHCN** | KH đến PK PHCN → KTV đánh giá → Mở AIVIHE → Lập kế hoạch trị liệu | Khách hàng cần phục hồi chức năng |
 
-- **PGS.TS. Doãn Ngọc Hải** — Chuyên gia y tế, Chủ mô hình, Super Admin
-- **TS. Trần Thị Nhị Hà** — Cố vấn cao cấp (nguyên GĐ Sở Y tế Hà Nội)
-- **Trần Thị Ngọc Trâm** — Giám đốc Thong Dong Daycare
-- **Partners**: Mirabo Global (VR/AR), Sở Y tế, Trạm Y tế xã/phường, Bạch Niên Thiên Đức, Bảo Minh
+---
+
+## Service Packages
+
+| Gói | Tên | Giá | Bao Gồm | Người Cung Cấp |
+|-----|-----|-----|---------|-----------------|
+| **0** | Cơ Bản | Miễn phí | Lập hồ sơ, cập nhật, AI tóm tắt | Hệ thống |
+| **1** | Bác Sĩ Gia Đình | 300k/tháng (6 tháng) | BS gia đình theo dõi, tư vấn, chỉ định | Thong Dong |
+| **2** | Phục Hồi Chức Năng | 500k-1M/gói | Trị liệu tại trung tâm hoặc nhà | Thong Dong |
+| **3** | Chuyên Khoa Sâu | 300k-500k/lần | BS chuyên khoa, tư vấn, hỗ trợ khám BV | Liên kết BV |
+
+---
+
+## Integration with Thong Dong Daycare
+
+### Architecture
+```
+Thong Dong Daycare          AIVIHE (Master)
+(Prisma + Neon)       ◄──► (Next.js + Supabase)
+   │                           │
+   └─ REST API ────────────────┘
+        + Webhooks (HMAC SHA256)
+        + Apikey auth
+```
+
+### Integration API Endpoints
+| Method | Path | Mô Tả |
+|--------|------|-------|
+| POST | `/api/integration/reserve-tdl-code` | Cấp mã TDL mới (Daycare call) |
+| GET | `/api/integration/citizens/{tdlCode}` | Lookup khách hàng by mã TDL |
+| POST | `/api/webhooks/daycare-events` | Webhook receiver (5 event types) |
+
+### Webhook Events
+**Daycare → AIVIHE (5 events):**
+- `customer_created` — KH mới từ Daycare
+- `vital_recorded` — Chỉ số được ghi tại Daycare
+- `daycare_daily_summary` — Tóm tắt hoạt động hàng ngày
+- `incident_reported` — Sự cố được báo cáo
+- `medication_log` — Nhật ký dùng thuốc
+
+**AIVIHE → Daycare (planned):**
+- `health_summary_updated` — Cập nhật tóm tắt sức khỏe
+- `doctor_instructions` — Chỉ dẫn từ BS
+- `medication_reminders` — Nhắc nhở dùng thuốc
+- `care_plan_updated` — Kế hoạch chăm sóc mới
+- `vital_alert` — Cảnh báo chỉ số
+
+**Security:**
+- API Key auth: `Authorization: Apikey <key>`
+- HMAC SHA256 signature verification
+- Idempotency: `X-Daycare-Request-Id` header
+- TLS required for all calls
+- Log audit: `integration_events` table
+
+---
 
 ## Technical Stack
 
-- **Frontend + Backend**: Next.js 16 (App Router), TypeScript, Tailwind CSS 4, shadcn/ui
-- **Database + Auth**: Supabase (PostgreSQL + Phone OTP Auth + Storage)
-- **AI**: Claude API (Vision OCR + Text summaries)
-- **Charts**: Recharts · **Deploy**: Vercel + Supabase Cloud (Seoul)
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| **Frontend + Backend** | Next.js App Router + TypeScript | 16.2.1 |
+| **UI Framework** | Tailwind CSS 4 + shadcn/ui | 4.x + latest |
+| **Database + Auth** | Supabase (PostgreSQL + Phone OTP + RLS) | 2.100+ |
+| **AI** | Anthropic Claude API (Vision OCR + Text) | SDK 0.80+ |
+| **Charts** | Recharts | 3.8+ |
+| **PDF Export** | @react-pdf/renderer | 4.3+ |
+| **Validation** | Zod | 4.3+ |
+| **Deploy** | Vercel (Frontend) + Supabase Cloud (Backend) | — |
+| **Region** | Seoul (Supabase) | — |
+
+---
+
+## Data Model & 3-Layer Architecture
+
+### Customer Code System
+```
+TDL-{LOCATION}-{SEQUENCE}
+  ↓
+  TDL-HN-000001 (Khách hàng chính)
+  TDL-HN-000002 (Khách hàng 2)
+  ...
+```
+
+**Rule:** Một khách hàng = 1 mã TDL = 1 hồ sơ sức khỏe thống nhất
+
+### 3-Layer Data Architecture
+```
+Layer 1: source_documents (immutable)
+         ↓ upload ảnh, file PDF
+         ↓ Claude Vision OCR
+
+Layer 2: extracted_records (AI output)
+         ↓ User review & confirm
+         ↓ or User edit + save
+
+Layer 3: confirmed_records (ground truth)
+         ↓ AI summary + citation
+         ↓ Dashboard display
+```
+
+### Mandatory Columns (4 cột trên mọi health record)
+| Column | Values | Purpose |
+|--------|--------|---------|
+| `owner_system` | daycare / aivihe / rehab / device | Ai sở hữu |
+| `source` | daycare_staff / family_doctor / rehab_tech / wearable / family_input | Ai nhập |
+| `scope` | general_care / clinical / rehab / administrative | Phạm vi |
+| `created_by` | user_id | Audit trail |
+
+### Per-Service Status (mỗi khách hàng)
+| Column | Enum Values | Ý Nghĩa |
+|--------|------------|--------|
+| `daycare_status` | trial / active / paused / inactive | Trạng thái tại Daycare |
+| `aivihe_status` | not_created / created / active / archived | Trạng thái AIVIHE |
+| `fd_status` | not_enrolled / enrolled / under_followup / discharged | BS gia đình |
+| `rh_status` | not_enrolled / under_assessment / in_treatment / completed | PHCN |
+
+---
+
+## Database Tables (26+ migrations)
+
+### Core Tables
+- `citizens` — Khách hàng gốc, link auth.users
+- `health_profiles` — Máu, dị ứng, bệnh mạn
+- `families` + `family_members` — Quản lý gia đình
+- `branches` + `branch_staff` — Chi nhánh
+
+### 3-Layer Health Data
+- `source_documents` — Ảnh, PDF upload gốc
+- `extracted_records` — Output từ Claude Vision
+- `confirmed_records` — User đã xác nhận
+
+### Health Records
+- `health_visits`, `clinical_exams`, `diagnoses`
+- `lab_tests`, `imaging`, `treatments`
+- `medications`, `vaccinations`
+- `vital_signs`, `vital_thresholds`
+
+### System Tables
+- `announcements`, `messages`, `audit_logs`
+- `feedbacks`, `visit_preparations`
+- `integration_events` — Webhook audit log
+- `service_enrollments` — Mã TDL per service
+
+---
+
+## Security Model
+
+### Row Level Security (RLS)
+- Mọi bảng đều có RLS enabled
+- User truy cập dữ liệu của mình qua `auth.uid()`
+- Family manager truy cập qua `is_family_manager_of()`
+- Audit logs: insert-only, user chỉ đọc của mình
+
+### Data Privacy
+- Health data = dữ liệu cá nhân nhạy cảm (Nghị định 13/2023)
+- User kiểm soát tất cả sharing
+- Consent required trước khi AI xử lý
+- Audit trail cho mọi access
+
+### Integration Security
+- Apikey + HMAC SHA256 signature
+- TLS required for all webhooks
+- PHI không expose ngoài summary level
+- Mọi integration event log vào `integration_events`
+
+---
+
+## UI/UX Standards
+
+**Nguyên tắc cho người cao tuổi:**
+- Font base ≥ 18px
+- Touch target ≥ 48px
+- High contrast (WCAG AA+)
+- Simple navigation, no jargon
+- Vietnamese text, no English for elderly
+- Progress indicators + loading state
+
+**Branding:**
+- Logo FBL (top) + AIVIHE (bottom) trên tất cả trang
+- Palette: teal/emerald/rose (inspired by BV Thu Cúc, Hồng Ngọc)
+- Every screen has "Trở về trang chủ" button (auth pages)
+- Logout → Home page (/)
+
+---
+
+## Current Implementation Status
+
+### Completed Features (25+ commits)
+✅ Landing page redesign (PGS.TS. Doãn Ngọc Hải expert review)
+✅ Doctor application flow (public → reception → director)
+✅ Family doctor registration (5 doctors seeded, customer select, director approval)
+✅ Role-specific dashboards (Director 9 tabs, Admin 8, Manager 4)
+✅ Reception dashboard (pending, contacted, approved, doctor-apps)
+✅ Staff UI separation (no personal health records, staff profile only)
+✅ E2E service flow visualizer (Director tab)
+✅ Vitals OCR (Claude Vision → extract → save with image)
+✅ Medical record 11 sections (self-input for 5 basic)
+✅ Document sidebar (upload + bookmark)
+✅ Treatment page (upload + AI verify)
+✅ Customer dashboard health-first (health status + activities + packages + info)
+✅ 3-layer DB architecture (source → extracted → confirmed)
+✅ Phone OTP Auth + demo mode
+✅ RBAC 12 roles, 34 permissions
+✅ Visit preparation 4-step wizard + PDF
+
+### In Progress (Sprint 1-2)
+🚧 Daycare integration API + Webhooks
+🚧 Vitals real-time tracking + thresholds
+🚧 Auto-alerts on severity
+
+### Planned (Sprint 3-4)
+⏳ EMR BS gia đình (encounters, medications, care plans)
+⏳ PHCN module (assessments, sessions, progress)
+⏳ Alert Engine (rule-based, escalation)
+⏳ Family Portal + Mobile responsive
+⏳ Device Integration (wearable, IoT)
+⏳ Production hardening + monitoring
+
+---
+
+## Success Metrics
+
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| **Customer Growth** | 500+ by end 2026 | Monthly active users |
+| **System Uptime** | 99.5% | Monitoring (post-Sprint 4) |
+| **API Response** | <500ms p95 | New Relic (TBD) |
+| **Data Accuracy** | >95% (AI extract) | User correction rate |
+| **User Satisfaction** | 4.0/5.0 | In-app survey |
+| **Feature Adoption** | >70% (paid packages) | % customers w/ service |
+
+---
+
+## Dependencies & Blockers
+
+| Item | Status | Owner | ETA |
+|------|--------|-------|-----|
+| Daycare API readiness | 🟡 In Design | Daycare team | 20/04 |
+| MediExpress device setup | 🟡 In Design | MediExpress | 30/05 |
+| BV partnership contract | 🔴 Pending | Legal | TBD |
+| Bảo Minh insurance API | 🔴 Pending | Insurance team | Q3 2026 |
+
+---
+
+## Next Steps
+
+1. **Sprint 1 (end Apr):** Finalize Daycare API, deploy production
+2. **Sprint 2 (May):** Vitals tracking + alerts
+3. **Sprint 3 (May-Jun):** EMR BS + Care plans
+4. **Sprint 4 (Jun-Jul):** Family Portal + SSO + Polish
+5. **Post-Sprint:** Monitor, optimize, gather feedback
+
+---
+
+*Tài liệu kỹ thuật chi tiết xem: `system-architecture.md`, `codebase-summary.md`, `code-standards.md`*
