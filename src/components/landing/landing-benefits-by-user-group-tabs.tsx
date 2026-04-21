@@ -72,7 +72,7 @@ const USER_GROUPS: UserGroup[] = [
       {
         icon: '📝',
         title: 'Ghi chép sinh hoạt trong ngày',
-        desc: 'Chỉ số, bữa ăn, hoạt động, ghi chú đặc biệt — tất cả lưu vào hồ sơ KH tự động.',
+        desc: 'Chỉ số, bữa ăn, hoạt động, ghi chú đặc biệt — tất cả lưu vào hồ sơ khách hàng tự động.',
       },
       {
         icon: '👨‍👩‍👧',
@@ -105,20 +105,20 @@ const USER_GROUPS: UserGroup[] = [
       {
         icon: '🔄',
         title: 'Phối hợp đa tuyến',
-        desc: 'Kết nối với Daycare, PHCN, chuyên khoa — chuyển tuyến có thông tin đầy đủ.',
+        desc: 'Kết nối với Daycare, phục hồi chức năng và chuyên khoa — chuyển tuyến có thông tin đầy đủ.',
       },
     ],
   },
   {
     id: 'rehab',
-    label: 'PHCN',
+    label: 'Phục hồi chức năng',
     emoji: '🏥',
     tagline: 'Theo dõi tiến triển, cá nhân hóa điều trị',
     benefits: [
       {
         icon: '📋',
         title: 'Hồ sơ tiến triển rõ ràng',
-        desc: 'Mỗi buổi trị liệu có ghi chép — KH, gia đình và BSGĐ đều thấy tiến triển theo thời gian.',
+        desc: 'Mỗi buổi trị liệu có ghi chép — khách hàng, gia đình và bác sĩ gia đình đều thấy tiến triển theo thời gian.',
       },
       {
         icon: '💪',
@@ -127,8 +127,8 @@ const USER_GROUPS: UserGroup[] = [
       },
       {
         icon: '🤝',
-        title: 'Phối hợp BSGĐ + gia đình',
-        desc: 'Chia sẻ tiến triển PHCN với bác sĩ gia đình và gia đình — chăm sóc liên tục không đứt gãy.',
+        title: 'Phối hợp bác sĩ gia đình + gia đình',
+        desc: 'Chia sẻ tiến triển phục hồi chức năng với bác sĩ gia đình và gia đình — chăm sóc liên tục không đứt gãy.',
       },
     ],
   },

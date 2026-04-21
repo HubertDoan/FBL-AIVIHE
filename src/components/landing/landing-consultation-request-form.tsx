@@ -132,8 +132,8 @@ export function LandingConsultationRequestForm() {
             <div className="grid grid-cols-2 gap-2">
               {[
                 { value: 'daycare', label: '🏠 Thong Dong Daycare' },
-                { value: 'family-doctor', label: '👨‍⚕️ BS gia đình' },
-                { value: 'rehabilitation', label: '🏥 PHCN' },
+                { value: 'family-doctor', label: '👨‍⚕️ Bác sĩ gia đình' },
+                { value: 'rehabilitation', label: '🏥 Phục hồi chức năng' },
                 { value: 'aivihe', label: '🤖 AIVIHE Trợ lý AI sức khỏe' },
                 { value: 'unsure', label: '💭 Chưa rõ, cần tư vấn' },
               ].map((opt) => (

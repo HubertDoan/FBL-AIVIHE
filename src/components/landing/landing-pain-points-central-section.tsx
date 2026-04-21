@@ -19,7 +19,7 @@ export function LandingPainPointsCentralSection() {
     },
     {
       emoji: '🏃',
-      text: 'Nhiều buổi PHCN nhưng không có hồ sơ tiến triển rõ ràng',
+      text: 'Nhiều buổi phục hồi chức năng nhưng không có hồ sơ tiến triển rõ ràng',
     },
     {
       emoji: '📊',

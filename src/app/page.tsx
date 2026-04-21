@@ -135,7 +135,7 @@ export default function LandingPage() {
             {[
               { icon: '📁', title: 'Lưu trữ tập trung', desc: 'Tài liệu, đơn thuốc, kết quả khám tại một nơi.' },
               { icon: '📈', title: 'Theo dõi xu hướng', desc: 'Chỉ số theo thời gian — chủ động hơn.' },
-              { icon: '🤝', title: 'Kết nối nhiều bên', desc: 'KH, gia đình, Daycare, BSGĐ, PHCN cùng một hành trình.' },
+              { icon: '🤝', title: 'Kết nối nhiều bên', desc: 'Khách hàng, gia đình, Daycare, bác sĩ gia đình và phục hồi chức năng cùng một hành trình.' },
               { icon: '🩺', title: 'Chuẩn bị tốt khi đi khám', desc: 'Tóm tắt SK, danh sách thuốc — giảm thiếu sót.' },
             ].map((item) => (
               <div key={item.title} className="bg-gradient-to-br from-teal-50/40 to-emerald-50/20 border border-teal-100 rounded-xl p-5">
@@ -170,10 +170,10 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <CommitmentCard icon={ShieldCheck} color="amber" title="AI không thay BS" desc="AI chỉ tổng hợp, giải thích. Không chẩn đoán, không kê đơn." />
-            <CommitmentCard icon={Lock} color="teal" title="Bạn kiểm soát data" desc="Thông tin thuộc quyền bạn. Chia sẻ chỉ khi cho phép." />
-            <CommitmentCard icon={CheckCircle} color="emerald" title="Luôn xác nhận" desc="Info AI trích xuất cần bạn xác nhận trước khi lưu." />
-            <CommitmentCard icon={AlertTriangle} color="rose" title="Minh bạch vai trò" desc="AIVIHE không thay hệ thống QLKCB của y tế." />
+            <CommitmentCard icon={ShieldCheck} color="amber" title="AI không thay thế bác sĩ" desc="AI chỉ tổng hợp và giải thích — không chẩn đoán, không kê đơn." />
+            <CommitmentCard icon={Lock} color="teal" title="Bạn là người kiểm soát thông tin" desc="Thông tin sức khỏe thuộc về bạn — chỉ chia sẻ khi bạn cho phép." />
+            <CommitmentCard icon={CheckCircle} color="emerald" title="Luôn xác nhận trước khi lưu" desc="Thông tin do AI trích xuất cần bạn xác nhận trước khi lưu vào hồ sơ." />
+            <CommitmentCard icon={AlertTriangle} color="rose" title="Minh bạch vai trò" desc="AIVIHE không thay thế hệ thống quản lý khám chữa bệnh của ngành y tế." />
           </div>
         </div>
       </section>

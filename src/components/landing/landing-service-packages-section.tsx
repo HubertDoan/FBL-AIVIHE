@@ -43,10 +43,10 @@ export function ServicePackagesSection() {
             highlight
             features={[
               'Tất cả gói Cơ bản',
-              'BS gia đình theo dõi thông tin sức khỏe khi khách hàng cho phép',
+              'Bác sĩ gia đình theo dõi thông tin sức khỏe khi khách hàng cho phép',
               'Tư vấn lối sống, dự phòng, quản lý bệnh nền',
               'Chuẩn bị khi cần đi khám chuyên khoa',
-              'Tự chọn BS — đánh giá sao',
+              'Tự chọn bác sĩ — đánh giá sao',
             ]}
           />
 
@@ -57,10 +57,10 @@ export function ServicePackagesSection() {
             price="Phí theo buổi"
             highlight={false}
             features={[
-              'Tất cả gói BSGD',
+              'Tất cả gói Bác sĩ gia đình',
               'Đánh giá chức năng chuyên sâu',
               'Trị liệu tại trung tâm hoặc tại nhà',
-              'Nhật ký trị liệu và tiến triển PHCN',
+              'Nhật ký trị liệu và tiến triển phục hồi chức năng',
               'Bài tập cá nhân hóa',
             ]}
           />
@@ -72,11 +72,11 @@ export function ServicePackagesSection() {
             price="Phí theo lần tư vấn"
             highlight={false}
             features={[
-              'Tất cả gói PHCN',
-              'BS chuyên khoa: khớp, tim mạch, nội tiết...',
+              'Tất cả gói Phục hồi chức năng',
+              'Bác sĩ chuyên khoa: khớp, tim mạch, nội tiết...',
               'Xem bản tóm tắt thông tin sức khỏe và tài liệu liên quan khi khách hàng cho phép',
               'Hỗ trợ đi khám tại bệnh viện',
-              'Phối hợp BS gia đình + chuyên khoa',
+              'Phối hợp bác sĩ gia đình + chuyên khoa',
             ]}
           />
         </div>

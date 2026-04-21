@@ -63,7 +63,7 @@ export function LandingDoctorApplicationSection() {
             className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md shadow-teal-500/20 hover:shadow-lg transition-all text-sm md:text-base"
           >
             <Stethoscope className="size-4" />
-            Đăng ký BS gia đình
+            Đăng ký Bác sĩ gia đình
             {showForm ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
           </button>
         </div>

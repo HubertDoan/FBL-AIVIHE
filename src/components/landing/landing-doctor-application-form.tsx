@@ -14,10 +14,10 @@ import { CheckCircle, Stethoscope, Loader2 } from 'lucide-react'
  */
 
 const DOCTOR_TYPES = [
-  { value: 'general', label: 'BS Đa khoa' },
-  { value: 'oriental', label: 'BS Đông y' },
+  { value: 'general', label: 'Bác sĩ Đa khoa' },
+  { value: 'oriental', label: 'Bác sĩ Đông y' },
   { value: 'family_medicine', label: 'Y học Gia đình' },
-  { value: 'specialist', label: 'BS Chuyên khoa' },
+  { value: 'specialist', label: 'Bác sĩ Chuyên khoa' },
 ] as const
 
 const EMPLOYMENT_TYPES = [
@@ -110,7 +110,7 @@ export function LandingDoctorApplicationForm() {
           <div className="inline-flex size-12 rounded-full bg-teal-100 text-teal-600 items-center justify-center mb-2">
             <Stethoscope className="size-5" />
           </div>
-          <h3 className="text-xl font-bold text-gray-900">Đăng ký BS gia đình</h3>
+          <h3 className="text-xl font-bold text-gray-900">Đăng ký Bác sĩ gia đình</h3>
           <p className="text-sm text-gray-500 mt-1">
             Điền thông tin — hành chính sẽ liên hệ bạn trong 24h
           </p>
@@ -125,7 +125,7 @@ export function LandingDoctorApplicationForm() {
               </Label>
               <Input
                 id="da_name"
-                placeholder="BS. Nguyễn Văn A"
+                placeholder="Bác sĩ Nguyễn Văn A"
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
                 required

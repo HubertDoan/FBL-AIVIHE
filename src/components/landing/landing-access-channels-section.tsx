@@ -38,24 +38,24 @@ export function LandingAccessChannelsSection() {
             icon={Stethoscope}
             number={2}
             title="Phòng khám Bác sĩ gia đình"
-            desc="BS gia đình gặp khách, đánh giá sức khỏe tổng thể và giới thiệu AIVIHE để theo dõi định kỳ, tư vấn dự phòng."
+            desc="Bác sĩ gia đình gặp khách, đánh giá sức khỏe tổng thể và giới thiệu AIVIHE để theo dõi định kỳ, tư vấn dự phòng."
             steps={[
-              'Khách đến PK BS gia đình',
-              'BS khám, đánh giá',
+              'Khách đến phòng khám bác sĩ gia đình',
+              'Bác sĩ khám, đánh giá',
               'Khách hàng khởi tạo tài khoản AIVIHE',
-              'BS theo dõi thông tin được chia sẻ và tư vấn dự phòng theo định kỳ',
+              'Bác sĩ theo dõi thông tin được chia sẻ và tư vấn dự phòng theo định kỳ',
             ]}
           />
           <ChannelCard
             icon={Activity}
             number={3}
             title="Phòng khám Phục hồi chức năng"
-            desc="KTV PHCN đánh giá chức năng vận động, chỉ định trị liệu. AIVIHE hỗ trợ ghi nhận nhật ký trị liệu, bài tập và tiến triển PHCN."
+            desc="Kỹ thuật viên phục hồi chức năng đánh giá chức năng vận động và chỉ định trị liệu. AIVIHE hỗ trợ ghi nhận nhật ký trị liệu, bài tập và tiến triển."
             steps={[
-              'Khách đến PK PHCN',
+              'Khách đến phòng khám phục hồi chức năng',
               'KTV đánh giá chức năng',
               'Khởi tạo tài khoản AIVIHE',
-              'Ghi nhận nhật ký trị liệu và tiến triển PHCN',
+              'Ghi nhận nhật ký trị liệu và tiến triển phục hồi chức năng',
             ]}
           />
         </div>

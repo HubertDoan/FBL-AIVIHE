@@ -60,7 +60,7 @@ export function EcosystemCareJourney() {
             icon={Users}
             step={5}
             title="Đội ngũ phối hợp chăm sóc"
-            desc="Gia đình, Daycare, bác sĩ gia đình và PHCN cùng phối hợp khi được phân quyền."
+            desc="Gia đình, Daycare, bác sĩ gia đình và phục hồi chức năng cùng phối hợp khi được phân quyền."
           />
         </div>
 

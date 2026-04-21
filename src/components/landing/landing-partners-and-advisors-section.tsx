@@ -1,63 +1,85 @@
-import { Users, Building2, Stethoscope, Cpu } from 'lucide-react'
+import { Cpu, Stethoscope, Building2 } from 'lucide-react'
 
 /**
- * Section giới thiệu đội ngũ cố vấn, đối tác và mạng lưới y tế
- * Thông tin từ thongdonglife.vn/ve-chung-toi
+ * Section "Đội ngũ & đối tác" — chia 3 cụm theo ý kiến chuyên gia (PGS.TS. Doãn Ngọc Hải, 21/04/2026):
+ *  1. Chuyên gia sáng lập & cố vấn
+ *  2. Đối tác công nghệ
+ *  3. Đối tác y tế & cộng đồng
+ *
+ * Cấu trúc rõ ràng giúp website cảm giác chỉnh chu, chuyên nghiệp hơn.
  */
 export function PartnersAndAdvisorsSection() {
   return (
     <section className="py-6 bg-gradient-to-b from-white to-slate-50/50">
       <div className="max-w-5xl mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-2">
-          Đội ngũ chuyên gia và đối tác
-        </h2>
-        <p className="text-center text-gray-500 mb-8 text-base">
-          AIVIHE được xây dựng dựa trên nền tảng chuyên môn y tế và công nghệ hàng đầu
-        </p>
-
-        {/* Advisors */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <AdvisorCard
-            name="PGS.TS. Doãn Ngọc Hải"
-            title="Chuyên gia y tế — Chủ mô hình"
-            desc="Nguyên Viện trưởng Viện Sức khỏe nghề nghiệp và Môi trường (Bộ Y tế). Kinh nghiệm sâu rộng trong y tế công cộng và hệ thống chăm sóc sức khỏe."
-          />
-          <AdvisorCard
-            name="TS. Trần Thị Nhị Hà"
-            title="Cố vấn cao cấp"
-            desc="Nguyên Giám đốc Sở Y tế Hà Nội, Đại biểu Quốc hội khóa XV & XVI. Chuyên gia quản lý hệ thống y tế và chính sách sức khỏe."
-          />
+        <div className="text-center mb-6">
+          <div className="inline-block text-xs font-bold text-teal-600 tracking-widest uppercase mb-2">Đội ngũ & đối tác</div>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
+            Được xây dựng bởi những người có chuyên môn
+          </h2>
+          <p className="text-slate-500 text-sm md:text-base max-w-2xl mx-auto">
+            AIVIHE quy tụ chuyên gia y tế, đối tác công nghệ và mạng lưới y tế — cùng hướng đến chăm sóc sức khỏe người cao tuổi chất lượng cao.
+          </p>
         </div>
 
-        {/* Partners grid */}
-        <div className="grid md:grid-cols-3 gap-6">
-          <PartnerCard
-            icon={Building2}
-            title="Đối tác công nghệ"
-            items={[
-              'Mirabo Global — VR/AR/MR & chuyển đổi số',
-              'MediExpress — tiên phong IoT y tế, GoTrust Box, thiết bị đeo tay',
-              'Thong Dong Tech — AI sức khỏe & nền tảng AIVIHE',
-            ]}
-          />
-          <PartnerCard
-            icon={Stethoscope}
-            title="Mạng lưới y tế"
-            items={[
-              'Giám đốc các Sở Y tế phối hợp',
-              'Trạm Y tế xã/phường đồng hành',
-              'Bệnh viện Phục hồi chức năng',
-            ]}
-          />
-          <PartnerCard
-            icon={Users}
-            title="Đối tác chiến lược"
-            items={[
-              'Bạch Niên Thiên Đức — chăm sóc dài hạn',
-              'Bảo Minh — bảo hiểm sức khỏe',
-              'Cộng đồng người cao tuổi địa phương',
-            ]}
-          />
+        {/* ═══ CỤM 1 — Chuyên gia sáng lập & cố vấn ═══ */}
+        <div className="mb-8">
+          <h3 className="text-sm font-bold text-teal-700 uppercase tracking-widest mb-3 text-center">
+            Chuyên gia sáng lập & cố vấn
+          </h3>
+          <div className="grid md:grid-cols-2 gap-5">
+            <AdvisorCard
+              name="PGS.TS. Doãn Ngọc Hải"
+              title="Chuyên gia y tế — Chủ mô hình"
+              desc="Nguyên Viện trưởng Viện Sức khỏe nghề nghiệp và Môi trường (Bộ Y tế). Kinh nghiệm sâu rộng trong y tế công cộng và hệ thống chăm sóc sức khỏe."
+            />
+            <AdvisorCard
+              name="TS. Trần Thị Nhị Hà"
+              title="Cố vấn cao cấp"
+              desc="Nguyên Giám đốc Sở Y tế Hà Nội, Đại biểu Quốc hội khóa XV và XVI. Chuyên gia quản lý hệ thống y tế và chính sách sức khỏe."
+            />
+          </div>
+        </div>
+
+        {/* ═══ CỤM 2 — Đối tác công nghệ ═══ */}
+        <div className="mb-8">
+          <h3 className="text-sm font-bold text-blue-700 uppercase tracking-widest mb-3 text-center">
+            Đối tác công nghệ
+          </h3>
+          <div className="grid sm:grid-cols-3 gap-4">
+            <PartnerItem
+              icon={Cpu}
+              accent="blue"
+              name="Mirabo Global"
+              desc="VR/AR/MR và chuyển đổi số"
+            />
+            <PartnerItem
+              icon={Cpu}
+              accent="blue"
+              name="MediExpress"
+              desc="Tiên phong IoT y tế — trạm AI Medical Hub, thiết bị đeo tay"
+            />
+            <PartnerItem
+              icon={Cpu}
+              accent="blue"
+              name="Thong Dong Tech"
+              desc="AI sức khỏe và phát triển nền tảng AIVIHE"
+            />
+          </div>
+        </div>
+
+        {/* ═══ CỤM 3 — Đối tác y tế & cộng đồng ═══ */}
+        <div>
+          <h3 className="text-sm font-bold text-rose-700 uppercase tracking-widest mb-3 text-center">
+            Đối tác y tế & cộng đồng
+          </h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <PartnerItem icon={Stethoscope} accent="rose" name="Bệnh viện" desc="Phối hợp chuyển tuyến" compact />
+            <PartnerItem icon={Stethoscope} accent="rose" name="Trạm y tế" desc="Xã/phường đồng hành" compact />
+            <PartnerItem icon={Building2} accent="rose" name="Đơn vị chăm sóc dài hạn" desc="Bạch Niên Thiên Đức" compact />
+            <PartnerItem icon={Building2} accent="rose" name="Bảo hiểm" desc="Bảo Minh — bảo hiểm sức khỏe" compact />
+            <PartnerItem icon={Building2} accent="rose" name="Cộng đồng người cao tuổi" desc="Địa phương" compact />
+          </div>
         </div>
       </div>
     </section>
@@ -68,35 +90,35 @@ function AdvisorCard({ name, title, desc }: {
   name: string; title: string; desc: string
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-md transition-shadow">
-      <h3 className="text-lg font-bold text-gray-900">{name}</h3>
+    <div className="bg-white rounded-2xl border border-teal-100 p-5 hover:shadow-md transition-shadow">
+      <h4 className="text-lg font-bold text-slate-900">{name}</h4>
       <p className="text-teal-600 font-medium text-sm mb-2">{title}</p>
-      <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
+      <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
     </div>
   )
 }
 
-function PartnerCard({ icon: Icon, title, items }: {
+function PartnerItem({ icon: Icon, accent, name, desc, compact }: {
   icon: React.ComponentType<{ className?: string }>
-  title: string
-  items: string[]
+  accent: 'blue' | 'rose'
+  name: string
+  desc: string
+  compact?: boolean
 }) {
+  const accentMap = {
+    blue: { border: 'border-blue-100', bg: 'bg-blue-50', text: 'text-blue-600' },
+    rose: { border: 'border-rose-100', bg: 'bg-rose-50', text: 'text-rose-600' },
+  }
+  const c = accentMap[accent]
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5">
-      <div className="flex items-center gap-2 mb-3">
-        <div className="size-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
-          <Icon className="size-5" />
+    <div className={`bg-white rounded-xl border ${c.border} p-4 hover:shadow-sm transition-shadow`}>
+      <div className="flex items-center gap-2 mb-1.5">
+        <div className={`size-8 rounded-lg ${c.bg} ${c.text} flex items-center justify-center shrink-0`}>
+          <Icon className="size-4" />
         </div>
-        <h3 className="font-semibold text-gray-900">{title}</h3>
+        <h4 className={`font-semibold text-slate-900 ${compact ? 'text-sm' : 'text-base'} leading-tight`}>{name}</h4>
       </div>
-      <ul className="space-y-1.5">
-        {items.map((item, i) => (
-          <li key={i} className="text-gray-600 text-sm flex items-start gap-1.5">
-            <span className="text-teal-500 mt-1">•</span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
+      <p className={`text-slate-600 ${compact ? 'text-xs' : 'text-sm'} leading-snug pl-10`}>{desc}</p>
     </div>
   )
 }

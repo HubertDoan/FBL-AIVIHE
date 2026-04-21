@@ -28,7 +28,7 @@ export function LandingInformationJourneyFlowDiagram() {
     },
     {
       emoji: '👨‍⚕️',
-      label: 'Bác sĩ GĐ & PHCN',
+      label: 'Bác sĩ gia đình & Phục hồi chức năng',
       desc: 'Theo dõi chuyên môn liên tục',
       color: 'rose',
       position: 'left',
