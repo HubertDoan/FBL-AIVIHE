@@ -99,9 +99,14 @@ export default function DashboardPage() {
 
   if (user?.role === 'guest') return <GuestDashboard />
 
-  // Staff redirect to work area
+  // Staff redirect to role-specific work area
   if (user?.role === 'reception' || user?.role === 'admin_staff') {
     router.push('/dashboard/reception')
+    return null
+  }
+
+  if (user?.role === 'manager') {
+    router.push('/dashboard/manager')
     return null
   }
 

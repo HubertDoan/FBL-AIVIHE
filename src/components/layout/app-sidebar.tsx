@@ -35,6 +35,8 @@ import {
   Sparkles,
   FolderHeart,
   Bookmark,
+  BarChart3,
+  UserCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PERMISSIONS, type Permission } from '@/lib/permissions/permission-definitions'
@@ -154,6 +156,55 @@ const NAV_SECTIONS: NavSection[] = [
   },
 ]
 
+// Role-specific priority sections shown at top of sidebar (above general sections)
+const ROLE_PRIORITY_SECTIONS: Partial<Record<string, NavSection>> = {
+  director: {
+    title: 'ĐIỀU HÀNH',
+    items: [
+      { href: '/dashboard/director', label: 'Tổng quan KPIs', icon: LayoutDashboard },
+      { href: '/dashboard/director#member-approval', label: 'Duyệt requests', icon: UserCheck },
+      { href: '/dashboard/director#announcements', label: 'Truyền thông', icon: Megaphone },
+      { href: '/dashboard/director#executive-report', label: 'Báo cáo điều hành', icon: BarChart3 },
+    ],
+  },
+  branch_director: {
+    title: 'ĐIỀU HÀNH',
+    items: [
+      { href: '/dashboard/director', label: 'Tổng quan KPIs', icon: LayoutDashboard },
+      { href: '/dashboard/director#member-approval', label: 'Duyệt requests', icon: UserCheck },
+      { href: '/dashboard/director#announcements', label: 'Truyền thông', icon: Megaphone },
+      { href: '/dashboard/director#executive-report', label: 'Báo cáo điều hành', icon: BarChart3 },
+    ],
+  },
+  admin: {
+    title: 'QUẢN TRỊ KỸ THUẬT',
+    items: [
+      { href: '/dashboard/system', label: 'System config', icon: Server },
+      { href: '/dashboard/permissions', label: 'Phân quyền', icon: ShieldCheck },
+      { href: '/dashboard/admin', label: 'Quản lý members', icon: Users },
+      { href: '/dashboard/admin#system-logs', label: 'Logs hệ thống', icon: Clock },
+    ],
+  },
+  super_admin: {
+    title: 'QUẢN TRỊ KỸ THUẬT',
+    items: [
+      { href: '/dashboard/system', label: 'System config', icon: Server },
+      { href: '/dashboard/permissions', label: 'Phân quyền', icon: ShieldCheck },
+      { href: '/dashboard/admin', label: 'Quản lý members', icon: Users },
+      { href: '/dashboard/admin#system-logs', label: 'Logs hệ thống', icon: Clock },
+    ],
+  },
+  manager: {
+    title: 'VẬN HÀNH',
+    items: [
+      { href: '/dashboard/manager', label: 'Vận hành hôm nay', icon: LayoutDashboard },
+      { href: '/dashboard/task-assignment', label: 'Giao việc', icon: ClipboardCheck },
+      { href: '/dashboard/manager#operations-report', label: 'Báo cáo vận hành', icon: BarChart3 },
+      { href: '/dashboard/director#announcements', label: 'Announcements', icon: Megaphone },
+    ],
+  },
+}
+
 interface AppSidebarProps {
   userName?: string
   userAvatar?: string
@@ -181,6 +232,12 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
   const visibleSections = NAV_SECTIONS
     .map(section => ({ ...section, items: section.items.filter(isItemVisible) }))
     .filter(section => section.items.length > 0)
+
+  // Prepend role-specific priority section if applicable
+  const rolePrioritySection = userRole ? ROLE_PRIORITY_SECTIONS[userRole] : undefined
+  const allSections = rolePrioritySection
+    ? [rolePrioritySection, ...visibleSections]
+    : visibleSections
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-gradient-to-b from-slate-50 via-white to-blue-50/30 text-gray-800">
@@ -215,7 +272,7 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
 
       {/* Navigation — grouped by sections */}
       <nav className="flex-1 p-2 overflow-y-auto">
-        {visibleSections.map((section, sIdx) => (
+        {allSections.map((section, sIdx) => (
           <div key={section.title || `s-${sIdx}`} className="mb-2">
             {section.title && (
               <p className="px-3 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">

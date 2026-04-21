@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Megaphone, Shield, Loader2, HandHeart, Send, Stethoscope } from 'lucide-react'
+import { Megaphone, Shield, Loader2, HandHeart, Send, Stethoscope, LayoutDashboard, UserCheck, BarChart3 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { DirectorAnnouncementForm } from '@/components/director/director-announcement-form'
@@ -15,6 +15,7 @@ import { ConsultationRequestListForReception } from '@/components/reception/cons
 import { DirectorServiceRegistrationApprovalList } from '@/components/director/director-service-registration-approval-list'
 import { BroadcastAnnouncementFormWithTargetSelector } from '@/components/director/broadcast-announcement-form-with-target-selector'
 import { DirectorFamilyDoctorRegistrationApprovalList } from '@/components/director/director-family-doctor-registration-approval-list'
+import { DirectorKpiOverviewTab, DirectorExecutiveReportTab } from '@/components/director/director-kpi-overview-tab'
 import type { DirectorAnnouncement } from '@/lib/demo/demo-director-announcement-data'
 import type { DirectorAnnouncementFormData } from '@/components/director/director-announcement-form'
 
@@ -124,21 +125,26 @@ export default function DirectorPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="consultation" className="space-y-4">
+      <Tabs defaultValue="kpi" className="space-y-4">
         <TabsList className="flex flex-wrap h-auto gap-1">
+          <TabsTrigger value="kpi" className="text-base gap-1.5">
+            <LayoutDashboard className="size-4" />
+            Tổng quan KPIs
+          </TabsTrigger>
+          <TabsTrigger value="member-approval" className="text-base gap-1.5">
+            <UserCheck className="size-4" />
+            Duyệt member mới
+          </TabsTrigger>
           <TabsTrigger value="family-doctor" className="text-base gap-1.5">
             <Stethoscope className="size-4" />
             Duyệt BS gia đình
-          </TabsTrigger>
-          <TabsTrigger value="consultation" className="text-base gap-1.5">
-            Duyệt yêu cầu tư vấn
           </TabsTrigger>
           <TabsTrigger value="service-registration" className="text-base gap-1.5">
             Duyệt đăng ký dịch vụ
           </TabsTrigger>
           <TabsTrigger value="announcements" className="text-base gap-1.5">
             <Megaphone className="size-4" />
-            Thông báo
+            Truyền thông
           </TabsTrigger>
           <TabsTrigger value="feedback" className="text-base gap-1.5">
             Phản hồi
@@ -151,14 +157,22 @@ export default function DirectorPage() {
             <HandHeart className="size-4" />
             Lời chào
           </TabsTrigger>
+          <TabsTrigger value="executive-report" className="text-base gap-1.5">
+            <BarChart3 className="size-4" />
+            Báo cáo điều hành
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="kpi">
+          <DirectorKpiOverviewTab />
+        </TabsContent>
+
+        <TabsContent value="member-approval">
+          <ConsultationRequestListForReception userRole={userRole} defaultFilter="info_completed" />
+        </TabsContent>
 
         <TabsContent value="family-doctor">
           <DirectorFamilyDoctorRegistrationApprovalList />
-        </TabsContent>
-
-        <TabsContent value="consultation">
-          <ConsultationRequestListForReception userRole={userRole} />
         </TabsContent>
 
         <TabsContent value="service-registration">
@@ -187,6 +201,10 @@ export default function DirectorPage() {
 
         <TabsContent value="greeting">
           <DirectorGreetingEditor />
+        </TabsContent>
+
+        <TabsContent value="executive-report">
+          <DirectorExecutiveReportTab />
         </TabsContent>
       </Tabs>
 

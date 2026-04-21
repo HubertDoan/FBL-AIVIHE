@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2, Bell, Crown, UserCheck, Send } from 'lucide-react'
+import { Shield, Users, ScrollText, BarChart3, FileText, Stethoscope, Loader2, Bell, Crown, UserCheck, Send, Server, ShieldCheck, Clock, ExternalLink } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
 import { MemberManagement } from '@/components/admin/member-management'
 import { AuditLogTable } from '@/components/admin/audit-log-table'
 import { AnnouncementManager } from '@/components/admin/announcement-manager'
@@ -29,14 +30,14 @@ interface Stats {
 function getVisibleTabs(role: string): string[] {
   switch (role) {
     case 'super_admin':
-      return ['users', 'manage-doctors', 'doctors', 'referrals', 'announcements', 'programs', 'audit', 'stats']
+      return ['users', 'manage-doctors', 'doctors', 'referrals', 'announcements', 'programs', 'audit', 'stats', 'system-config', 'permissions', 'system-logs']
     case 'director':
       return ['announcements', 'programs', 'stats']
     case 'branch_director':
       return ['announcements', 'stats']
     case 'admin':
     default:
-      return ['users', 'manage-doctors', 'doctors', 'referrals', 'announcements', 'audit', 'stats']
+      return ['users', 'manage-doctors', 'doctors', 'referrals', 'announcements', 'audit', 'stats', 'system-config', 'permissions', 'system-logs']
   }
 }
 
@@ -159,6 +160,24 @@ export default function AdminPage() {
               Thống kê
             </TabsTrigger>
           )}
+          {visibleTabs.includes('system-config') && (
+            <TabsTrigger value="system-config" className="gap-1.5 text-base">
+              <Server className="size-4" />
+              Cài đặt hệ thống
+            </TabsTrigger>
+          )}
+          {visibleTabs.includes('permissions') && (
+            <TabsTrigger value="permissions" className="gap-1.5 text-base">
+              <ShieldCheck className="size-4" />
+              Phân quyền
+            </TabsTrigger>
+          )}
+          {visibleTabs.includes('system-logs') && (
+            <TabsTrigger value="system-logs" className="gap-1.5 text-base">
+              <Clock className="size-4" />
+              Logs hệ thống
+            </TabsTrigger>
+          )}
         </TabsList>
 
         {/* Users Tab */}
@@ -256,6 +275,76 @@ export default function AdminPage() {
                 <AuditLogTable />
               </CardContent>
             </Card>
+          </TabsContent>
+        )}
+
+        {/* System Config Tab */}
+        {visibleTabs.includes('system-config') && (
+          <TabsContent value="system-config">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Server className="size-5 text-teal-600" />
+                  Cài đặt hệ thống
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground text-sm">
+                  Truy cập trang cài đặt hệ thống đầy đủ để cấu hình các thông số vận hành.
+                </p>
+                <Link
+                  href="/dashboard/system"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                >
+                  <ExternalLink className="size-4" />
+                  Mở trang Cài đặt hệ thống
+                </Link>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {/* Permissions Tab */}
+        {visibleTabs.includes('permissions') && (
+          <TabsContent value="permissions">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <ShieldCheck className="size-5 text-teal-600" />
+                  Phân quyền người dùng
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground text-sm">
+                  Quản lý quyền truy cập từng module cho từng tài khoản trong hệ thống AIVIHE.
+                </p>
+                <Link
+                  href="/dashboard/permissions"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                >
+                  <ExternalLink className="size-4" />
+                  Mở trang Phân quyền
+                </Link>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {/* System Logs Tab */}
+        {visibleTabs.includes('system-logs') && (
+          <TabsContent value="system-logs">
+            <div className="flex flex-col items-center justify-center py-16 text-center space-y-4">
+              <div className="size-16 rounded-full bg-slate-100 flex items-center justify-center">
+                <Clock className="size-8 text-slate-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800">Logs hệ thống</h3>
+              <p className="text-muted-foreground max-w-sm text-base">
+                Tính năng theo dõi log vận hành hệ thống đang được phát triển và sẽ ra mắt sớm.
+              </p>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">
+                Sắp ra mắt
+              </span>
+            </div>
           </TabsContent>
         )}
 
