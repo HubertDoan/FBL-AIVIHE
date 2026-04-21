@@ -19,6 +19,7 @@ import { IotHealthDevicesSection } from '@/components/landing/landing-iot-health
 import { ServicePackagesSection } from '@/components/landing/landing-service-packages-section'
 import { LandingConsultationRequestForm } from '@/components/landing/landing-consultation-request-form'
 import { LandingAccessChannelsSection } from '@/components/landing/landing-access-channels-section'
+import { LandingDoctorApplicationSection } from '@/components/landing/landing-doctor-application-section'
 
 // Healthcare-inspired palette (BV Thu Cúc / Hồng Ngọc / ĐH Y tế Công Cộng):
 // - Primary: teal-600 (#0d9488) — trust + health
@@ -231,6 +232,9 @@ export default function LandingPage() {
 
       {/* ===== ĐỘI NGŨ & ĐỐI TÁC ===== */}
       <PartnersAndAdvisorsSection />
+
+      {/* ===== ĐĂNG KÝ BS GIA ĐÌNH — dành cho bác sĩ muốn tham gia mạng lưới ===== */}
+      <LandingDoctorApplicationSection />
 
       {/* ===== FORM ĐĂNG KÝ — teal dark (healthcare authority) ===== */}
       <section id="dang-ky-tu-van" className="py-12 bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 text-white scroll-mt-6">

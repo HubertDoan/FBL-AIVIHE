@@ -15,6 +15,7 @@ import { ConsultationRequestListForReception } from '@/components/reception/cons
 import { DirectorServiceRegistrationApprovalList } from '@/components/director/director-service-registration-approval-list'
 import { BroadcastAnnouncementFormWithTargetSelector } from '@/components/director/broadcast-announcement-form-with-target-selector'
 import { DirectorFamilyDoctorRegistrationApprovalList } from '@/components/director/director-family-doctor-registration-approval-list'
+import { DoctorApplicationApprovalList } from '@/components/director/doctor-application-approval-list'
 import { DirectorKpiOverviewTab, DirectorExecutiveReportTab } from '@/components/director/director-kpi-overview-tab'
 import type { DirectorAnnouncement } from '@/lib/demo/demo-director-announcement-data'
 import type { DirectorAnnouncementFormData } from '@/components/director/director-announcement-form'
@@ -139,6 +140,10 @@ export default function DirectorPage() {
             <Stethoscope className="size-4" />
             Duyệt BS gia đình
           </TabsTrigger>
+          <TabsTrigger value="doctor-applications" className="text-base gap-1.5">
+            <Stethoscope className="size-4" />
+            Duyệt BS đăng ký
+          </TabsTrigger>
           <TabsTrigger value="service-registration" className="text-base gap-1.5">
             Duyệt đăng ký dịch vụ
           </TabsTrigger>
@@ -173,6 +178,10 @@ export default function DirectorPage() {
 
         <TabsContent value="family-doctor">
           <DirectorFamilyDoctorRegistrationApprovalList />
+        </TabsContent>
+
+        <TabsContent value="doctor-applications">
+          <DoctorApplicationApprovalList />
         </TabsContent>
 
         <TabsContent value="service-registration">

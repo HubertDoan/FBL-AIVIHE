@@ -18,15 +18,17 @@ import { Card, CardContent } from '@/components/ui/card'
 import { useAuth } from '@/hooks/use-auth'
 import { ConsultationRequestListForReception } from '@/components/reception/consultation-request-list-for-reception'
 import { ReceptionPendingMemberRegistrationList } from '@/components/reception/reception-pending-member-registration-list'
+import { DoctorApplicationListForReception } from '@/components/reception/doctor-application-list-for-reception'
 
 const RECEPTION_ACCESS_ROLES = ['reception', 'admin', 'admin_staff', 'manager', 'super_admin', 'director', 'branch_director']
 
-type ActiveView = 'pending' | 'contacted' | 'approved' | 'handoff-daycare' | 'handoff-phcn' | 'members'
+type ActiveView = 'pending' | 'contacted' | 'approved' | 'doctor-applications' | 'handoff-daycare' | 'handoff-phcn' | 'members'
 
 const MENU_ITEMS: { key: ActiveView; label: string; icon: React.ComponentType<{ className?: string }>; desc: string }[] = [
   { key: 'pending', label: 'Chờ tư vấn', icon: PhoneCall, desc: 'Yêu cầu mới từ website' },
   { key: 'contacted', label: 'Đã tư vấn & Trình duyệt', icon: UserCheck, desc: 'Đã liên hệ, chờ GĐ duyệt' },
   { key: 'approved', label: 'Đã duyệt', icon: CheckCircle, desc: 'GĐ đã duyệt → thông báo KH' },
+  { key: 'doctor-applications', label: 'BS đăng ký', icon: Users, desc: 'BS muốn tham gia mạng lưới' },
   { key: 'handoff-daycare', label: 'Chuyển lễ tân Daycare', icon: Home, desc: 'KH đăng ký Daycare → chuyển thông tin' },
   { key: 'handoff-phcn', label: 'Chuyển lễ tân PHCN', icon: Activity, desc: 'KH đăng ký PHCN → chuyển thông tin' },
   { key: 'members', label: 'Danh sách khách hàng', icon: Users, desc: 'KH đã tư vấn thành công' },
@@ -113,6 +115,13 @@ export default function ReceptionPage() {
           <div className="space-y-3">
             <ViewHeader title="Đã duyệt" desc="GĐ đã duyệt — liên hệ KH thông báo kết quả, hướng dẫn tạo tài khoản" />
             <ConsultationRequestListForReception userRole={user?.role || ''} defaultFilter="approved" />
+          </div>
+        )}
+
+        {activeView === 'doctor-applications' && (
+          <div className="space-y-3">
+            <ViewHeader title="BS đăng ký" desc="BS muốn tham gia mạng lưới — gọi điện, bổ sung thông tin, trình GĐ duyệt" />
+            <DoctorApplicationListForReception userRole={user?.role || ''} />
           </div>
         )}
 
