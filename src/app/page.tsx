@@ -61,7 +61,7 @@ export default function LandingPage() {
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full px-6 py-3 shadow-xl shadow-teal-500/30">
               <Sparkles className="size-5" />
-              <span className="text-base md:text-xl font-bold tracking-wide">Nền tảng hồ sơ sức khỏe số trung tâm</span>
+              <span className="text-base md:text-xl font-bold tracking-wide">Nền tảng quản lý sức khỏe cá nhân</span>
             </div>
           </div>
 
