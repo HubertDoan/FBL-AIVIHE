@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Megaphone, Shield, Loader2, HandHeart, Send, Stethoscope, LayoutDashboard, UserCheck, BarChart3 } from 'lucide-react'
+import { Megaphone, Shield, Loader2, HandHeart, Send, Stethoscope, LayoutDashboard, UserCheck, BarChart3, GitBranch } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { DirectorAnnouncementForm } from '@/components/director/director-announcement-form'
@@ -17,6 +17,7 @@ import { BroadcastAnnouncementFormWithTargetSelector } from '@/components/direct
 import { DirectorFamilyDoctorRegistrationApprovalList } from '@/components/director/director-family-doctor-registration-approval-list'
 import { DoctorApplicationApprovalList } from '@/components/director/doctor-application-approval-list'
 import { DirectorKpiOverviewTab, DirectorExecutiveReportTab } from '@/components/director/director-kpi-overview-tab'
+import { EndToEndServiceFlowVisualizer } from '@/components/director/end-to-end-service-flow-visualizer'
 import type { DirectorAnnouncement } from '@/lib/demo/demo-director-announcement-data'
 import type { DirectorAnnouncementFormData } from '@/components/director/director-announcement-form'
 
@@ -162,6 +163,10 @@ export default function DirectorPage() {
             <HandHeart className="size-4" />
             Lời chào
           </TabsTrigger>
+          <TabsTrigger value="service-flow" className="text-base gap-1.5">
+            <GitBranch className="size-4" />
+            Quy trình dịch vụ
+          </TabsTrigger>
           <TabsTrigger value="executive-report" className="text-base gap-1.5">
             <BarChart3 className="size-4" />
             Báo cáo điều hành
@@ -210,6 +215,10 @@ export default function DirectorPage() {
 
         <TabsContent value="greeting">
           <DirectorGreetingEditor />
+        </TabsContent>
+
+        <TabsContent value="service-flow">
+          <EndToEndServiceFlowVisualizer />
         </TabsContent>
 
         <TabsContent value="executive-report">

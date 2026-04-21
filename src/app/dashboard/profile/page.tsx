@@ -1,9 +1,10 @@
 'use client'
 
-// Trang hồ sơ cá nhân — 3 tabs: Thông tin cá nhân, Khám định kỳ, Khám chữa bệnh
-// Tất cả users (nhân viên + khách hàng) đều thấy 3 tab này
+// Trang hồ sơ cá nhân — dành cho khách hàng (citizen/member)
+// Staff roles → redirect sang /dashboard/staff-profile (hồ sơ công việc)
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { PersonalInfoWithHealthForm } from '@/components/profile/personal-info-with-health-form'
@@ -13,8 +14,17 @@ import { useAuth } from '@/hooks/use-auth'
 import { Pencil, X, User, CalendarHeart, Stethoscope } from 'lucide-react'
 import type { Citizen, HealthProfile } from '@/types/database'
 
+// Roles được coi là nhân viên quản lý — không có hồ sơ SK cá nhân
+const STAFF_ROLES = new Set([
+  'director', 'branch_director', 'admin', 'super_admin',
+  'manager', 'reception', 'admin_staff', 'staff',
+  'accountant', 'technician', 'tech_assistant',
+  'nurse', 'support_staff', 'intern', 'exam_doctor',
+])
+
 export default function ProfilePage() {
   const { user, loading: authLoading } = useAuth()
+  const router = useRouter()
   const [citizen, setCitizen] = useState<Citizen | null>(null)
   const [healthProfile, setHealthProfile] = useState<HealthProfile | null>(null)
   const [editing, setEditing] = useState(false)
@@ -35,8 +45,13 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (authLoading || !user) return
+    // Staff không có hồ sơ SK cá nhân → redirect sang staff-profile
+    if (STAFF_ROLES.has(user.role)) {
+      router.replace('/dashboard/staff-profile')
+      return
+    }
     fetchData()
-  }, [authLoading, user, fetchData])
+  }, [authLoading, user, fetchData, router])
 
   const handleSave = async (citizenData: Partial<Citizen>, healthData: Partial<HealthProfile>) => {
     if (!citizen) return

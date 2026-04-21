@@ -13,6 +13,7 @@ import type { Permission } from '@/lib/permissions/permission-definitions'
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard': 'Tổng quan',
   '/dashboard/profile': 'Hồ sơ cá nhân',
+  '/dashboard/staff-profile': 'Hồ sơ nhân viên',
   '/dashboard/family': 'Gia đình',
   '/dashboard/upload': 'Tải tài liệu',
   '/dashboard/timeline': 'Dòng thời gian',

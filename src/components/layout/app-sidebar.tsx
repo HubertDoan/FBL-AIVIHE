@@ -41,6 +41,14 @@ import {
 import { cn } from '@/lib/utils'
 import { PERMISSIONS, type Permission } from '@/lib/permissions/permission-definitions'
 
+// Roles được coi là nhân viên quản lý — không có hồ sơ SK cá nhân
+const STAFF_ROLES = new Set([
+  'director', 'branch_director', 'admin', 'super_admin',
+  'manager', 'reception', 'admin_staff', 'staff',
+  'accountant', 'technician', 'tech_assistant',
+  'nurse', 'support_staff', 'intern', 'exam_doctor',
+])
+
 interface NavItem {
   href: string
   label: string
@@ -50,6 +58,10 @@ interface NavItem {
   // Doctor sub-conditions (chỉ áp dụng cho doctor modules)
   doctorNotRegistered?: boolean
   doctorApproved?: boolean
+  // Hiển thị cho khách hàng (citizen/member) — ẩn cho staff roles
+  customerOnly?: boolean
+  // Hiển thị chỉ cho staff — ẩn cho citizen/member
+  staffOnly?: boolean
 }
 
 interface NavSection {
@@ -68,48 +80,48 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: 'THÔNG TIN SỨC KHỎE CÁ NHÂN',
+    title: 'THÔNG TIN SỨC KHỎE CÁ NHÂN',  // customerOnly — ẩn hoàn toàn cho staff
     items: [
-      { href: '/dashboard/medical-record', label: 'Thông tin sức khỏe của tôi', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD },
-      { href: '/dashboard/vitals', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE },
-      { href: '/dashboard/upload', label: 'Upload tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD },
-      { href: '/dashboard/ai-summary', label: 'AI tổng hợp', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true },
-      { href: '/dashboard/health-report', label: 'Báo cáo sức khỏe', icon: FileText, requiredPermission: PERMISSIONS.MODULE_SUMMARY },
+      { href: '/dashboard/medical-record', label: 'Thông tin sức khỏe của tôi', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD, customerOnly: true },
+      { href: '/dashboard/vitals', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE, customerOnly: true },
+      { href: '/dashboard/upload', label: 'Upload tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD, customerOnly: true },
+      { href: '/dashboard/ai-summary', label: 'AI tổng hợp', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true, customerOnly: true },
+      { href: '/dashboard/health-report', label: 'Báo cáo sức khỏe', icon: FileText, requiredPermission: PERMISSIONS.MODULE_SUMMARY, customerOnly: true },
     ],
   },
   {
-    title: 'DAYCARE',  // Ẩn nếu KH chưa đăng ký Daycare
+    title: 'DAYCARE',  // customerOnly — KH đăng ký Daycare mới thấy
     items: [
-      { href: '/dashboard/health-record?tab=daycare', label: 'Hoạt động Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE },
+      { href: '/dashboard/health-record?tab=daycare', label: 'Hoạt động Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE, customerOnly: true },
     ],
   },
   {
-    title: 'BÁC SĨ GIA ĐÌNH',  // Ẩn nếu KH chưa đăng ký BSGĐ
+    title: 'BÁC SĨ GIA ĐÌNH',  // customerOnly — KH đăng ký BSGĐ mới thấy
     items: [
-      { href: '/dashboard/health-record?tab=family-doctor', label: 'Thông tin BSGĐ', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR },
-      { href: '/dashboard/consultation', label: 'Hỏi Bác sĩ', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_CONSULTATION },
-      { href: '/dashboard/choose-doctor', label: 'Chọn BS gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_CHOOSE_DOCTOR },
+      { href: '/dashboard/health-record?tab=family-doctor', label: 'Thông tin BSGĐ', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR, customerOnly: true },
+      { href: '/dashboard/consultation', label: 'Hỏi Bác sĩ', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_CONSULTATION, customerOnly: true },
+      { href: '/dashboard/choose-doctor', label: 'Chọn BS gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_CHOOSE_DOCTOR, customerOnly: true },
     ],
   },
   {
-    title: 'PHỤC HỒI CHỨC NĂNG',  // Ẩn nếu KH chưa đăng ký PHCN
+    title: 'PHỤC HỒI CHỨC NĂNG',  // customerOnly — KH đăng ký PHCN mới thấy
     items: [
-      { href: '/dashboard/health-record?tab=rehab', label: 'Nhật ký trị liệu', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB },
+      { href: '/dashboard/health-record?tab=rehab', label: 'Nhật ký trị liệu', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB, customerOnly: true },
     ],
   },
   {
-    title: 'KHÁM CHỮA BỆNH',  // Ẩn nếu KH chưa đăng ký chuyên khoa
+    title: 'KHÁM CHỮA BỆNH',  // customerOnly — KH đăng ký chuyên khoa mới thấy
     items: [
-      { href: '/dashboard/health-record?tab=clinic', label: 'Bệnh đã khám & điều trị', icon: Hospital, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC },
-      { href: '/dashboard/visit-prep', label: 'Đi khám bệnh', icon: CalendarCheck, requiredPermission: PERMISSIONS.MODULE_VISIT_PREP },
-      { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TREATMENT },
+      { href: '/dashboard/health-record?tab=clinic', label: 'Bệnh đã khám & điều trị', icon: Hospital, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC, customerOnly: true },
+      { href: '/dashboard/visit-prep', label: 'Đi khám bệnh', icon: CalendarCheck, requiredPermission: PERMISSIONS.MODULE_VISIT_PREP, customerOnly: true },
+      { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TREATMENT, customerOnly: true },
     ],
   },
   {
     title: 'TÀI LIỆU',
     items: [
-      { href: '/dashboard/documents/health', label: 'Tài liệu sức khỏe', icon: FolderHeart, requiredPermission: PERMISSIONS.MODULE_HEALTH_DOCUMENTS },
-      { href: '/dashboard/documents/personal', label: 'Tài liệu cá nhân', icon: Bookmark, requiredPermission: PERMISSIONS.MODULE_PERSONAL_DOCUMENTS },
+      { href: '/dashboard/documents/health', label: 'Tài liệu sức khỏe', icon: FolderHeart, requiredPermission: PERMISSIONS.MODULE_HEALTH_DOCUMENTS, customerOnly: true },
+      { href: '/dashboard/documents/personal', label: 'Tài liệu cá nhân', icon: Bookmark, requiredPermission: PERMISSIONS.MODULE_PERSONAL_DOCUMENTS, customerOnly: true },
     ],
   },
   {
@@ -117,7 +129,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { href: '/dashboard/notifications', label: 'Thông báo', icon: Bell, requiredPermission: PERMISSIONS.MODULE_NOTIFICATIONS },
       { href: '/dashboard/messages', label: 'Tin nhắn', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_MESSAGES },
-      { href: '/dashboard/family', label: 'Gia đình', icon: Users, requiredPermission: PERMISSIONS.MODULE_FAMILY },
+      { href: '/dashboard/family', label: 'Gia đình', icon: Users, requiredPermission: PERMISSIONS.MODULE_FAMILY, customerOnly: true },
     ],
   },
   {
@@ -149,7 +161,9 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: 'TÀI KHOẢN',
     items: [
-      { href: '/dashboard/profile', label: 'Thông tin tài khoản', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE },
+      // Khách hàng → hồ sơ y tế; staff → hồ sơ công việc
+      { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE, customerOnly: true },
+      { href: '/dashboard/staff-profile', label: 'Hồ sơ nhân viên', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE, staffOnly: true },
       { href: '/dashboard/guide', label: 'Hướng dẫn', icon: BookOpen, requiredPermission: PERMISSIONS.MODULE_GUIDE },
       { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings, requiredPermission: PERMISSIONS.MODULE_SETTINGS },
     ],
@@ -163,6 +177,7 @@ const ROLE_PRIORITY_SECTIONS: Partial<Record<string, NavSection>> = {
     items: [
       { href: '/dashboard/director', label: 'Tổng quan KPIs', icon: LayoutDashboard },
       { href: '/dashboard/director#member-approval', label: 'Duyệt requests', icon: UserCheck },
+      { href: '/dashboard/director#service-flow', label: 'Quy trình dịch vụ', icon: Activity },
       { href: '/dashboard/director#announcements', label: 'Truyền thông', icon: Megaphone },
       { href: '/dashboard/director#executive-report', label: 'Báo cáo điều hành', icon: BarChart3 },
     ],
@@ -172,6 +187,7 @@ const ROLE_PRIORITY_SECTIONS: Partial<Record<string, NavSection>> = {
     items: [
       { href: '/dashboard/director', label: 'Tổng quan KPIs', icon: LayoutDashboard },
       { href: '/dashboard/director#member-approval', label: 'Duyệt requests', icon: UserCheck },
+      { href: '/dashboard/director#service-flow', label: 'Quy trình dịch vụ', icon: Activity },
       { href: '/dashboard/director#announcements', label: 'Truyền thông', icon: Megaphone },
       { href: '/dashboard/director#executive-report', label: 'Báo cáo điều hành', icon: BarChart3 },
     ],
@@ -221,10 +237,16 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
   const isDoctorRegistered = doctorProfileStatus != null
   const isDoctorApproved = doctorProfileStatus === 'approved'
 
+  const isStaffRole = userRole ? STAFF_ROLES.has(userRole) : false
+
   function isItemVisible(item: NavItem): boolean {
     if (item.requiredPermission && !userPermissions.includes(item.requiredPermission)) return false
     if (item.doctorNotRegistered && isDoctorRegistered) return false
     if (item.doctorApproved && !isDoctorApproved) return false
+    // Staff không thấy các mục chỉ dành cho khách hàng
+    if (item.customerOnly && isStaffRole) return false
+    // Khách hàng không thấy các mục chỉ dành cho staff
+    if (item.staffOnly && !isStaffRole) return false
     return true
   }
 
