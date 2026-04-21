@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
-import { Sparkles, FileText, HeartPulse, AlertTriangle, ArrowRight } from 'lucide-react'
+import { Sparkles, FileText, HeartPulse, AlertTriangle, ArrowRight, FileBarChart } from 'lucide-react'
 
 /**
  * Tình trạng sức khỏe chung — top section của customer dashboard.
@@ -74,7 +74,7 @@ export function CustomerHealthStatusOverviewWithAiSummary({ userName }: { userNa
           <MetricTile icon={AlertTriangle} label="Cần chú ý" value={alertCount} color={alertCount > 0 ? 'rose' : 'slate'} />
         </div>
 
-        {/* CTA */}
+        {/* CTA — 3 nút: Upload, AI summary, Báo cáo SK (giống sidebar) */}
         <div className="flex gap-2 flex-wrap">
           <Link
             href="/dashboard/upload"
@@ -87,6 +87,12 @@ export function CustomerHealthStatusOverviewWithAiSummary({ userName }: { userNa
             className="inline-flex items-center gap-1.5 bg-white border border-teal-200 hover:border-teal-400 text-teal-700 text-sm font-semibold px-4 py-2 rounded-lg transition"
           >
             Xem báo cáo AI đầy đủ
+          </Link>
+          <Link
+            href="/dashboard/health-report"
+            className="inline-flex items-center gap-1.5 bg-white border border-teal-200 hover:border-teal-400 text-teal-700 text-sm font-semibold px-4 py-2 rounded-lg transition"
+          >
+            <FileBarChart className="size-3.5" /> Báo cáo sức khỏe
           </Link>
         </div>
       </CardContent>
