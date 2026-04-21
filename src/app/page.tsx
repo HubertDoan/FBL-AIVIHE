@@ -65,35 +65,40 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* TWO-COLUMN HERO — AIVIHE + MediExpress */}
+          {/* ═══ PAIN POINTS — đưa lên top ngay dưới banner ═══ */}
+          <div className="mb-6">
+            <LandingPainPointsCentralSection />
+          </div>
+
+          {/* TWO-COLUMN HERO — AIVIHE + MediExpress, both start from TOP, same heading size */}
           <div className="grid lg:grid-cols-2 gap-6 items-stretch">
 
             {/* ═══ LEFT: AIVIHE Hero ═══ */}
-            <div className="bg-white/60 backdrop-blur border border-teal-100 rounded-2xl p-6 flex flex-col justify-center">
+            <div className="bg-white/60 backdrop-blur border border-teal-100 rounded-2xl p-6 flex flex-col">
 
-              <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-3 leading-[1.15]">
-                <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">AIVIHE</span>
-                <span className="text-slate-900"> — Hồ sơ sức khỏe số</span>
-                <br />
-                <span className="text-slate-900">không đứt gãy thông tin</span>
-              </h1>
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2 leading-tight">
+                <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">AIVIHE</span> — Hồ sơ sức khỏe số không đứt gãy
+              </h2>
+
+              <p className="text-sm md:text-base text-slate-600 mb-3 leading-relaxed">
+                Giải quyết <span className="font-semibold text-rose-600">đứt gãy thông tin chăm sóc dài hạn</span> — dữ liệu rải rác, không ai nhìn thấy toàn bộ hành trình.
+              </p>
+              <div className="inline-flex items-center gap-1.5 bg-teal-50 text-teal-700 border border-teal-200 rounded-full px-3 py-1 mb-4 w-fit">
+                <span className="text-xs font-bold uppercase tracking-wider">🌿 Một hồ sơ trung tâm</span>
+              </div>
 
               <p className="text-sm md:text-base text-slate-600 leading-relaxed mb-2">
-                Giải quyết <span className="font-semibold text-rose-600">đứt gãy thông tin chăm sóc dài hạn</span> —
-                dữ liệu sức khỏe rải rác, không ai nhìn thấy toàn bộ hành trình.
+                Dành cho <span className="font-semibold">khách hàng, gia đình và đội ngũ chăm sóc</span> — cùng theo dõi một hành trình sức khỏe liên tục, an toàn.
               </p>
-              <p className="text-xs md:text-sm text-slate-500 mb-4">
-                Dành cho khách hàng, gia đình và đội ngũ chăm sóc — cùng theo dõi một hành trình sức khỏe liên tục, an toàn.
-              </p>
-              <p className="text-[11px] text-slate-400 mb-5 italic">
+              <p className="text-xs md:text-sm text-slate-500 italic mb-5 flex-1">
                 AI chỉ hỗ trợ đọc, tóm tắt và giải thích — không chẩn đoán, không kê đơn, không thay thế bác sĩ.
               </p>
 
-              <div className="flex flex-wrap gap-2">
-                <Link href="/register" className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-teal-500/25 hover:shadow-lg transition-all text-sm">
+              <div className="flex flex-wrap gap-2 mt-auto">
+                <Link href="/register" className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-teal-500/25 hover:shadow-lg transition-all text-sm md:text-base">
                   Khởi tạo hồ sơ miễn phí <ArrowRight className="size-4" />
                 </Link>
-                <a href="#hanh-trinh-thong-tin" className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:border-teal-300 text-slate-700 hover:text-teal-700 font-semibold px-5 py-2.5 rounded-lg transition-all text-sm">
+                <a href="#hanh-trinh-thong-tin" className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:border-teal-300 text-slate-700 hover:text-teal-700 font-semibold px-5 py-2.5 rounded-lg transition-all text-sm md:text-base">
                   Xem hành trình
                 </a>
               </div>
@@ -181,9 +186,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* ===== 4. NỖI ĐAU TRUNG TÂM ===== */}
-      <LandingPainPointsCentralSection />
 
       {/* ===== 5. SƠ ĐỒ HÀNH TRÌNH THÔNG TIN ===== */}
       <div id="hanh-trinh-thong-tin">
