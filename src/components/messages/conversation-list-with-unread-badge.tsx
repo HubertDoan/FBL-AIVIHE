@@ -1,6 +1,6 @@
 'use client'
 
-// Conversation list panel: search + type filter tabs + unread badge
+// Conversation list panel with unread badge, search, and type filter tabs
 // Accepts normalized ConversationUI shape — works for both demo and Supabase production mode
 // Used as the left panel in /dashboard/messages page
 
@@ -44,19 +44,19 @@ function timeShort(iso: string): string {
   return `${Math.floor(hours / 24)}ng`
 }
 
-interface ConversationListWithSearchAndTypeFilterProps {
+interface ConversationListWithUnreadBadgeProps {
   conversations: ConversationUI[]
   selectedId: string | null
   currentUserId: string
   onSelect: (conv: ConversationUI) => void
 }
 
-export function ConversationListWithSearchAndTypeFilter({
+export function ConversationListWithUnreadBadge({
   conversations,
   selectedId,
   currentUserId: _currentUserId,
   onSelect,
-}: ConversationListWithSearchAndTypeFilterProps) {
+}: ConversationListWithUnreadBadgeProps) {
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState<FilterTab>('all')
 
@@ -113,7 +113,7 @@ export function ConversationListWithSearchAndTypeFilter({
         ) : (
           filtered.map((conv) => {
             const unread = conv.unread_count
-            const displayName = conv.subject ?? conv.last_message.slice(0, 40)
+            const displayName = conv.subject ?? conv.last_message.slice(0, 30)
             return (
               <button
                 key={conv.id}
@@ -124,6 +124,7 @@ export function ConversationListWithSearchAndTypeFilter({
                 )}
               >
                 <div className="flex items-start gap-3">
+                  {/* Avatar placeholder */}
                   <div className="size-10 rounded-full bg-muted flex items-center justify-center shrink-0">
                     <MessageCircle className="size-5 text-muted-foreground" />
                   </div>
@@ -142,10 +143,7 @@ export function ConversationListWithSearchAndTypeFilter({
                       <p className="text-sm text-muted-foreground truncate">{conv.last_message}</p>
                       <div className="flex items-center gap-1 shrink-0">
                         {conv.type && (
-                          <span className={cn(
-                            'text-xs px-2 py-0.5 rounded-full',
-                            TYPE_COLORS[conv.type] ?? 'bg-slate-100 text-slate-700'
-                          )}>
+                          <span className={cn('text-xs px-2 py-0.5 rounded-full', TYPE_COLORS[conv.type] ?? 'bg-slate-100 text-slate-700')}>
                             {TYPE_LABELS[conv.type] ?? conv.type}
                           </span>
                         )}

@@ -44,14 +44,38 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Chưa đăng nhập.' }, { status: 401 })
 
+    // Verify participant access
+    const { data: conv } = await supabase
+      .from('conversations')
+      .select('id')
+      .eq('id', conversationId)
+      .contains('participant_ids', [user.id])
+      .single()
+    if (!conv) return NextResponse.json({ error: 'Không có quyền truy cập.' }, { status: 403 })
+
+    // Join sender full_name from citizens
     const { data, error } = await supabase
       .from('messages')
-      .select('*')
+      .select('id, conversation_id, sender_id, content, is_read, created_at, citizens!sender_id(full_name)')
       .eq('conversation_id', conversationId)
       .order('created_at', { ascending: true })
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json({ messages: data ?? [] })
+
+    // Normalize to flat shape with sender_name
+    const messages = (data ?? []).map((m) => ({
+      id: m.id,
+      conversation_id: m.conversation_id,
+      sender_id: m.sender_id,
+      sender_name: (Array.isArray(m.citizens)
+        ? (m.citizens[0] as { full_name: string } | undefined)?.full_name
+        : (m.citizens as { full_name: string } | null)?.full_name) ?? 'Người dùng',
+      content: m.content,
+      is_read: m.is_read,
+      created_at: m.created_at,
+    }))
+
+    return NextResponse.json({ messages })
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Lỗi máy chủ' }, { status: 500 })
   }
@@ -92,6 +116,13 @@ export async function POST(request: NextRequest, context: RouteContext) {
       .single()
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+
+    // Update conversation last_message + last_message_at
+    await supabase
+      .from('conversations')
+      .update({ last_message: body.content.trim(), last_message_at: new Date().toISOString() })
+      .eq('id', conversationId)
+
     return NextResponse.json(data, { status: 201 })
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Lỗi máy chủ' }, { status: 500 })

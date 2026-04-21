@@ -1,15 +1,17 @@
 'use client'
 
 // Messaging page: two-panel layout (conversation list + message thread)
-// Supports all 4 conversation types: admin, director, doctor, specialist
+// Supports demo mode (in-memory) and production mode (Supabase + Realtime)
 // Mobile: shows list OR thread, not both simultaneously
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Plus, ArrowLeft, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ConversationListWithSearchAndTypeFilter } from '@/components/messages/conversation-list-with-search-and-type-filter'
 import { MessageThreadWithBubblesAndInput } from '@/components/messages/message-thread-with-bubbles-and-input'
 import { NewConversationStartDialog, type ContactOption } from '@/components/messages/new-conversation-start-dialog'
+import { useSupabaseMessagesRealtimeSubscription } from '@/lib/hooks/use-supabase-messages-realtime-subscription'
+import type { ConversationUI, MessageUI } from '@/lib/types/messaging-ui-normalized-types'
 import type { Conversation, Message, ConversationType } from '@/lib/demo/demo-messaging-data'
 
 // Role label mapping for display
@@ -35,94 +37,184 @@ const ROLE_LABELS: Record<string, string> = {
   intern: 'Nhân viên thực tập',
 }
 
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
+// Normalize demo Conversation → ConversationUI
+function normalizeDemoConversation(c: Conversation, currentUserId: string): ConversationUI {
+  return {
+    id: c.id,
+    participant_ids: c.participants,
+    type: c.type,
+    subject: c.subject,
+    last_message: c.lastMessage,
+    last_message_at: c.lastMessageAt,
+    unread_count: c.unreadCounts[currentUserId] ?? 0,
+    created_at: c.createdAt,
+  }
+}
+
+// Normalize demo Message → MessageUI
+function normalizeDemoMessage(m: Message): MessageUI {
+  return {
+    id: m.id,
+    conversation_id: m.conversationId,
+    sender_id: m.senderId,
+    sender_name: m.senderName,
+    content: m.content,
+    is_read: m.readAt !== null,
+    created_at: m.createdAt,
+  }
+}
+
+// Normalize Supabase conversation row → ConversationUI
+function normalizeSupabaseConversation(
+  c: Record<string, unknown>,
+  currentUserId: string
+): ConversationUI {
+  return {
+    id: c.id as string,
+    participant_ids: (c.participant_ids as string[]) ?? [],
+    type: (c.type as ConversationUI['type']) ?? undefined,
+    subject: (c.subject as string) ?? undefined,
+    last_message: (c.last_message as string) ?? '',
+    last_message_at: (c.last_message_at as string) ?? (c.created_at as string),
+    unread_count: 0, // Supabase doesn't track per-user unread count in schema
+    created_at: c.created_at as string,
+  }
+}
+
 export default function MessagesPage() {
   const [currentUserId, setCurrentUserId] = useState<string>('')
   const [currentUserRole, setCurrentUserRole] = useState<string>('')
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  const [selectedConv, setSelectedConv] = useState<Conversation | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [conversations, setConversations] = useState<ConversationUI[]>([])
+  const [selectedConv, setSelectedConv] = useState<ConversationUI | null>(null)
+  const [messages, setMessages] = useState<MessageUI[]>([])
   const [sending, setSending] = useState(false)
   const [showNewDialog, setShowNewDialog] = useState(false)
   const [mobileView, setMobileView] = useState<'list' | 'thread'>('list')
   const [loading, setLoading] = useState(true)
   const [allContacts, setAllContacts] = useState<ContactOption[]>([])
 
-  // Load current user info + all contacts
+  // Stable callback ref so Realtime hook doesn't re-subscribe on every render
+  const onNewMessageRef = useRef<(msg: MessageUI) => void>(() => {})
+  onNewMessageRef.current = (msg: MessageUI) => {
+    setMessages((prev) => {
+      // Deduplicate by id
+      if (prev.some((m) => m.id === msg.id)) return prev
+      return [...prev, msg]
+    })
+    // Refresh conversation list to update last_message preview
+    loadConversations()
+  }
+
+  const stableOnNewMessage = useCallback((msg: MessageUI) => {
+    onNewMessageRef.current(msg)
+  }, [])
+
+  // Supabase Realtime subscription (no-op in demo mode)
+  useSupabaseMessagesRealtimeSubscription({
+    conversationId: selectedConv?.id ?? null,
+    onNewMessage: stableOnNewMessage,
+  })
+
+  // Load current user info + contacts
   useEffect(() => {
-    fetch('/api/demo/me')
+    // Demo mode: use demo/me; Production: use /api/profile (returns { citizen })
+    const userEndpoint = isDemoMode ? '/api/demo/me' : '/api/profile'
+    fetch(userEndpoint)
       .then((r) => r.json())
       .then((data) => {
-        if (data.user) {
-          setCurrentUserId(data.user.id)
-          setCurrentUserRole(data.user.role)
+        if (isDemoMode) {
+          const u = data.user
+          if (u?.id) { setCurrentUserId(u.id); setCurrentUserRole(u.role ?? '') }
+        } else {
+          const c = data.citizen
+          if (c?.id) { setCurrentUserId(c.id); setCurrentUserRole(c.role ?? '') }
         }
       })
       .catch(() => {})
 
-    // Fetch all accounts for contact list
-    fetch('/api/demo/accounts')
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
+    // Contacts only available in demo mode for now
+    // Production: members see only their conversations; staff initiate from admin panel
+    if (isDemoMode) {
+      fetch('/api/demo/accounts')
+        .then((r) => r.json())
+        .then((data) => {
+          const list = Array.isArray(data) ? data : []
           setAllContacts(
-            data.map((a: { id: string; fullName: string; role: string }) => ({
+            list.map((a: { id: string; fullName: string; role: string }) => ({
               id: a.id,
               name: a.fullName,
               role: a.role,
               roleLabel: ROLE_LABELS[a.role] ?? a.role,
             }))
           )
-        }
-      })
-      .catch(() => {})
+        })
+        .catch(() => {})
+    }
   }, [])
 
   // Load conversations
   const loadConversations = useCallback(async () => {
     try {
       const res = await fetch('/api/messages')
-      if (res.ok) {
-        const data = await res.json()
-        setConversations(data.conversations ?? [])
-      }
+      if (!res.ok) return
+      const data = await res.json()
+      const raw: ConversationUI[] = (data.conversations ?? []).map(
+        (c: Record<string, unknown>) =>
+          isDemoMode
+            ? normalizeDemoConversation(c as unknown as Conversation, currentUserId)
+            : normalizeSupabaseConversation(c, currentUserId)
+      )
+      setConversations(raw)
     } catch {
       // silently handle
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [currentUserId])
 
   useEffect(() => {
+    if (!currentUserId) return
     loadConversations()
-    // Poll every 30 seconds
-    const interval = setInterval(loadConversations, 30_000)
-    return () => clearInterval(interval)
-  }, [loadConversations])
+    // Poll every 30s in demo mode; Realtime handles updates in production
+    if (isDemoMode) {
+      const interval = setInterval(loadConversations, 30_000)
+      return () => clearInterval(interval)
+    }
+  }, [loadConversations, currentUserId])
 
   // Load messages for selected conversation
   const loadMessages = useCallback(async (convId: string) => {
     try {
       const res = await fetch(`/api/messages/${convId}`)
-      if (res.ok) {
-        const data = await res.json()
-        setMessages(data.messages ?? [])
-        // Mark as read
-        await fetch(`/api/messages/${convId}`, { method: 'PATCH' })
-        // Update local unread count
-        setConversations((prev) =>
-          prev.map((c) =>
-            c.id === convId
-              ? { ...c, unreadCounts: { ...c.unreadCounts, [currentUserId]: 0 } }
-              : c
-          )
-        )
-      }
+      if (!res.ok) return
+      const data = await res.json()
+      const raw: MessageUI[] = (data.messages ?? []).map((m: Record<string, unknown>) =>
+        isDemoMode
+          ? normalizeDemoMessage(m as unknown as Message)
+          : {
+              id: m.id as string,
+              conversation_id: m.conversation_id as string,
+              sender_id: m.sender_id as string,
+              sender_name: (m.sender_name as string) ?? 'Người dùng',
+              content: m.content as string,
+              is_read: (m.is_read as boolean) ?? false,
+              created_at: m.created_at as string,
+            }
+      )
+      setMessages(raw)
+      // Mark as read
+      await fetch(`/api/messages/${convId}`, { method: 'PATCH' })
+      setConversations((prev) =>
+        prev.map((c) => (c.id === convId ? { ...c, unread_count: 0 } : c))
+      )
     } catch {
       // silently handle
     }
-  }, [currentUserId])
+  }, [])
 
-  function handleSelectConversation(conv: Conversation) {
+  function handleSelectConversation(conv: ConversationUI) {
     setSelectedConv(conv)
     setMobileView('thread')
     if (currentUserId) loadMessages(conv.id)
@@ -138,8 +230,11 @@ export default function MessagesPage() {
         body: JSON.stringify({ content }),
       })
       if (res.ok) {
-        await loadMessages(selectedConv.id)
-        await loadConversations()
+        // In demo mode, reload messages (no realtime); production uses Realtime
+        if (isDemoMode) {
+          await loadMessages(selectedConv.id)
+          await loadConversations()
+        }
       }
     } catch {
       // silently handle
@@ -160,12 +255,15 @@ export default function MessagesPage() {
       body: JSON.stringify({ recipientId, type, subject, firstMessage }),
     })
     if (!res.ok) throw new Error('Không thể tạo cuộc trò chuyện')
-    const newConv: Conversation = await res.json()
+    const raw = await res.json()
     await loadConversations()
+    // Normalize and select the new conversation
+    const newConv: ConversationUI = isDemoMode
+      ? normalizeDemoConversation(raw as Conversation, currentUserId)
+      : normalizeSupabaseConversation(raw as Record<string, unknown>, currentUserId)
     handleSelectConversation(newConv)
   }
 
-  // Show all contacts except current user, sorted by role then name
   const contacts = allContacts
     .filter((c) => c.id !== currentUserId)
     .sort((a, b) => a.role.localeCompare(b.role) || a.name.localeCompare(b.name))
