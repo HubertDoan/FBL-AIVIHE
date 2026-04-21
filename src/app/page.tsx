@@ -3,8 +3,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import {
-  ArrowRight, ShieldCheck, FileText, TrendingUp, Users,
+  ArrowRight, ShieldCheck, FileText, Users,
   Lock, CheckCircle, AlertTriangle, Sparkles, Stethoscope,
+  Heart, Smartphone, Activity, ExternalLink,
 } from 'lucide-react'
 import { CommitmentCard } from '@/components/landing/landing-commitment-card'
 import { HowAiHelpsSection } from '@/components/landing/landing-how-ai-helps-section'
@@ -21,27 +22,17 @@ import { LandingInformationJourneyFlowDiagram } from '@/components/landing/landi
 import { LandingMediExpressHealthStationPartnershipSection } from '@/components/landing/landing-mediexpress-health-station-partnership-section'
 
 /**
- * Landing aivihe.vn — restructured 21/04/2026 theo phản hồi thầy:
- * - Đưa thông tin thiết thực + tăng tin tưởng lên TOP
- * - Push thông tin chi tiết xuống dưới
- *
- * THỨ TỰ MỚI:
- *  1. Hero (3 thông điệp + CTA chính)
- *  2. ĐỐI TÁC MEDIEXPRESS (split view — tin tưởng ngay)  ← MOVED UP
- *  3. 2 QUICK CTA: Bệnh nhân tư vấn + Bác sĩ đăng ký     ← MOVED UP
- *  4. Nỗi đau trung tâm (đứt gãy thông tin)
- *  5. Sơ đồ hành trình thông tin
- *  6. 4 giá trị cốt lõi + Lợi ích 5 nhóm
- *  7. Cách AIVIHE hoạt động + Nguyên tắc an toàn
- *  8. Hệ sinh thái + IoT + Gói dịch vụ + Kênh tiếp cận
- *  9. Đội ngũ + Form đăng ký BS + CTA cuối
+ * Landing aivihe.vn — Combined Hero Layout (21/04/2026):
+ * - LEFT half: AIVIHE positioning (hero text + CTA)
+ * - RIGHT half: MediExpress partnership (image + 4 benefits)
+ * Cùng đứng top — vừa định vị, vừa tạo niềm tin ngay
  */
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
 
-      {/* ===== 1. HERO — 3 thông điệp ===== */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50">
+      {/* ===== 1. COMBINED HERO — AIVIHE LEFT + MEDIEXPRESS RIGHT ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-blue-50">
         <div
           className="absolute inset-0 opacity-[0.035]"
           style={{
@@ -50,15 +41,16 @@ export default function LandingPage() {
           }}
         />
         <div className="absolute -top-24 -left-24 size-96 rounded-full bg-teal-400/15 blur-3xl" />
-        <div className="absolute -bottom-24 -right-24 size-96 rounded-full bg-rose-300/15 blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 size-96 rounded-full bg-blue-300/15 blur-3xl" />
 
-        <div className="relative max-w-6xl mx-auto px-4 pt-8 pb-10">
+        <div className="relative max-w-7xl mx-auto px-4 pt-6 pb-8">
+          {/* Top bar — logos + login */}
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
             <div className="flex items-center gap-3">
-              <Image src="/thong-dong-life-logo.png" alt="Thong Dong Life" width={140} height={60} className="h-12 w-auto" priority />
+              <Image src="/thong-dong-life-logo.png" alt="Thong Dong Life" width={140} height={60} className="h-10 w-auto" priority />
               <div className="hidden sm:flex items-center gap-2">
                 <span className="text-slate-300">|</span>
-                <span className="text-lg font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">AIVIHE</span>
+                <span className="text-base font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">AIVIHE</span>
               </div>
             </div>
             <Link href="/login" className="text-sm font-medium text-slate-700 hover:text-teal-700 transition-colors px-4 py-2 rounded-lg border border-slate-200 hover:border-teal-300 bg-white/70 backdrop-blur">
@@ -66,93 +58,136 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-white border border-teal-100 rounded-full px-3 py-1 mb-4 shadow-sm">
-              <Sparkles className="size-3.5 text-teal-500" />
-              <span className="text-xs font-semibold text-slate-700">Nền tảng hồ sơ sức khỏe số trung tâm</span>
+          {/* TWO-COLUMN HERO — AIVIHE + MediExpress */}
+          <div className="grid lg:grid-cols-2 gap-6 items-stretch">
+
+            {/* ═══ LEFT: AIVIHE Hero ═══ */}
+            <div className="bg-white/60 backdrop-blur border border-teal-100 rounded-2xl p-6 flex flex-col justify-center">
+              <div className="inline-flex items-center gap-2 bg-white border border-teal-200 rounded-full px-3 py-1 mb-4 shadow-sm w-fit">
+                <Sparkles className="size-3.5 text-teal-500" />
+                <span className="text-xs font-semibold text-slate-700">Nền tảng hồ sơ sức khỏe số trung tâm</span>
+              </div>
+
+              <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-3 leading-[1.15]">
+                <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">AIVIHE</span>
+                <span className="text-slate-900"> — Hồ sơ sức khỏe số</span>
+                <br />
+                <span className="text-slate-900">không đứt gãy thông tin</span>
+              </h1>
+
+              <p className="text-sm md:text-base text-slate-600 leading-relaxed mb-2">
+                Giải quyết <span className="font-semibold text-rose-600">đứt gãy thông tin chăm sóc dài hạn</span> —
+                dữ liệu sức khỏe rải rác, không ai nhìn thấy toàn bộ hành trình.
+              </p>
+              <p className="text-xs md:text-sm text-slate-500 mb-4">
+                Dành cho khách hàng, gia đình và đội ngũ chăm sóc — cùng theo dõi một hành trình sức khỏe liên tục, an toàn.
+              </p>
+              <p className="text-[11px] text-slate-400 mb-5 italic">
+                AI chỉ hỗ trợ đọc, tóm tắt và giải thích — không chẩn đoán, không kê đơn, không thay thế bác sĩ.
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                <Link href="/register" className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-teal-500/25 hover:shadow-lg transition-all text-sm">
+                  Khởi tạo hồ sơ miễn phí <ArrowRight className="size-4" />
+                </Link>
+                <a href="#hanh-trinh-thong-tin" className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:border-teal-300 text-slate-700 hover:text-teal-700 font-semibold px-5 py-2.5 rounded-lg transition-all text-sm">
+                  Xem hành trình
+                </a>
+              </div>
             </div>
 
-            <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 leading-[1.1]">
-              <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">AIVIHE</span>
-              <span className="text-slate-900"> — Hồ sơ sức khỏe số</span>
-              <br />
-              <span className="text-slate-900">không đứt gãy thông tin</span>
-            </h1>
-            <p className="max-w-2xl mx-auto text-base md:text-lg text-slate-600 leading-relaxed mb-2">
-              Giải quyết <span className="font-semibold text-rose-600">đứt gãy thông tin chăm sóc dài hạn</span> —
-              dữ liệu sức khỏe rải rác, không ai nhìn thấy toàn bộ hành trình.
-            </p>
-            <p className="max-w-xl mx-auto text-sm text-slate-500 mb-5">
-              Dành cho khách hàng, gia đình và đội ngũ chăm sóc — cùng theo dõi một hành trình sức khỏe liên tục, an toàn.
-            </p>
+            {/* ═══ RIGHT: MediExpress Partnership Card ═══ */}
+            <div className="bg-white/60 backdrop-blur border border-blue-100 rounded-2xl p-6 flex flex-col">
+              <div className="inline-flex items-center gap-2 bg-blue-600 text-white rounded-full px-3 py-1 mb-3 shadow-md w-fit">
+                <span className="text-xs font-bold uppercase tracking-widest">🤝 Đối tác chiến lược</span>
+              </div>
+              <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-1">
+                AIVIHE × <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">MediExpress Vietnam</span>
+              </h2>
+              <p className="text-xs text-slate-600 mb-3">
+                Trạm AI Medical Hub + wearable — theo dõi sức khỏe <span className="font-semibold">tự nhiên, không cảm giác đi bệnh viện</span>
+              </p>
 
-            <div className="flex items-center justify-center gap-3 flex-wrap">
-              <Link href="/register" className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg shadow-teal-500/25 hover:shadow-xl transition-all text-sm md:text-base">
-                Khởi tạo hồ sơ sức khỏe số miễn phí <ArrowRight className="size-4" />
-              </Link>
-              <a href="#hanh-trinh-thong-tin" className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:border-teal-300 text-slate-700 hover:text-teal-700 font-semibold px-6 py-3 rounded-lg transition-all text-sm md:text-base">
-                Xem hành trình
+              <div className="grid grid-cols-2 gap-3 items-start flex-1">
+                {/* Image small */}
+                <div className="relative">
+                  <div className="absolute -inset-2 bg-gradient-to-br from-blue-200/40 to-teal-200/30 rounded-xl blur-lg" />
+                  <div className="relative bg-white rounded-lg border border-slate-200 p-1.5 shadow-sm">
+                    <Image
+                      src="/medi-express-ai-medical-station.jpg"
+                      alt="AI Medical Station"
+                      width={300}
+                      height={400}
+                      className="w-full h-44 object-contain rounded"
+                    />
+                    <div className="mt-1 px-1">
+                      <a href="https://mediexpress.com.vn/" target="_blank" rel="noopener noreferrer" className="text-[10px] inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-700 font-semibold">
+                        mediexpress.com.vn <ExternalLink className="size-2.5" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4 benefits compact */}
+                <div className="space-y-1.5">
+                  <MiniBenefit icon={Heart} color="text-rose-600" title="Đo nhanh tại trung tâm" />
+                  <MiniBenefit icon={Smartphone} color="text-blue-600" title="Wearable đăng ký" />
+                  <MiniBenefit icon={Activity} color="text-teal-600" title="Tự nhiên, không cảm giác BV" />
+                  <MiniBenefit icon={ShieldCheck} color="text-emerald-600" title="Đối tác y tế chính thức" />
+                </div>
+              </div>
+
+              <a href="#thiet-bi-mediexpress" className="text-xs text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center gap-1 mt-3 self-start">
+                Xem 12 chức năng AI Medical Hub + 8 thiết bị →
               </a>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* ===== 2. ĐỐI TÁC MEDIEXPRESS (TIN TƯỞNG NGAY) — MOVED UP ===== */}
-      <LandingMediExpressHealthStationPartnershipSection />
-
-      {/* ===== 3. 2 QUICK CTA SIDE-BY-SIDE — Bệnh nhân + Bác sĩ ===== */}
-      <section className="py-10 bg-gradient-to-b from-white to-slate-50">
+      {/* ===== 2. 2 QUICK CTA SIDE-BY-SIDE — KH + BS ===== */}
+      <section className="py-8 bg-gradient-to-b from-white to-slate-50">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-6">
-            <div className="inline-block text-xs font-bold text-teal-600 tracking-widest uppercase mb-2">Bắt đầu ngay</div>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Bạn là khách hàng hay bác sĩ?</h2>
-            <p className="text-slate-600 text-sm">Chọn lối vào phù hợp — chỉ vài phút để bắt đầu</p>
+          <div className="text-center mb-5">
+            <div className="inline-block text-xs font-bold text-teal-600 tracking-widest uppercase mb-1">Bắt đầu ngay</div>
+            <h2 className="text-xl md:text-2xl font-bold text-slate-900">Bạn là khách hàng hay bác sĩ?</h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
-            {/* CTA 1: Khách hàng / bệnh nhân */}
-            <div className="group bg-gradient-to-br from-teal-50 via-white to-emerald-50 border-2 border-teal-200 rounded-2xl p-6 hover:border-teal-400 hover:shadow-xl transition-all">
-              <div className="size-12 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 text-white flex items-center justify-center mb-3 shadow-md shadow-teal-500/20">
-                <Users className="size-6" />
+            <div className="group bg-gradient-to-br from-teal-50 via-white to-emerald-50 border-2 border-teal-200 rounded-2xl p-5 hover:border-teal-400 hover:shadow-xl transition-all">
+              <div className="size-10 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 text-white flex items-center justify-center mb-2.5 shadow-md">
+                <Users className="size-5" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Tôi muốn quản lý sức khỏe</h3>
-              <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                Khởi tạo hồ sơ sức khỏe số miễn phí, lưu tài liệu khám/đơn thuốc, theo dõi chỉ số.
-                Hành chính sẽ liên hệ tư vấn kênh phù hợp (Daycare / BSGĐ / PHCN).
+              <h3 className="text-lg font-bold text-slate-900 mb-1.5">Tôi muốn quản lý sức khỏe</h3>
+              <p className="text-sm text-slate-600 leading-relaxed mb-3">
+                Khởi tạo hồ sơ SK số miễn phí, lưu tài liệu/đơn thuốc, theo dõi chỉ số. Hành chính tư vấn kênh phù hợp.
               </p>
-              <ul className="text-xs text-slate-600 space-y-1 mb-4">
-                <li className="flex items-start gap-1.5"><CheckCircle className="size-3.5 text-teal-600 shrink-0 mt-0.5" />Hồ sơ trung tâm — không đứt gãy thông tin</li>
-                <li className="flex items-start gap-1.5"><CheckCircle className="size-3.5 text-teal-600 shrink-0 mt-0.5" />AI hỗ trợ đọc tài liệu y tế</li>
-                <li className="flex items-start gap-1.5"><CheckCircle className="size-3.5 text-teal-600 shrink-0 mt-0.5" />Gia đình cùng theo dõi (khi cho phép)</li>
-              </ul>
-              <a href="#dang-ky-tu-van" className="inline-flex items-center justify-center w-full gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-4 py-2.5 rounded-lg transition group-hover:gap-3">
+              <a href="#dang-ky-tu-van" className="inline-flex items-center justify-center w-full gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-4 py-2.5 rounded-lg transition group-hover:gap-3 text-sm">
                 Đăng ký tư vấn <ArrowRight className="size-4" />
               </a>
             </div>
 
-            {/* CTA 2: Bác sĩ */}
-            <div className="group bg-gradient-to-br from-blue-50 via-white to-cyan-50 border-2 border-blue-200 rounded-2xl p-6 hover:border-blue-400 hover:shadow-xl transition-all">
-              <div className="size-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white flex items-center justify-center mb-3 shadow-md shadow-blue-500/20">
-                <Stethoscope className="size-6" />
+            <div className="group bg-gradient-to-br from-blue-50 via-white to-cyan-50 border-2 border-blue-200 rounded-2xl p-5 hover:border-blue-400 hover:shadow-xl transition-all">
+              <div className="size-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white flex items-center justify-center mb-2.5 shadow-md">
+                <Stethoscope className="size-5" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Tôi là Bác sĩ muốn tham gia</h3>
-              <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                BS đa khoa / Đông y / Y học gia đình / chuyên khoa — đăng ký tham gia mạng lưới.
-                Hành chính sẽ liên hệ xác minh, Giám đốc duyệt, ký hợp đồng minh bạch.
+              <h3 className="text-lg font-bold text-slate-900 mb-1.5">Tôi là Bác sĩ muốn tham gia</h3>
+              <p className="text-sm text-slate-600 leading-relaxed mb-3">
+                BS đa khoa / Đông y / YHGD / chuyên khoa — đăng ký mạng lưới. GĐ duyệt, ký HĐ minh bạch.
               </p>
-              <ul className="text-xs text-slate-600 space-y-1 mb-4">
-                <li className="flex items-start gap-1.5"><CheckCircle className="size-3.5 text-blue-600 shrink-0 mt-0.5" />Linh hoạt: toàn thời gian / bán thời gian</li>
-                <li className="flex items-start gap-1.5"><CheckCircle className="size-3.5 text-blue-600 shrink-0 mt-0.5" />Tài khoản BS riêng — quản lý KH gia đình</li>
-                <li className="flex items-start gap-1.5"><CheckCircle className="size-3.5 text-blue-600 shrink-0 mt-0.5" />Tư vấn từ xa hoặc đến nhà BN</li>
-              </ul>
-              <a href="#dang-ky-bac-si" className="inline-flex items-center justify-center w-full gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-lg transition group-hover:gap-3">
+              <a href="#dang-ky-bac-si" className="inline-flex items-center justify-center w-full gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-lg transition group-hover:gap-3 text-sm">
                 Đăng ký BS gia đình <ArrowRight className="size-4" />
               </a>
             </div>
           </div>
         </div>
       </section>
+
+      {/* ===== 3. CHI TIẾT MEDIEXPRESS — 12 features + 8 devices ===== */}
+      <div id="thiet-bi-mediexpress">
+        <LandingMediExpressHealthStationPartnershipSection />
+      </div>
 
       {/* ===== 4. NỖI ĐAU TRUNG TÂM ===== */}
       <LandingPainPointsCentralSection />
@@ -174,10 +209,10 @@ export default function LandingPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: '📁', title: 'Lưu trữ tập trung', desc: 'Tài liệu, đơn thuốc, kết quả khám tại một nơi — không mất, dễ tìm.' },
-              { icon: '📈', title: 'Theo dõi xu hướng', desc: 'Chỉ số theo dòng thời gian — chủ động hơn, không xem lẻ loi.' },
-              { icon: '🤝', title: 'Kết nối nhiều bên', desc: 'KH, gia đình, Daycare, BSGĐ, PHCN — cùng nhìn một hành trình.' },
-              { icon: '🩺', title: 'Chuẩn bị tốt khi đi khám', desc: 'Tóm tắt SK, danh sách thuốc, câu hỏi — giảm thiếu sót.' },
+              { icon: '📁', title: 'Lưu trữ tập trung', desc: 'Tài liệu, đơn thuốc, kết quả khám tại một nơi.' },
+              { icon: '📈', title: 'Theo dõi xu hướng', desc: 'Chỉ số theo thời gian — chủ động hơn.' },
+              { icon: '🤝', title: 'Kết nối nhiều bên', desc: 'KH, gia đình, Daycare, BSGĐ, PHCN cùng một hành trình.' },
+              { icon: '🩺', title: 'Chuẩn bị tốt khi đi khám', desc: 'Tóm tắt SK, danh sách thuốc — giảm thiếu sót.' },
             ].map((item) => (
               <div key={item.title} className="bg-gradient-to-br from-teal-50/40 to-emerald-50/20 border border-teal-100 rounded-xl p-5">
                 <div className="text-2xl mb-2" aria-hidden="true">{item.icon}</div>
@@ -189,7 +224,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== 7. LỢI ÍCH THEO 5 NHÓM ===== */}
+      {/* ===== 7. LỢI ÍCH 5 NHÓM ===== */}
       <LandingBenefitsByUserGroupTabs />
 
       {/* ===== 8. AI LÀM GÌ ===== */}
@@ -202,19 +237,19 @@ export default function LandingPage() {
             <div className="inline-block text-xs font-bold text-emerald-700 tracking-widest uppercase mb-2">Nguyên tắc an toàn</div>
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Minh bạch & do bạn kiểm soát</h2>
             <p className="text-slate-500 text-sm max-w-2xl mx-auto">
-              AIVIHE không thay thế hệ thống quản lý khám chữa bệnh của cơ sở y tế. Mọi xử lý y tế do chuyên môn đảm nhận.
+              AIVIHE không thay thế hệ thống quản lý khám chữa bệnh. Mọi xử lý y tế do chuyên môn đảm nhận.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <CommitmentCard icon={ShieldCheck} color="amber" title="AI không thay BS" desc="AI chỉ tổng hợp, giải thích. Không chẩn đoán, không kê đơn." />
-            <CommitmentCard icon={Lock} color="teal" title="Bạn kiểm soát data" desc="Thông tin thuộc quyền bạn. Chia sẻ chỉ khi cho phép rõ ràng." />
-            <CommitmentCard icon={CheckCircle} color="emerald" title="Luôn xác nhận" desc="Info AI trích xuất cần bạn kiểm tra + xác nhận trước khi lưu." />
-            <CommitmentCard icon={AlertTriangle} color="rose" title="Minh bạch vai trò" desc="AIVIHE không thay hệ thống quản lý khám chữa bệnh." />
+            <CommitmentCard icon={Lock} color="teal" title="Bạn kiểm soát data" desc="Thông tin thuộc quyền bạn. Chia sẻ chỉ khi cho phép." />
+            <CommitmentCard icon={CheckCircle} color="emerald" title="Luôn xác nhận" desc="Info AI trích xuất cần bạn xác nhận trước khi lưu." />
+            <CommitmentCard icon={AlertTriangle} color="rose" title="Minh bạch vai trò" desc="AIVIHE không thay hệ thống QLKCB của y tế." />
           </div>
         </div>
       </section>
 
-      {/* ===== 10. HỆ SINH THÁI + IOT + GÓI + KÊNH (chi tiết bổ sung) ===== */}
+      {/* ===== 10. HỆ SINH THÁI + IOT + GÓI + KÊNH ===== */}
       <EcosystemCareJourney />
       <IotHealthDevicesSection />
       <ServicePackagesSection />
@@ -223,7 +258,7 @@ export default function LandingPage() {
       {/* ===== 11. ĐỘI NGŨ & ĐỐI TÁC ===== */}
       <PartnersAndAdvisorsSection />
 
-      {/* ===== 12. FORM ĐĂNG KÝ BS GIA ĐÌNH ===== */}
+      {/* ===== 12. FORM ĐĂNG KÝ BS ===== */}
       <div id="dang-ky-bac-si">
         <LandingDoctorApplicationSection />
       </div>
@@ -253,6 +288,17 @@ export default function LandingPage() {
           <p className="text-slate-500 text-xs">&copy; 2026 AIVIHE — Thong Dong Life · Phát triển bởi Thong Dong Tech</p>
         </div>
       </footer>
+    </div>
+  )
+}
+
+function MiniBenefit({ icon: Icon, color, title }: {
+  icon: React.ComponentType<{ className?: string }>; color: string; title: string
+}) {
+  return (
+    <div className="flex items-start gap-1.5 p-1.5 rounded bg-white border border-slate-100">
+      <Icon className={`size-3.5 shrink-0 mt-0.5 ${color}`} />
+      <span className="text-[11px] font-semibold text-slate-800 leading-tight">{title}</span>
     </div>
   )
 }
