@@ -101,33 +101,33 @@ export default function LandingPage() {
 
             {/* ═══ RIGHT: MediExpress Partnership Card ═══ */}
             <div className="bg-white/60 backdrop-blur border border-blue-100 rounded-2xl p-6 flex flex-col">
-              <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-1">
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2 leading-tight">
                 AIVIHE × <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">MediExpress Vietnam</span>
               </h2>
-              <p className="text-xs text-slate-600 mb-2">
+              <p className="text-sm md:text-base text-slate-600 mb-3 leading-relaxed">
                 Trạm AI Medical Hub + wearable — theo dõi sức khỏe <span className="font-semibold">tự nhiên, không cảm giác đi bệnh viện</span>
               </p>
-              <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2 py-0.5 mb-3 w-fit">
-                <span className="text-[10px] font-bold uppercase tracking-wider">🤝 Đối tác chiến lược</span>
+              <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-3 py-1 mb-4 w-fit">
+                <span className="text-xs font-bold uppercase tracking-wider">🤝 Đối tác chiến lược</span>
               </div>
 
-              <div className="flex gap-3 items-start flex-1">
-                {/* Image — catalog thumbnail size, nhỏ minh họa */}
+              <div className="flex gap-4 items-start flex-1">
+                {/* Image — larger catalog thumbnail */}
                 <div className="relative shrink-0">
                   <Image
                     src="/medi-express-ai-medical-station.jpg"
                     alt="AI Medical Station"
-                    width={120}
-                    height={160}
-                    className="w-20 h-28 object-contain rounded border border-slate-200 bg-white p-1"
+                    width={200}
+                    height={260}
+                    className="w-36 md:w-40 h-48 md:h-56 object-contain rounded-lg border border-slate-200 bg-white p-1.5"
                   />
-                  <a href="https://mediexpress.com.vn/" target="_blank" rel="noopener noreferrer" className="text-[9px] inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-700 font-semibold mt-1 whitespace-nowrap">
-                    mediexpress.com.vn <ExternalLink className="size-2" />
+                  <a href="https://mediexpress.com.vn/" target="_blank" rel="noopener noreferrer" className="text-xs inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 font-semibold mt-1.5 whitespace-nowrap">
+                    mediexpress.com.vn <ExternalLink className="size-3" />
                   </a>
                 </div>
 
-                {/* 4 benefits compact — chiếm phần lớn */}
-                <div className="space-y-1.5 flex-1 min-w-0">
+                {/* 4 benefits — larger text */}
+                <div className="space-y-2.5 flex-1 min-w-0">
                   <MiniBenefit icon={Heart} color="text-rose-600" title="Đo nhanh tại trung tâm" />
                   <MiniBenefit icon={Smartphone} color="text-blue-600" title="Wearable đăng ký" />
                   <MiniBenefit icon={Activity} color="text-teal-600" title="Tự nhiên, không cảm giác BV" />
@@ -135,8 +135,8 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <a href="#thiet-bi-mediexpress" className="text-xs text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center gap-1 mt-3 self-start">
-                Xem 12 chức năng AI Medical Hub + 8 thiết bị →
+              <a href="#thiet-bi-mediexpress" className="text-sm md:text-base text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center gap-1.5 mt-4 self-start">
+                Xem 12 cảm biến + 8 thiết bị đi kèm →
               </a>
             </div>
 
@@ -289,9 +289,9 @@ function MiniBenefit({ icon: Icon, color, title }: {
   icon: React.ComponentType<{ className?: string }>; color: string; title: string
 }) {
   return (
-    <div className="flex items-start gap-1.5 p-1.5 rounded bg-white border border-slate-100">
-      <Icon className={`size-3.5 shrink-0 mt-0.5 ${color}`} />
-      <span className="text-[11px] font-semibold text-slate-800 leading-tight">{title}</span>
+    <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-white border border-slate-100 hover:border-blue-200 transition-colors">
+      <Icon className={`size-5 shrink-0 ${color}`} />
+      <span className="text-sm md:text-base font-semibold text-slate-800 leading-snug">{title}</span>
     </div>
   )
 }
