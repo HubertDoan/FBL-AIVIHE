@@ -62,11 +62,11 @@ export default function LandingPage() {
 
           {/* Top bar — logos + login + BS link nhỏ (không cạnh tranh với CTA chính) */}
           <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
-            <div className="flex items-center gap-3">
-              <Image src="/thong-dong-life-logo.png" alt="Thong Dong Life" width={140} height={60} className="h-10 w-auto" priority />
-              <div className="hidden sm:flex items-center gap-2">
-                <span className="text-slate-300">|</span>
-                <span className="text-base font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">AIVIHE</span>
+            <div className="flex items-center gap-4">
+              <Image src="/thong-dong-life-logo.png" alt="Thong Dong Life" width={200} height={90} className="h-14 md:h-16 w-auto" priority />
+              <div className="hidden sm:flex items-center gap-3">
+                <span className="text-slate-300 text-2xl">|</span>
+                <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent tracking-tight">AIVIHE</span>
               </div>
             </div>
             <div className="flex items-center gap-2 text-sm">
