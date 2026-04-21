@@ -1,4 +1,7 @@
-import { Watch, Activity, Heart, Wifi, AlertTriangle } from 'lucide-react'
+import {
+  Watch, Activity, Heart, Wifi, AlertTriangle,
+  HeartPulse, Thermometer, Droplets, Scale, Eye, Stethoscope, Wind, Microscope, ShieldCheck,
+} from 'lucide-react'
 
 /**
  * Section thiết bị IoT — viết lại cẩn thận theo đề xuất chuyên gia
@@ -99,6 +102,76 @@ export function IotHealthDevicesSection() {
           </div>
         </div>
 
+        {/* ═══ CẢM BIẾN THEO DÕI SỨC KHỎE — AI Medical Hub MDEC-003 ═══ */}
+        <div id="thiet-bi-mediexpress" className="mt-6 bg-white rounded-2xl border border-blue-100 p-5">
+          <div className="text-center mb-4">
+            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-3 py-1 mb-2">
+              <Wifi className="size-3.5 text-blue-600" />
+              <span className="text-xs font-bold text-blue-700 uppercase tracking-widest">Cảm biến theo dõi sức khỏe</span>
+            </div>
+            <h3 className="text-base md:text-lg font-bold text-slate-900">
+              12 cảm biến y tế tích hợp
+              <span className="block text-xs font-normal text-slate-500 mt-0.5">Trạm AI Medical Hub MDEC-003 · MediExpress Vietnam</span>
+            </h3>
+            <p className="text-xs text-slate-600 mt-1.5 max-w-xl mx-auto">
+              Mỗi cảm biến ghi nhận một chỉ số sinh hiệu — dữ liệu tự đồng bộ hồ sơ sức khỏe AIVIHE, không nhập tay.
+            </p>
+          </div>
+
+          {/* 9 cảm biến tiêu chuẩn */}
+          <div className="mb-3">
+            <p className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <span className="size-1.5 rounded-full bg-blue-500 inline-block" />
+              9 cảm biến tiêu chuẩn
+            </p>
+            <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-2">
+              <SensorChip icon={HeartPulse} label="Huyết áp" unit="mmHg" />
+              <SensorChip icon={Thermometer} label="Nhiệt độ" unit="°C" />
+              <SensorChip icon={Droplets} label="SpO₂" unit="%" />
+              <SensorChip icon={Scale} label="BMI" unit="kg/m²" />
+              <SensorChip icon={Scale} label="Body Fat" unit="%" />
+              <SensorChip icon={Eye} label="Tai mũi họng" unit="soi nội" />
+              <SensorChip icon={Activity} label="Điện tâm đồ" unit="ECG" />
+              <SensorChip icon={Stethoscope} label="Nghe tim phổi" unit="âm thanh" />
+              <SensorChip icon={Wind} label="Chức năng phổi" unit="FEV1" />
+            </div>
+          </div>
+
+          {/* 3 cảm biến tùy chọn */}
+          <div className="pt-2.5 border-t border-slate-100">
+            <p className="text-[10px] font-bold text-amber-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <span className="size-1.5 rounded-full bg-amber-400 inline-block" />
+              3 cảm biến tùy chọn
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <SensorChip icon={Microscope} label="Xét nghiệm" unit="máu" optional />
+              <SensorChip icon={Activity} label="Siêu âm" unit="2D/3D" optional />
+              <SensorChip icon={ShieldCheck} label="Đo loãng xương" unit="BMD" optional />
+            </div>
+          </div>
+
+          {/* Phần cứng cảm biến kèm theo */}
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+              <span className="size-1.5 rounded-full bg-slate-400 inline-block" />
+              Phần cứng cảm biến đi kèm (8 thiết bị)
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <SensorHardwareCard emoji="💓" name="Đầu đo huyết áp" />
+              <SensorHardwareCard emoji="🫁" name="Cảm biến hô hấp" />
+              <SensorHardwareCard emoji="🩺" name="Cảm biến tim phổi" />
+              <SensorHardwareCard emoji="👂" name="Cảm biến tai mũi họng" />
+              <SensorHardwareCard emoji="⚖️" name="Cảm biến cân BMI" />
+              <SensorHardwareCard emoji="📊" name="Cảm biến ECG 6 đạo" />
+              <SensorHardwareCard emoji="🏠" name="Homekit cảm biến" />
+              <SensorHardwareCard emoji="📱" name='Màn hình cảm ứng 24"' />
+            </div>
+            <p className="text-[11px] text-slate-500 italic text-center mt-3">
+              Toàn bộ cảm biến do MediExpress Vietnam cung cấp — đạt chuẩn y khoa, dữ liệu tự đồng bộ AIVIHE.
+            </p>
+          </div>
+        </div>
+
         {/* Important disclaimer */}
         <div className="mt-5 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
           <AlertTriangle className="size-4 text-amber-600 shrink-0 mt-0.5" />
@@ -111,6 +184,33 @@ export function IotHealthDevicesSection() {
         </div>
       </div>
     </section>
+  )
+}
+
+function SensorChip({ icon: Icon, label, unit, optional }: {
+  icon: React.ComponentType<{ className?: string }>; label: string; unit: string; optional?: boolean
+}) {
+  return (
+    <div className={`relative flex flex-col items-center gap-0.5 p-2 rounded-lg text-center ${
+      optional ? 'bg-amber-50/60 border border-amber-200' : 'bg-blue-50/60 border border-blue-200'
+    }`}>
+      {/* Pulse dot — signal from sensor */}
+      <span className={`absolute top-1 right-1 size-1.5 rounded-full ${
+        optional ? 'bg-amber-500' : 'bg-blue-500'
+      } animate-pulse`} />
+      <Icon className={`size-5 ${optional ? 'text-amber-600' : 'text-blue-600'}`} />
+      <span className={`text-[11px] font-semibold leading-tight ${optional ? 'text-amber-900' : 'text-blue-900'}`}>{label}</span>
+      <span className={`text-[9px] leading-tight ${optional ? 'text-amber-700/70' : 'text-blue-700/70'}`}>{unit}</span>
+    </div>
+  )
+}
+
+function SensorHardwareCard({ emoji, name }: { emoji: string; name: string }) {
+  return (
+    <div className="bg-white rounded-lg border border-slate-200 px-3 py-2.5 flex items-center gap-2 hover:border-blue-300 transition-all">
+      <span className="text-xl shrink-0" aria-hidden="true">{emoji}</span>
+      <span className="text-xs font-semibold text-slate-800 truncate">{name}</span>
+    </div>
   )
 }
 

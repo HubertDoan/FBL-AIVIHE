@@ -19,7 +19,6 @@ import { LandingDoctorApplicationSection } from '@/components/landing/landing-do
 import { LandingPainPointsCentralSection } from '@/components/landing/landing-pain-points-central-section'
 import { LandingBenefitsByUserGroupTabs } from '@/components/landing/landing-benefits-by-user-group-tabs'
 import { LandingInformationJourneyFlowDiagram } from '@/components/landing/landing-information-journey-flow-diagram'
-import { LandingMediExpressHealthStationPartnershipSection } from '@/components/landing/landing-mediexpress-health-station-partnership-section'
 
 /**
  * Landing aivihe.vn — Combined Hero Layout (21/04/2026):
@@ -58,15 +57,19 @@ export default function LandingPage() {
             </Link>
           </div>
 
+          {/* ═══ BIG BANNER — định vị to nhất, full width, lên top ═══ */}
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full px-6 py-3 shadow-xl shadow-teal-500/30">
+              <Sparkles className="size-5" />
+              <span className="text-base md:text-xl font-bold tracking-wide">Nền tảng hồ sơ sức khỏe số trung tâm</span>
+            </div>
+          </div>
+
           {/* TWO-COLUMN HERO — AIVIHE + MediExpress */}
           <div className="grid lg:grid-cols-2 gap-6 items-stretch">
 
             {/* ═══ LEFT: AIVIHE Hero ═══ */}
             <div className="bg-white/60 backdrop-blur border border-teal-100 rounded-2xl p-6 flex flex-col justify-center">
-              <div className="inline-flex items-center gap-2 bg-white border border-teal-200 rounded-full px-3 py-1 mb-4 shadow-sm w-fit">
-                <Sparkles className="size-3.5 text-teal-500" />
-                <span className="text-xs font-semibold text-slate-700">Nền tảng hồ sơ sức khỏe số trung tâm</span>
-              </div>
 
               <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-3 leading-[1.15]">
                 <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">AIVIHE</span>
@@ -98,15 +101,15 @@ export default function LandingPage() {
 
             {/* ═══ RIGHT: MediExpress Partnership Card ═══ */}
             <div className="bg-white/60 backdrop-blur border border-blue-100 rounded-2xl p-6 flex flex-col">
-              <div className="inline-flex items-center gap-2 bg-blue-600 text-white rounded-full px-3 py-1 mb-3 shadow-md w-fit">
-                <span className="text-xs font-bold uppercase tracking-widest">🤝 Đối tác chiến lược</span>
-              </div>
               <h2 className="text-lg md:text-xl font-bold text-slate-900 mb-1">
                 AIVIHE × <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">MediExpress Vietnam</span>
               </h2>
-              <p className="text-xs text-slate-600 mb-3">
+              <p className="text-xs text-slate-600 mb-2">
                 Trạm AI Medical Hub + wearable — theo dõi sức khỏe <span className="font-semibold">tự nhiên, không cảm giác đi bệnh viện</span>
               </p>
+              <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2 py-0.5 mb-3 w-fit">
+                <span className="text-[10px] font-bold uppercase tracking-wider">🤝 Đối tác chiến lược</span>
+              </div>
 
               <div className="flex gap-3 items-start flex-1">
                 {/* Image — catalog thumbnail size, nhỏ minh họa */}
@@ -178,11 +181,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* ===== 3. CHI TIẾT MEDIEXPRESS — 12 features + 8 devices ===== */}
-      <div id="thiet-bi-mediexpress">
-        <LandingMediExpressHealthStationPartnershipSection />
-      </div>
 
       {/* ===== 4. NỖI ĐAU TRUNG TÂM ===== */}
       <LandingPainPointsCentralSection />
