@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   ArrowRight, ShieldCheck, Lock, CheckCircle, AlertTriangle, Sparkles,
+  Package, MessageCircle, Stethoscope, LogIn,
 } from 'lucide-react'
 import { CommitmentCard } from '@/components/landing/landing-commitment-card'
 import { HowAiHelpsSection } from '@/components/landing/landing-how-ai-helps-section'
@@ -69,14 +70,47 @@ export default function LandingPage() {
                 <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent tracking-tight">AIVIHE</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <a href="#dang-ky-bac-si" className="hidden md:inline-flex items-center font-medium text-blue-700 hover:text-blue-800 transition-colors px-4 py-2 rounded-lg border border-blue-200 hover:border-blue-400 bg-white/70 backdrop-blur">
-                Bác sĩ tham gia mạng lưới?
+            {/* Top nav — 3 tier hierarchy: ghost nav → outlined secondary → filled primary */}
+            <nav className="flex items-center gap-1.5 text-sm flex-wrap justify-end">
+              {/* Ghost nav link — scan info */}
+              <a
+                href="#goi-dich-vu"
+                className="hidden sm:inline-flex items-center gap-1.5 font-medium text-slate-600 hover:text-teal-700 hover:bg-teal-50/80 transition-colors px-3.5 py-2 rounded-lg"
+              >
+                <Package className="size-4" aria-hidden="true" />
+                Gói dịch vụ
               </a>
-              <Link href="/login" className="font-medium text-slate-700 hover:text-teal-700 transition-colors px-4 py-2 rounded-lg border border-slate-200 hover:border-teal-300 bg-white/70 backdrop-blur">
+
+              {/* Outlined secondary — Tư vấn (KH funnel) */}
+              <a
+                href="#dang-ky-tu-van"
+                className="hidden sm:inline-flex items-center gap-1.5 font-semibold text-teal-700 hover:text-white hover:bg-teal-700 border border-teal-600 transition-colors px-3.5 py-2 rounded-lg bg-white/70 backdrop-blur"
+              >
+                <MessageCircle className="size-4" aria-hidden="true" />
+                Tư vấn
+              </a>
+
+              {/* Subtle divider — tách nav KH với nav BS */}
+              <span className="hidden md:inline-block h-5 w-px bg-slate-200 mx-1" aria-hidden="true" />
+
+              {/* Ghost nav — BS funnel riêng (compact) */}
+              <a
+                href="#dang-ky-bac-si"
+                className="hidden md:inline-flex items-center gap-1.5 font-medium text-blue-700 hover:text-blue-800 hover:bg-blue-50/80 transition-colors px-3.5 py-2 rounded-lg"
+              >
+                <Stethoscope className="size-4" aria-hidden="true" />
+                Bác sĩ tham gia?
+              </a>
+
+              {/* Filled primary — Đăng nhập (main action cho user đã có tài khoản) */}
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 font-semibold text-white bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-md shadow-teal-500/25 hover:shadow-lg hover:shadow-teal-500/30 transition-all px-4 py-2 rounded-lg"
+              >
+                <LogIn className="size-4" aria-hidden="true" />
                 Đăng nhập
               </Link>
-            </div>
+            </nav>
           </div>
 
           {/* Hero content — center, 1 màn ăn decision */}
@@ -88,16 +122,9 @@ export default function LandingPage() {
               <span className="text-base md:text-xl font-bold tracking-wide">Nền tảng quản lý sức khỏe cá nhân</span>
             </div>
 
-            {/* H1 — TRẢ LỜI "AIVIHE LÀ GÌ" */}
-            <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 leading-[1.15] text-slate-900">
-              <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">AIVIHE</span>
-              <span className="block mt-1">Một hồ sơ sức khỏe chung</span>
-              <span className="block">cho cả gia đình</span>
-            </h1>
-
             {/* Sub — TRẢ LỜI "GIẢI QUYẾT VẤN ĐỀ GÌ" */}
             <p className="text-base md:text-xl text-slate-600 leading-relaxed mb-6 max-w-2xl mx-auto">
-              Lưu tài liệu, đơn thuốc, chỉ số của người thân tại <span className="font-semibold text-slate-900">một nơi</span> — để không còn thất lạc, không còn kể lại từ đầu mỗi lần đi khám.
+              Lưu tài liệu, đơn thuốc, chỉ số của người thân tại <span className="font-semibold text-slate-900">một nơi</span> — để không còn thất lạc, không còn kể lại từ đầu mỗi lần đi khám. <span className="font-semibold text-slate-900">Trí tuệ nhân tạo (AI)</span> giúp cập nhật thông tin, tổng hợp kết quả và phân tích xu hướng — để mỗi cá nhân hiểu rõ tình trạng sức khỏe của mình.
             </p>
 
             {/* CTA — TRẢ LỜI "LÀM GÌ TIẾP THEO" (1 nút chính + 1 text link) */}
@@ -105,8 +132,8 @@ export default function LandingPage() {
               <Link href="/register" className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-7 py-3.5 rounded-lg shadow-lg shadow-teal-500/30 hover:shadow-xl transition-all text-base md:text-lg">
                 Khởi tạo hồ sơ miễn phí <ArrowRight className="size-5" />
               </Link>
-              <a href="#hanh-trinh-thong-tin" className="text-sm md:text-base font-semibold text-teal-700 hover:text-teal-800 underline underline-offset-4 decoration-teal-300 hover:decoration-teal-600 transition-colors">
-                Xem hành trình thông tin →
+              <a href="#hanh-trinh-thong-tin" className="inline-flex items-center gap-2 bg-white hover:bg-teal-50 text-teal-700 font-semibold px-7 py-3.5 rounded-lg border-2 border-teal-600 hover:border-teal-700 shadow-sm hover:shadow-md transition-all text-base md:text-lg">
+                Xem hành trình thông tin <ArrowRight className="size-5" />
               </a>
             </div>
 
@@ -185,7 +212,9 @@ export default function LandingPage() {
       <IotHealthDevicesSection />
 
       {/* ===== 10. GÓI DỊCH VỤ ===== */}
-      <ServicePackagesSection />
+      <div id="goi-dich-vu" className="scroll-mt-6">
+        <ServicePackagesSection />
+      </div>
 
       {/* ===== 11. KÊNH TIẾP CẬN ===== */}
       <LandingAccessChannelsSection />

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import {
   Watch, Activity, Heart, Wifi, AlertTriangle,
   HeartPulse, Thermometer, Droplets, Scale, Eye, Stethoscope, Wind, Microscope, ShieldCheck,
-  Smartphone, ExternalLink,
+  Smartphone, ExternalLink, ChevronDown,
 } from 'lucide-react'
 
 /**
@@ -172,58 +172,69 @@ export function IotHealthDevicesSection() {
             </p>
           </div>
 
-          {/* 9 cảm biến tiêu chuẩn */}
-          <div className="mb-3">
-            <p className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-blue-500 inline-block" />
-              9 cảm biến tiêu chuẩn
-            </p>
-            <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-2">
-              <SensorChip icon={HeartPulse} label="Huyết áp" unit="mmHg" />
-              <SensorChip icon={Thermometer} label="Nhiệt độ" unit="°C" />
-              <SensorChip icon={Droplets} label="SpO₂" unit="%" />
-              <SensorChip icon={Scale} label="BMI" unit="kg/m²" />
-              <SensorChip icon={Scale} label="Body Fat" unit="%" />
-              <SensorChip icon={Eye} label="Tai mũi họng" unit="soi nội" />
-              <SensorChip icon={Activity} label="Điện tâm đồ" unit="ECG" />
-              <SensorChip icon={Stethoscope} label="Nghe tim phổi" unit="âm thanh" />
-              <SensorChip icon={Wind} label="Chức năng phổi" unit="FEV1" />
-            </div>
-          </div>
+          {/* Collapsible detail — click to expand 3 inner blocks */}
+          <details className="group">
+            <summary className="list-none cursor-pointer select-none flex items-center justify-center gap-2 text-sm font-semibold text-blue-700 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg px-4 py-2.5 transition-colors">
+              <span className="group-open:hidden">Xem chi tiết 12 cảm biến + 8 thiết bị phần cứng</span>
+              <span className="hidden group-open:inline">Ẩn chi tiết thiết bị</span>
+              <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden="true" />
+            </summary>
 
-          {/* 3 cảm biến tùy chọn */}
-          <div className="pt-2.5 border-t border-slate-100">
-            <p className="text-[10px] font-bold text-amber-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-amber-400 inline-block" />
-              3 cảm biến tùy chọn
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <SensorChip icon={Microscope} label="Xét nghiệm" unit="máu" optional />
-              <SensorChip icon={Activity} label="Siêu âm" unit="2D/3D" optional />
-              <SensorChip icon={ShieldCheck} label="Đo loãng xương" unit="BMD" optional />
-            </div>
-          </div>
+            <div className="mt-4 space-y-0">
+              {/* 9 cảm biến tiêu chuẩn */}
+              <div className="mb-3">
+                <p className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <span className="size-1.5 rounded-full bg-blue-500 inline-block" />
+                  9 cảm biến tiêu chuẩn
+                </p>
+                <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-2">
+                  <SensorChip icon={HeartPulse} label="Huyết áp" unit="mmHg" />
+                  <SensorChip icon={Thermometer} label="Nhiệt độ" unit="°C" />
+                  <SensorChip icon={Droplets} label="SpO₂" unit="%" />
+                  <SensorChip icon={Scale} label="BMI" unit="kg/m²" />
+                  <SensorChip icon={Scale} label="Body Fat" unit="%" />
+                  <SensorChip icon={Eye} label="Tai mũi họng" unit="soi nội" />
+                  <SensorChip icon={Activity} label="Điện tâm đồ" unit="ECG" />
+                  <SensorChip icon={Stethoscope} label="Nghe tim phổi" unit="âm thanh" />
+                  <SensorChip icon={Wind} label="Chức năng phổi" unit="FEV1" />
+                </div>
+              </div>
 
-          {/* Phần cứng cảm biến kèm theo */}
-          <div className="mt-4 pt-4 border-t border-slate-100">
-            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-slate-400 inline-block" />
-              Phần cứng cảm biến đi kèm (8 thiết bị)
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <SensorHardwareCard emoji="💓" name="Đầu đo huyết áp" />
-              <SensorHardwareCard emoji="🫁" name="Cảm biến hô hấp" />
-              <SensorHardwareCard emoji="🩺" name="Cảm biến tim phổi" />
-              <SensorHardwareCard emoji="👂" name="Cảm biến tai mũi họng" />
-              <SensorHardwareCard emoji="⚖️" name="Cảm biến cân BMI" />
-              <SensorHardwareCard emoji="📊" name="Cảm biến ECG 6 đạo" />
-              <SensorHardwareCard emoji="🏠" name="Homekit cảm biến" />
-              <SensorHardwareCard emoji="📱" name='Màn hình cảm ứng 24"' />
+              {/* 3 cảm biến tùy chọn */}
+              <div className="pt-2.5 border-t border-slate-100">
+                <p className="text-[10px] font-bold text-amber-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <span className="size-1.5 rounded-full bg-amber-400 inline-block" />
+                  3 cảm biến tùy chọn
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  <SensorChip icon={Microscope} label="Xét nghiệm" unit="máu" optional />
+                  <SensorChip icon={Activity} label="Siêu âm" unit="2D/3D" optional />
+                  <SensorChip icon={ShieldCheck} label="Đo loãng xương" unit="BMD" optional />
+                </div>
+              </div>
+
+              {/* Phần cứng cảm biến kèm theo */}
+              <div className="mt-4 pt-4 border-t border-slate-100">
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <span className="size-1.5 rounded-full bg-slate-400 inline-block" />
+                  Phần cứng cảm biến đi kèm (8 thiết bị)
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <SensorHardwareCard emoji="💓" name="Đầu đo huyết áp" />
+                  <SensorHardwareCard emoji="🫁" name="Cảm biến hô hấp" />
+                  <SensorHardwareCard emoji="🩺" name="Cảm biến tim phổi" />
+                  <SensorHardwareCard emoji="👂" name="Cảm biến tai mũi họng" />
+                  <SensorHardwareCard emoji="⚖️" name="Cảm biến cân BMI" />
+                  <SensorHardwareCard emoji="📊" name="Cảm biến ECG 6 đạo" />
+                  <SensorHardwareCard emoji="🏠" name="Homekit cảm biến" />
+                  <SensorHardwareCard emoji="📱" name='Màn hình cảm ứng 24"' />
+                </div>
+                <p className="text-[11px] text-slate-500 italic text-center mt-3">
+                  Toàn bộ cảm biến do MediExpress Vietnam cung cấp — đạt chuẩn y khoa, dữ liệu tự đồng bộ AIVIHE.
+                </p>
+              </div>
             </div>
-            <p className="text-[11px] text-slate-500 italic text-center mt-3">
-              Toàn bộ cảm biến do MediExpress Vietnam cung cấp — đạt chuẩn y khoa, dữ liệu tự đồng bộ AIVIHE.
-            </p>
-          </div>
+          </details>
         </div>
 
         {/* Important disclaimer */}

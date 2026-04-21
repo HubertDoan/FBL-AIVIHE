@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { CheckCircle, PhoneCall, Loader2 } from 'lucide-react'
+import { CheckCircle, PhoneCall, Loader2, Home } from 'lucide-react'
 
 /**
  * Form đăng ký tư vấn trên trang chủ aivihe.vn
@@ -13,12 +14,25 @@ import { CheckCircle, PhoneCall, Loader2 } from 'lucide-react'
  * AIVIHE không có điểm tiếp xúc vật lý riêng — khách đến qua Daycare/BSGD/PHCN.
  */
 export function LandingConsultationRequestForm() {
+  const router = useRouter()
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [channel, setChannel] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [countdown, setCountdown] = useState(3)
+
+  // Auto-redirect về trang chủ sau 3s khi submitted
+  useEffect(() => {
+    if (!submitted) return
+    if (countdown <= 0) {
+      router.push('/')
+      return
+    }
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000)
+    return () => clearTimeout(timer)
+  }, [submitted, countdown, router])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -71,10 +85,17 @@ export function LandingConsultationRequestForm() {
             Cảm ơn {fullName}. Nhân viên hành chính sẽ liên hệ số {phone} trong
             vòng 24 giờ để tư vấn và hướng dẫn bạn tiếp cận dịch vụ phù hợp.
           </p>
-          <p className="text-sm text-green-700">
+          <p className="text-sm text-green-700 mb-5">
             AIVIHE phục vụ qua 3 kênh: Thong Dong Daycare, Phòng khám Bác sĩ gia đình,
             Phòng khám Phục hồi chức năng.
           </p>
+          <Button
+            onClick={() => router.push('/')}
+            className="bg-green-600 hover:bg-green-700 text-white gap-2"
+          >
+            <Home className="size-4" />
+            Về trang chủ ({countdown}s)
+          </Button>
         </CardContent>
       </Card>
     )
