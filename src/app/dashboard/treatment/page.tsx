@@ -1,39 +1,57 @@
 'use client'
 
-// Treatment list page — shows active and completed treatment episodes
-// Members only: each completed exam creates a treatment episode to monitor
+// Treatment list page — redesigned with full treatment overview
+// Sections:
+//   1. Active treatment summary (diagnosis, doctor, start date, progress)
+//   2. Active treatment card list (existing)
+//   3. Completed treatments
+//   4. Related documents grouped by type
+//   5. Supplementary upload (AI extract → user confirm)
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { HeartPulse, Calendar, Pill, ChevronRight, ClipboardList } from 'lucide-react'
+import {
+  HeartPulse,
+  Calendar,
+  Pill,
+  ChevronRight,
+  ClipboardList,
+  FolderOpen,
+} from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
 import type { TreatmentEpisode } from '@/lib/demo/demo-treatment-data'
+import { TreatmentActiveSummaryCard } from '@/components/treatment/treatment-active-summary-card'
+import { TreatmentMedicationsCompactList } from '@/components/treatment/treatment-medications-compact-list'
+import { TreatmentRelatedDocumentsGroupedList } from '@/components/treatment/treatment-related-documents-grouped-list'
+import { TreatmentSupplementaryUploadSection } from '@/components/treatment/treatment-supplementary-upload-section'
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function daysRemaining(endDate: string): number {
-  const end = new Date(endDate)
-  const now = new Date()
-  const diff = Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  const diff = Math.ceil((new Date(endDate).getTime() - Date.now()) / 86400000)
   return Math.max(0, diff)
 }
 
 function progressPercent(startDate: string, durationDays: number): number {
-  const start = new Date(startDate)
-  const now = new Date()
-  const elapsed = Math.max(0, (now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+  const elapsed = Math.max(0, (Date.now() - new Date(startDate).getTime()) / 86400000)
   return Math.min(100, Math.round((elapsed / durationDays) * 100))
 }
 
 function statusBadge(status: TreatmentEpisode['status']) {
   const map = {
-    active: { label: 'Đang điều trị', cls: 'bg-blue-100 text-blue-800' },
-    completed: { label: 'Đã hoàn thành', cls: 'bg-green-100 text-green-800' },
-    follow_up_needed: { label: 'Cần tái khám', cls: 'bg-amber-100 text-amber-800' },
+    active:            { label: 'Đang điều trị',  cls: 'bg-teal-100 text-teal-800' },
+    completed:         { label: 'Đã hoàn thành',  cls: 'bg-green-100 text-green-800' },
+    follow_up_needed:  { label: 'Cần tái khám',   cls: 'bg-amber-100 text-amber-800' },
   }
   const s = map[status]
-  return <span className={`px-2 py-0.5 rounded-full text-sm font-medium ${s.cls}`}>{s.label}</span>
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${s.cls}`}>{s.label}</span>
+  )
 }
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 function ActiveTreatmentCard({ t, onClick }: { t: TreatmentEpisode; onClick: () => void }) {
   const remaining = daysRemaining(t.end_date)
@@ -49,17 +67,13 @@ function ActiveTreatmentCard({ t, onClick }: { t: TreatmentEpisode; onClick: () 
           {statusBadge(t.status)}
         </div>
 
-        {/* Progress bar */}
         <div className="space-y-1">
-          <div className="flex justify-between text-sm text-muted-foreground">
+          <div className="flex justify-between text-xs text-muted-foreground">
             <span>Ngày {t.treatment_duration_days - remaining}/{t.treatment_duration_days}</span>
             <span>Còn {remaining} ngày</span>
           </div>
           <div className="w-full bg-muted rounded-full h-2">
-            <div
-              className="bg-primary rounded-full h-2 transition-all"
-              style={{ width: `${pct}%` }}
-            />
+            <div className="bg-teal-500 rounded-full h-2 transition-all" style={{ width: `${pct}%` }} />
           </div>
         </div>
 
@@ -77,14 +91,14 @@ function ActiveTreatmentCard({ t, onClick }: { t: TreatmentEpisode; onClick: () 
         <div className="flex gap-2 pt-1">
           <Button
             variant="outline"
-            className="flex-1 min-h-[48px] text-base"
+            className="flex-1 min-h-[44px] text-sm"
             onClick={(e) => { e.stopPropagation(); onClick() }}
           >
             <ClipboardList className="size-4 mr-1" /> Ghi nhật ký
           </Button>
           <Button
             variant="outline"
-            className="flex-1 min-h-[48px] text-base"
+            className="flex-1 min-h-[44px] text-sm"
             onClick={(e) => { e.stopPropagation(); onClick() }}
           >
             Nhắn BS
@@ -103,8 +117,8 @@ function CompletedTreatmentRow({ t, onClick }: { t: TreatmentEpisode; onClick: (
       onClick={onClick}
     >
       <div className="space-y-0.5">
-        <p className="text-base font-medium">{t.diagnosis.split('.')[0]}</p>
-        <p className="text-sm text-muted-foreground">{t.exam_date} · BS. {t.exam_doctor_name}</p>
+        <p className="text-sm font-medium">{t.diagnosis.split('.')[0]}</p>
+        <p className="text-xs text-muted-foreground">{t.exam_date} · BS. {t.exam_doctor_name}</p>
       </div>
       <div className="flex items-center gap-2">
         {statusBadge(t.status)}
@@ -114,65 +128,106 @@ function CompletedTreatmentRow({ t, onClick }: { t: TreatmentEpisode; onClick: (
   )
 }
 
+// ─── Section wrapper ──────────────────────────────────────────────────────────
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="space-y-3">
+      <h2 className="text-base font-semibold text-gray-800">{title}</h2>
+      {children}
+    </section>
+  )
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default function TreatmentListPage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const [treatments, setTreatments] = useState<TreatmentEpisode[]>([])
   const [loading, setLoading] = useState(true)
+  const [docsKey, setDocsKey] = useState(0) // bump to re-fetch documents after upload
 
-  useEffect(() => {
-    if (authLoading || !user) return
+  const fetchTreatments = useCallback(() => {
+    if (!user) return
     fetch('/api/treatment')
       .then((r) => r.json())
       .then((data) => setTreatments(data.treatments ?? []))
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [authLoading, user])
+  }, [user])
+
+  useEffect(() => {
+    if (authLoading || !user) return
+    fetchTreatments()
+  }, [authLoading, user, fetchTreatments])
 
   if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center space-y-3">
-          <div className="size-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-lg text-muted-foreground">Đang tải...</p>
+          <div className="size-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-base text-muted-foreground">Đang tải...</p>
         </div>
       </div>
     )
   }
 
+  if (!user) return null
+
   const active = treatments.filter((t) => t.status === 'active' || t.status === 'follow_up_needed')
   const completed = treatments.filter((t) => t.status === 'completed')
+  // Aggregate all active medications
+  const activeMeds = active.flatMap((t) => t.prescription)
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6 pb-8">
+      {/* Page header */}
       <div className="flex items-center gap-3">
-        <HeartPulse className="size-6 text-primary" />
-        <h1 className="text-2xl font-bold">Đang điều trị</h1>
+        <HeartPulse className="size-6 text-teal-600" />
+        <h1 className="text-xl font-bold">Đang điều trị</h1>
       </div>
 
-      {/* Active treatments */}
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Đợt điều trị hiện tại</h2>
-        {active.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground border border-dashed rounded-lg">
-            <HeartPulse className="size-10 mx-auto mb-2 opacity-30" />
-            <p className="text-base">Không có đợt điều trị nào đang diễn ra</p>
+      {/* Section 1: Active treatment summary cards (highlighted) */}
+      {active.length > 0 ? (
+        <Section title="Tóm tắt đợt điều trị hiện tại">
+          <div className="space-y-3">
+            {active.map((t) => (
+              <TreatmentActiveSummaryCard key={t.id} treatment={t} />
+            ))}
           </div>
-        ) : (
-          active.map((t) => (
+        </Section>
+      ) : (
+        <div className="text-center py-10 border border-dashed rounded-xl text-muted-foreground">
+          <HeartPulse className="size-12 mx-auto mb-3 opacity-20" />
+          <p className="text-base font-medium">Không có đợt điều trị nào đang diễn ra</p>
+          <p className="text-sm mt-1">Upload tài liệu y tế bên dưới để bắt đầu theo dõi sức khỏe</p>
+        </div>
+      )}
+
+      {/* Section 2: Active treatment detail cards (actions: log, message) */}
+      {active.length > 0 && (
+        <Section title="Đợt điều trị hiện tại">
+          {active.map((t) => (
             <ActiveTreatmentCard
               key={t.id}
               t={t}
               onClick={() => router.push(`/dashboard/treatment/${t.id}`)}
             />
-          ))
-        )}
-      </section>
+          ))}
+        </Section>
+      )}
 
-      {/* Completed treatments */}
+      {/* Section 3: Medications compact list */}
+      {activeMeds.length > 0 && (
+        <Section title="Thuốc đang dùng">
+          <TreatmentMedicationsCompactList medications={activeMeds} />
+        </Section>
+      )}
+
+      {/* Section 4: Completed treatments */}
       {completed.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">Đợt điều trị đã hoàn thành</h2>
+        <Section title="Đợt điều trị đã hoàn thành">
           <div className="space-y-2">
             {completed.map((t) => (
               <CompletedTreatmentRow
@@ -182,7 +237,43 @@ export default function TreatmentListPage() {
               />
             ))}
           </div>
-        </section>
+        </Section>
+      )}
+
+      {/* Section 5: Related documents grouped by type */}
+      <Section title="Tài liệu khám / xét nghiệm liên quan">
+        <TreatmentRelatedDocumentsGroupedList
+          key={docsKey}
+          citizenId={user.citizenId}
+        />
+      </Section>
+
+      {/* Section 6: Supplementary upload */}
+      <Section title="">
+        <TreatmentSupplementaryUploadSection
+          citizenId={user.citizenId}
+          fullName={user.fullName}
+          onUploadComplete={() => setDocsKey((k) => k + 1)}
+        />
+      </Section>
+
+      {/* Empty state CTA — shown only when no treatments and no section above was shown */}
+      {treatments.length === 0 && (
+        <Card className="border-dashed border-teal-200 bg-teal-50/50">
+          <CardContent className="p-6 text-center space-y-3">
+            <FolderOpen className="size-10 mx-auto text-teal-400" />
+            <p className="text-sm text-gray-600">
+              Chưa có hồ sơ điều trị. Upload tài liệu y tế để AI trích xuất và tạo hồ sơ.
+            </p>
+            <Button
+              size="sm"
+              className="bg-teal-600 hover:bg-teal-700 text-white"
+              onClick={() => router.push('/dashboard/upload')}
+            >
+              Đi đến trang Upload
+            </Button>
+          </CardContent>
+        </Card>
       )}
     </div>
   )
