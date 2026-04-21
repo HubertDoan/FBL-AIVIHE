@@ -22,7 +22,7 @@ export function LandingDoctorApplicationSection() {
   return (
     <section
       id="dang-ky-bac-si"
-      className="py-10 bg-gradient-to-br from-teal-50 via-emerald-50/60 to-white scroll-mt-6"
+      className="py-6 bg-gradient-to-br from-teal-50 via-emerald-50/60 to-white scroll-mt-6"
     >
       <div className="max-w-5xl mx-auto px-4">
         {/* Header */}

@@ -23,7 +23,7 @@ const STEPS = [
 
 export function HowAiHelpsSection() {
   return (
-    <section id="cach-aivihe-hoat-dong" className="max-w-5xl mx-auto px-4 py-10 scroll-mt-6">
+    <section id="cach-aivihe-hoat-dong" className="max-w-5xl mx-auto px-4 py-6 scroll-mt-6">
       <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-2">
         AIVIHE hoạt động như thế nào?
       </h2>

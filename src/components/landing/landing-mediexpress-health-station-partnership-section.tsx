@@ -17,7 +17,7 @@ import {
  */
 export function LandingMediExpressHealthStationPartnershipSection() {
   return (
-    <section className="py-10 bg-gradient-to-br from-slate-50 via-white to-blue-50 border-y border-slate-100">
+    <section className="py-6 bg-gradient-to-br from-slate-50 via-white to-blue-50 border-y border-slate-100">
       <div className="max-w-6xl mx-auto px-4">
         {/* ═══ HEADER BANNER ═══ */}
         <div className="text-center mb-6">

@@ -9,7 +9,7 @@ import { Home, Stethoscope, Activity, ArrowRight } from 'lucide-react'
  */
 export function LandingAccessChannelsSection() {
   return (
-    <section className="py-12 bg-gradient-to-b from-white to-slate-50/50">
+    <section className="py-6 bg-gradient-to-b from-white to-slate-50/50">
       <div className="max-w-5xl mx-auto px-4">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">

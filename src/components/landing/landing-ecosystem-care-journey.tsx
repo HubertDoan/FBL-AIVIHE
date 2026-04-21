@@ -8,7 +8,7 @@ import { ArrowRight, UserPlus, FileText, Brain, CheckCircle, Users } from 'lucid
  */
 export function EcosystemCareJourney() {
   return (
-    <section className="py-12 bg-gradient-to-b from-teal-50/30 to-white">
+    <section className="py-6 bg-gradient-to-b from-teal-50/30 to-white">
       <div className="max-w-6xl mx-auto px-4">
 
         {/* Header */}

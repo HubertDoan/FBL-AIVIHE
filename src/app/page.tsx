@@ -150,7 +150,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== 2. 2 QUICK CTA SIDE-BY-SIDE — KH + BS ===== */}
-      <section className="py-8 bg-gradient-to-b from-white to-slate-50">
+      <section className="py-5 bg-gradient-to-b from-white to-slate-50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-5">
             <div className="inline-block text-xs font-bold text-teal-600 tracking-widest uppercase mb-1">Bắt đầu ngay</div>
@@ -193,7 +193,7 @@ export default function LandingPage() {
       </div>
 
       {/* ===== 6. GIÁ TRỊ CỐT LÕI ===== */}
-      <section className="py-10 bg-white">
+      <section className="py-6 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-8">
             <div className="inline-block text-xs font-bold text-teal-600 tracking-widest uppercase mb-2">Giải pháp</div>
@@ -226,7 +226,7 @@ export default function LandingPage() {
       <HowAiHelpsSection />
 
       {/* ===== 9. NGUYÊN TẮC AN TOÀN ===== */}
-      <section className="py-10 bg-white">
+      <section className="py-6 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-6">
             <div className="inline-block text-xs font-bold text-emerald-700 tracking-widest uppercase mb-2">Nguyên tắc an toàn</div>
@@ -259,7 +259,7 @@ export default function LandingPage() {
       </div>
 
       {/* ===== 13. CTA CUỐI + FORM TƯ VẤN KH ===== */}
-      <section id="dang-ky-tu-van" className="py-12 bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 text-white scroll-mt-6">
+      <section id="dang-ky-tu-van" className="py-8 bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 text-white scroll-mt-6">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-6">
             <div className="inline-block text-xs font-bold text-teal-300 tracking-widest uppercase mb-2">Đăng ký tư vấn</div>

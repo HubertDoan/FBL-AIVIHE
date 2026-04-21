@@ -28,7 +28,7 @@ export function LandingPainPointsCentralSection() {
   ]
 
   return (
-    <section className="relative py-12 bg-gradient-to-br from-rose-50 via-amber-50/60 to-orange-50/40 overflow-hidden">
+    <section className="relative py-6 bg-gradient-to-br from-rose-50 via-amber-50/60 to-orange-50/40 overflow-hidden">
       {/* Decorative background */}
       <div
         className="absolute inset-0 opacity-[0.03]"

@@ -6,7 +6,7 @@ import { Heart } from 'lucide-react'
  */
 export function HealthInspirationQuote() {
   return (
-    <section className="py-12 bg-gradient-to-b from-white to-amber-50/30">
+    <section className="py-6 bg-gradient-to-b from-white to-amber-50/30">
       <div className="max-w-3xl mx-auto px-4 text-center">
         <div className="inline-flex items-center justify-center size-16 rounded-full bg-amber-100 text-amber-600 mb-6">
           <Heart className="size-8" />

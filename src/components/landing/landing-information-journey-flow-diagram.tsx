@@ -63,7 +63,7 @@ export function LandingInformationJourneyFlowDiagram() {
   }
 
   return (
-    <section className="py-12 bg-gradient-to-b from-slate-50 to-white">
+    <section className="py-6 bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-5xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-10">
           <div className="inline-block text-xs font-bold text-teal-600 tracking-widest uppercase mb-2">

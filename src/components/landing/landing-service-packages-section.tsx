@@ -10,7 +10,7 @@ import { buttonVariants } from '@/components/ui/button'
  */
 export function ServicePackagesSection() {
   return (
-    <section className="py-12 bg-gradient-to-b from-white to-teal-50/30">
+    <section className="py-6 bg-gradient-to-b from-white to-teal-50/30">
       <div className="max-w-5xl mx-auto px-4">
         <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-2">
           Gói dịch vụ

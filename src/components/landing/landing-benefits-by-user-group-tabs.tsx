@@ -139,7 +139,7 @@ export function LandingBenefitsByUserGroupTabs() {
   const activeGroup = USER_GROUPS.find((g) => g.id === activeTab) ?? USER_GROUPS[0]
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-6 bg-white">
       <div className="max-w-5xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-8">
           <div className="inline-block text-xs font-bold text-emerald-700 tracking-widest uppercase mb-2">
