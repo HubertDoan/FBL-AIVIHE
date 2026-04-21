@@ -108,28 +108,23 @@ export default function LandingPage() {
                 Trạm AI Medical Hub + wearable — theo dõi sức khỏe <span className="font-semibold">tự nhiên, không cảm giác đi bệnh viện</span>
               </p>
 
-              <div className="grid grid-cols-2 gap-3 items-start flex-1">
-                {/* Image small */}
-                <div className="relative">
-                  <div className="absolute -inset-2 bg-gradient-to-br from-blue-200/40 to-teal-200/30 rounded-xl blur-lg" />
-                  <div className="relative bg-white rounded-lg border border-slate-200 p-1.5 shadow-sm">
-                    <Image
-                      src="/medi-express-ai-medical-station.jpg"
-                      alt="AI Medical Station"
-                      width={300}
-                      height={400}
-                      className="w-full h-44 object-contain rounded"
-                    />
-                    <div className="mt-1 px-1">
-                      <a href="https://mediexpress.com.vn/" target="_blank" rel="noopener noreferrer" className="text-[10px] inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-700 font-semibold">
-                        mediexpress.com.vn <ExternalLink className="size-2.5" />
-                      </a>
-                    </div>
-                  </div>
+              <div className="flex gap-3 items-start flex-1">
+                {/* Image — catalog thumbnail size, nhỏ minh họa */}
+                <div className="relative shrink-0">
+                  <Image
+                    src="/medi-express-ai-medical-station.jpg"
+                    alt="AI Medical Station"
+                    width={120}
+                    height={160}
+                    className="w-20 h-28 object-contain rounded border border-slate-200 bg-white p-1"
+                  />
+                  <a href="https://mediexpress.com.vn/" target="_blank" rel="noopener noreferrer" className="text-[9px] inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-700 font-semibold mt-1 whitespace-nowrap">
+                    mediexpress.com.vn <ExternalLink className="size-2" />
+                  </a>
                 </div>
 
-                {/* 4 benefits compact */}
-                <div className="space-y-1.5">
+                {/* 4 benefits compact — chiếm phần lớn */}
+                <div className="space-y-1.5 flex-1 min-w-0">
                   <MiniBenefit icon={Heart} color="text-rose-600" title="Đo nhanh tại trung tâm" />
                   <MiniBenefit icon={Smartphone} color="text-blue-600" title="Wearable đăng ký" />
                   <MiniBenefit icon={Activity} color="text-teal-600" title="Tự nhiên, không cảm giác BV" />
