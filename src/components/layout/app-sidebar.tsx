@@ -33,6 +33,8 @@ import {
   Bell,
   BookOpen,
   Sparkles,
+  FolderHeart,
+  Bookmark,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PERMISSIONS, type Permission } from '@/lib/permissions/permission-definitions'
@@ -99,6 +101,13 @@ const NAV_SECTIONS: NavSection[] = [
       { href: '/dashboard/health-record?tab=clinic', label: 'Bệnh đã khám & điều trị', icon: Hospital, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC },
       { href: '/dashboard/visit-prep', label: 'Đi khám bệnh', icon: CalendarCheck, requiredPermission: PERMISSIONS.MODULE_VISIT_PREP },
       { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TREATMENT },
+    ],
+  },
+  {
+    title: 'TÀI LIỆU',
+    items: [
+      { href: '/dashboard/documents/health', label: 'Tài liệu sức khỏe', icon: FolderHeart, requiredPermission: PERMISSIONS.MODULE_HEALTH_DOCUMENTS },
+      { href: '/dashboard/documents/personal', label: 'Tài liệu cá nhân', icon: Bookmark, requiredPermission: PERMISSIONS.MODULE_PERSONAL_DOCUMENTS },
     ],
   },
   {

@@ -91,6 +91,8 @@ export const PERMISSIONS = {
   MODULE_MEDICAL_RECORD: 'module.medical_record',
   MODULE_CONSULTATION: 'module.consultation',
   MODULE_AI_SUMMARY: 'module.ai_summary',
+  MODULE_HEALTH_DOCUMENTS: 'module.health_documents',     // Tài liệu sức khỏe (đã upload)
+  MODULE_PERSONAL_DOCUMENTS: 'module.personal_documents', // Tài liệu cá nhân (KH lưu)
 } as const
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
@@ -288,6 +290,8 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   'module.medical_record': 'Hồ sơ y tế (11 mục)',
   'module.consultation': 'Hỏi Bác sĩ',
   'module.ai_summary': 'AI Phân tích',
+  'module.health_documents': 'Tài liệu sức khỏe',
+  'module.personal_documents': 'Tài liệu cá nhân',
 }
 
 export const ALL_PERMISSIONS: Permission[] = Object.values(PERMISSIONS)

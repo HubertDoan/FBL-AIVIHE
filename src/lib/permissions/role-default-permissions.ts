@@ -41,6 +41,8 @@ const CITIZEN_MODULES: Permission[] = [
   PERMISSIONS.MODULE_MEDICAL_RECORD, // hồ sơ 11 section — ai cũng xem được của mình
   PERMISSIONS.MODULE_CONSULTATION,    // Hỏi BS — luôn mở cho citizen
   PERMISSIONS.MODULE_AI_SUMMARY,      // AI phân tích — luôn mở cho citizen
+  PERMISSIONS.MODULE_HEALTH_DOCUMENTS, // Tài liệu sức khỏe đã upload
+  PERMISSIONS.MODULE_PERSONAL_DOCUMENTS, // Tài liệu cá nhân KH tự lưu
   // Modules hỗ trợ
   PERMISSIONS.MODULE_MEMBERSHIP,
   PERMISSIONS.MODULE_FAMILY,
