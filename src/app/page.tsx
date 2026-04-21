@@ -7,7 +7,6 @@ import {
   Brain, FileText, TrendingUp, Stethoscope,
   AlertTriangle, Lock, CheckCircle, Sparkles,
 } from 'lucide-react'
-import { buttonVariants } from '@/components/ui/button'
 import { ProblemCard } from '@/components/landing/landing-problem-card'
 import { SolutionCard } from '@/components/landing/landing-solution-card'
 import { AudienceCard } from '@/components/landing/landing-audience-card'
@@ -21,25 +20,29 @@ import { ServicePackagesSection } from '@/components/landing/landing-service-pac
 import { LandingConsultationRequestForm } from '@/components/landing/landing-consultation-request-form'
 import { LandingAccessChannelsSection } from '@/components/landing/landing-access-channels-section'
 
-// Tech-modern design: compact spacing, gradient accents, glass-morphism,
-// tighter sections, medium font (text-base default, elder-friendly ≥16px)
+// Healthcare-inspired palette (BV Thu Cúc / Hồng Ngọc / ĐH Y tế Công Cộng):
+// - Primary: teal-600 (#0d9488) — trust + health
+// - Accent warm: rose-400 / amber — human warmth
+// - Dark: teal-900 (#134e4a) — professional authority
+// - BG: cream slate-50 / emerald-50 — clean, healing
+// Compact spacing, gradient accents, elder-friendly (text-base 16px min)
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
 
-      {/* ===== HERO — Tech mesh gradient + grid pattern overlay ===== */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50">
-        {/* Grid pattern background */}
+      {/* ===== HERO — soft healthcare gradient ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50">
+        {/* Grid pattern background — subtle */}
         <div
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-[0.035]"
           style={{
-            backgroundImage: `linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(to right, #0f766e 1px, transparent 1px), linear-gradient(to bottom, #0f766e 1px, transparent 1px)`,
             backgroundSize: '48px 48px',
           }}
         />
-        {/* Colored blobs */}
-        <div className="absolute -top-24 -left-24 size-96 rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="absolute -bottom-24 -right-24 size-96 rounded-full bg-cyan-500/10 blur-3xl" />
+        {/* Soft colored blobs — teal + rose (health + warmth) */}
+        <div className="absolute -top-24 -left-24 size-96 rounded-full bg-teal-400/15 blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 size-96 rounded-full bg-rose-300/15 blur-3xl" />
 
         <div className="relative max-w-6xl mx-auto px-4 pt-8 pb-10">
           {/* Top bar — logos + login */}
@@ -55,27 +58,27 @@ export default function LandingPage() {
               />
               <div className="hidden sm:flex items-center gap-2">
                 <span className="text-slate-300">|</span>
-                <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">AIVIHE</span>
+                <span className="text-lg font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">AIVIHE</span>
               </div>
             </div>
             <Link
               href="/login"
-              className="text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors px-4 py-2 rounded-lg border border-slate-200 hover:border-blue-300 bg-white/60 backdrop-blur"
+              className="text-sm font-medium text-slate-700 hover:text-teal-700 transition-colors px-4 py-2 rounded-lg border border-slate-200 hover:border-teal-300 bg-white/70 backdrop-blur"
             >
               Đăng nhập
             </Link>
           </div>
 
           <div className="text-center max-w-4xl mx-auto">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white border border-blue-100 rounded-full px-3 py-1 mb-5 shadow-sm">
-              <Sparkles className="size-3.5 text-cyan-500" />
+            {/* Badge — teal healthcare */}
+            <div className="inline-flex items-center gap-2 bg-white border border-teal-100 rounded-full px-3 py-1 mb-5 shadow-sm">
+              <Sparkles className="size-3.5 text-teal-500" />
               <span className="text-xs font-semibold text-slate-700">Nền tảng quản lý thông tin sức khỏe cá nhân</span>
             </div>
 
-            {/* H1 — gradient text */}
+            {/* H1 — teal/emerald gradient */}
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 leading-[1.1]">
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-600 bg-clip-text text-transparent">
                 AIVIHE
               </span>
               <span className="text-slate-900"> — Không gian dữ liệu</span>
@@ -90,24 +93,24 @@ export default function LandingPage() {
               AI chỉ hỗ trợ đọc, tóm tắt và giải thích — không chẩn đoán, không kê đơn, không thay thế bác sĩ.
             </p>
 
-            {/* CTAs */}
+            {/* CTAs — teal gradient primary */}
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <a
                 href="#dang-ky-tu-van"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all text-sm md:text-base"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30 transition-all text-sm md:text-base"
               >
                 Đăng ký tư vấn <ArrowRight className="size-4" />
               </a>
               <a
                 href="#cach-aivihe-hoat-dong"
-                className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-600 font-semibold px-6 py-3 rounded-lg transition-all text-sm md:text-base"
+                className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:border-teal-300 text-slate-700 hover:text-teal-700 font-semibold px-6 py-3 rounded-lg transition-all text-sm md:text-base"
               >
                 Cách AIVIHE hoạt động
               </a>
             </div>
           </div>
 
-          {/* Stats row */}
+          {/* Stats row — teal accents */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 max-w-4xl mx-auto">
             {[
               { k: '11', v: 'tabs hồ sơ' },
@@ -115,8 +118,8 @@ export default function LandingPage() {
               { k: '5', v: 'điểm chạm chăm sóc' },
               { k: '100%', v: 'người dùng kiểm soát' },
             ].map((s) => (
-              <div key={s.v} className="bg-white/70 backdrop-blur border border-slate-200 rounded-xl px-4 py-3 text-center">
-                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">{s.k}</div>
+              <div key={s.v} className="bg-white/80 backdrop-blur border border-teal-100 rounded-xl px-4 py-3 text-center">
+                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">{s.k}</div>
                 <div className="text-xs text-slate-500 mt-0.5">{s.v}</div>
               </div>
             ))}
@@ -124,28 +127,36 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== VẤN ĐỀ — dark tech section ===== */}
-      <section className="bg-slate-900 text-white py-10">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-6">
-            <div className="inline-block text-xs font-bold text-cyan-400 tracking-widest uppercase mb-2">Vấn đề hiện tại</div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-2">Vì sao cần không gian thông tin sức khỏe cá nhân?</h2>
-            <p className="text-slate-400 text-sm">Những điểm đứt gãy phổ biến trong chăm sóc dài hạn</p>
+      {/* ===== VẤN ĐỀ — LIGHT healthcare theme (replaced dark slate-900) ===== */}
+      <section className="relative py-10 bg-gradient-to-br from-rose-50/60 via-amber-50/40 to-white overflow-hidden">
+        {/* Decorative dots pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `radial-gradient(#0f766e 1px, transparent 1px)`,
+            backgroundSize: '24px 24px',
+          }}
+        />
+        <div className="relative max-w-6xl mx-auto px-4">
+          <div className="text-center max-w-2xl mx-auto mb-7">
+            <div className="inline-block text-xs font-bold text-rose-600 tracking-widest uppercase mb-2">Vấn đề hiện tại</div>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Vì sao cần không gian thông tin sức khỏe cá nhân?</h2>
+            <p className="text-slate-600 text-sm">Những điểm đứt gãy phổ biến trong chăm sóc dài hạn</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <ProblemCard icon={AlertTriangle} color="red" title="Dữ liệu rải rác" desc="Kết quả khám, đơn thuốc, xét nghiệm nằm ở nhiều nơi — mất thời gian tổng hợp khi cần." />
+            <ProblemCard icon={AlertTriangle} color="rose" title="Dữ liệu rải rác" desc="Kết quả khám, đơn thuốc, xét nghiệm nằm ở nhiều nơi — mất thời gian tổng hợp khi cần." />
             <ProblemCard icon={Users} color="amber" title="Khó đồng hành từ xa" desc="Con cái ở xa không nắm được thuốc, chỉ số, dấu hiệu bất thường của cha mẹ." />
-            <ProblemCard icon={Activity} color="orange" title="Thông tin đứt gãy" desc="Mỗi lần khám, buổi trị liệu, ngày Daycare đều tạo info mới. Không kết nối — chăm sóc thiếu liên tục." />
-            <ProblemCard icon={TrendingUp} color="blue" title="Không thấy xu hướng" desc="Chỉ số riêng lẻ chưa đủ. Theo dõi theo thời gian mới thấy thay đổi để chủ động hơn." />
+            <ProblemCard icon={Activity} color="teal" title="Thông tin đứt gãy" desc="Mỗi lần khám, buổi trị liệu, ngày Daycare đều tạo info mới. Không kết nối — chăm sóc thiếu liên tục." />
+            <ProblemCard icon={TrendingUp} color="emerald" title="Không thấy xu hướng" desc="Chỉ số riêng lẻ chưa đủ. Theo dõi theo thời gian mới thấy thay đổi để chủ động hơn." />
           </div>
         </div>
       </section>
 
-      {/* ===== GIẢI PHÁP ===== */}
+      {/* ===== GIẢI PHÁP — white clean ===== */}
       <section className="py-10 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-8">
-            <div className="inline-block text-xs font-bold text-blue-600 tracking-widest uppercase mb-2">Giải pháp</div>
+            <div className="inline-block text-xs font-bold text-teal-600 tracking-widest uppercase mb-2">Giải pháp</div>
             <h2 className="text-2xl md:text-3xl font-bold mb-2 text-slate-900">Không chỉ là AI — AIVIHE là nền tảng kết nối</h2>
             <p className="text-slate-600 text-sm md:text-base leading-relaxed">
               Tạo một không gian thông tin thống nhất, nơi khách hàng, gia đình và đội ngũ chăm sóc
@@ -165,11 +176,11 @@ export default function LandingPage() {
       {/* ===== AI LÀM GÌ ===== */}
       <HowAiHelpsSection />
 
-      {/* ===== DÀNH CHO AI ===== */}
-      <section className="py-10 bg-gradient-to-b from-slate-50 to-white">
+      {/* ===== DÀNH CHO AI — cream gradient ===== */}
+      <section className="py-10 bg-gradient-to-b from-emerald-50/40 to-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-8">
-            <div className="inline-block text-xs font-bold text-indigo-600 tracking-widest uppercase mb-2">Đối tượng</div>
+            <div className="inline-block text-xs font-bold text-emerald-700 tracking-widest uppercase mb-2">Đối tượng</div>
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">AIVIHE dành cho những ai?</h2>
             <p className="text-slate-600 text-sm">Kết nối mọi điểm chạm trong hành trình chăm sóc</p>
           </div>
@@ -188,7 +199,7 @@ export default function LandingPage() {
       <section className="py-10 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-6">
-            <div className="inline-block text-xs font-bold text-green-600 tracking-widest uppercase mb-2">Nguyên tắc an toàn</div>
+            <div className="inline-block text-xs font-bold text-emerald-700 tracking-widest uppercase mb-2">Nguyên tắc an toàn</div>
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Minh bạch & do bạn kiểm soát</h2>
             <p className="text-slate-500 text-sm max-w-2xl mx-auto">
               AIVIHE không thay thế hệ thống quản lý khám chữa bệnh của cơ sở y tế. Mọi xử lý y tế do chuyên môn đảm nhận.
@@ -196,9 +207,9 @@ export default function LandingPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <CommitmentCard icon={ShieldCheck} color="amber" title="AI không thay BS" desc="AI chỉ tổng hợp, giải thích. Không chẩn đoán, không kê đơn." />
-            <CommitmentCard icon={Lock} color="blue" title="Bạn kiểm soát data" desc="Thông tin thuộc quyền bạn. Chia sẻ chỉ khi cho phép rõ ràng." />
-            <CommitmentCard icon={CheckCircle} color="green" title="Luôn xác nhận" desc="Info AI trích xuất cần bạn kiểm tra + xác nhận trước khi lưu." />
-            <CommitmentCard icon={AlertTriangle} color="teal" title="Minh bạch vai trò" desc="AIVIHE không thay hệ thống quản lý khám chữa bệnh của y tế." />
+            <CommitmentCard icon={Lock} color="teal" title="Bạn kiểm soát data" desc="Thông tin thuộc quyền bạn. Chia sẻ chỉ khi cho phép rõ ràng." />
+            <CommitmentCard icon={CheckCircle} color="emerald" title="Luôn xác nhận" desc="Info AI trích xuất cần bạn kiểm tra + xác nhận trước khi lưu." />
+            <CommitmentCard icon={AlertTriangle} color="rose" title="Minh bạch vai trò" desc="AIVIHE không thay hệ thống quản lý khám chữa bệnh của y tế." />
           </div>
         </div>
       </section>
@@ -221,17 +232,17 @@ export default function LandingPage() {
       {/* ===== ĐỘI NGŨ & ĐỐI TÁC ===== */}
       <PartnersAndAdvisorsSection />
 
-      {/* ===== FORM ĐĂNG KÝ — dark accent ===== */}
-      <section id="dang-ky-tu-van" className="py-12 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white scroll-mt-6">
+      {/* ===== FORM ĐĂNG KÝ — teal dark (healthcare authority) ===== */}
+      <section id="dang-ky-tu-van" className="py-12 bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 text-white scroll-mt-6">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-6">
-            <div className="inline-block text-xs font-bold text-cyan-400 tracking-widest uppercase mb-2">Bắt đầu ngay</div>
+            <div className="inline-block text-xs font-bold text-teal-300 tracking-widest uppercase mb-2">Bắt đầu ngay</div>
             <h2 className="text-2xl md:text-3xl font-bold mb-2">
               Hành trình sức khỏe cùng AIVIHE
             </h2>
-            <p className="text-slate-300 text-sm max-w-2xl mx-auto">
-              Tiếp cận qua <span className="font-semibold text-cyan-300">Thong Dong Daycare, Phòng khám Bác sĩ gia đình</span> hoặc
-              <span className="font-semibold text-cyan-300"> Phòng khám Phục hồi chức năng</span>.
+            <p className="text-teal-100/90 text-sm max-w-2xl mx-auto">
+              Tiếp cận qua <span className="font-semibold text-teal-200">Thong Dong Daycare, Phòng khám Bác sĩ gia đình</span> hoặc
+              <span className="font-semibold text-teal-200"> Phòng khám Phục hồi chức năng</span>.
               Để lại tên + SĐT, chúng tôi liên hệ tư vấn kênh phù hợp.
             </p>
           </div>
@@ -245,7 +256,7 @@ export default function LandingPage() {
           <div className="flex items-center justify-center gap-3 mb-1.5">
             <Image src="/thong-dong-life-logo.png" alt="Thong Dong Life" width={100} height={40} className="h-7 w-auto" />
             <span className="text-slate-300">|</span>
-            <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent tracking-wide">AIVIHE</span>
+            <span className="text-sm font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent tracking-wide">AIVIHE</span>
           </div>
           <p className="text-slate-500 text-xs">&copy; 2026 AIVIHE — Thong Dong Life · Phát triển bởi Thong Dong Tech</p>
         </div>
