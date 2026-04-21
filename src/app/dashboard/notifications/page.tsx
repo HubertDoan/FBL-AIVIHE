@@ -29,7 +29,14 @@ const CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
   payment: { label: 'Thanh toán', color: 'bg-green-100 text-green-700' },
   system: { label: 'Hệ thống', color: 'bg-gray-100 text-gray-700' },
   program: { label: 'Chương trình', color: 'bg-amber-100 text-amber-700' },
+  event: { label: 'Sự kiện', color: 'bg-orange-100 text-orange-700' },
+  promotion: { label: 'Khuyến mãi', color: 'bg-pink-100 text-pink-700' },
 }
+
+// Map notification categories to tab buckets
+const SYSTEM_CATEGORIES = ['system', 'admin']
+const ANNOUNCEMENT_CATEGORIES = ['director', 'center', 'event', 'program', 'promotion']
+const PERSONAL_CATEGORIES = ['doctor', 'payment']
 
 export default function NotificationsPage() {
   const { user, loading: authLoading } = useAuth()
@@ -73,7 +80,13 @@ export default function NotificationsPage() {
     ? items
     : filter === 'unread'
       ? items.filter(n => !n.is_read)
-      : items.filter(n => n.category === filter)
+      : filter === 'system'
+        ? items.filter(n => SYSTEM_CATEGORIES.includes(n.category))
+        : filter === 'announcement'
+          ? items.filter(n => ANNOUNCEMENT_CATEGORIES.includes(n.category))
+          : filter === 'personal'
+            ? items.filter(n => PERSONAL_CATEGORIES.includes(n.category))
+            : items.filter(n => n.category === filter)
 
   const unreadCount = items.filter(n => !n.is_read).length
 
@@ -117,10 +130,9 @@ export default function NotificationsPage() {
         {[
           { k: 'all', l: `Tất cả (${items.length})` },
           { k: 'unread', l: `Chưa đọc (${unreadCount})` },
-          { k: 'center', l: 'Trung tâm' },
-          { k: 'doctor', l: 'Bác sĩ' },
-          { k: 'payment', l: 'Thanh toán' },
-          { k: 'admin', l: 'Quản trị' },
+          { k: 'announcement', l: 'Thông báo' },
+          { k: 'system', l: 'Hệ thống' },
+          { k: 'personal', l: 'Cá nhân' },
         ].map(f => (
           <button
             key={f.k}

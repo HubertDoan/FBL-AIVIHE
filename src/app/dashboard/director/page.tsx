@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Megaphone, Shield, Loader2, HandHeart } from 'lucide-react'
+import { Megaphone, Shield, Loader2, HandHeart, Send } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { DirectorAnnouncementForm } from '@/components/director/director-announcement-form'
@@ -13,6 +13,7 @@ import { DirectorFeedbackInbox } from '@/components/director/director-feedback-i
 import { DirectorGreetingEditor } from '@/components/director/director-greeting-editor'
 import { ConsultationRequestListForReception } from '@/components/reception/consultation-request-list-for-reception'
 import { DirectorServiceRegistrationApprovalList } from '@/components/director/director-service-registration-approval-list'
+import { BroadcastAnnouncementFormWithTargetSelector } from '@/components/director/broadcast-announcement-form-with-target-selector'
 import type { DirectorAnnouncement } from '@/lib/demo/demo-director-announcement-data'
 import type { DirectorAnnouncementFormData } from '@/components/director/director-announcement-form'
 
@@ -137,6 +138,10 @@ export default function DirectorPage() {
           <TabsTrigger value="feedback" className="text-base gap-1.5">
             Phản hồi
           </TabsTrigger>
+          <TabsTrigger value="broadcast" className="text-base gap-1.5">
+            <Send className="size-4" />
+            Gửi thông báo
+          </TabsTrigger>
           <TabsTrigger value="greeting" className="text-base gap-1.5">
             <HandHeart className="size-4" />
             Lời chào
@@ -163,6 +168,12 @@ export default function DirectorPage() {
 
         <TabsContent value="feedback">
           <DirectorFeedbackInbox announcements={announcements} />
+        </TabsContent>
+
+        <TabsContent value="broadcast">
+          <BroadcastAnnouncementFormWithTargetSelector
+            onSent={() => fetchAnnouncements()}
+          />
         </TabsContent>
 
         <TabsContent value="greeting">
