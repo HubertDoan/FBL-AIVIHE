@@ -80,10 +80,10 @@ export default function LandingPage() {
           {/* Hero content — center, 1 màn ăn decision */}
           <div className="text-center max-w-3xl mx-auto">
 
-            {/* Mini-badge định vị (nhỏ, không chiếm sân khấu) */}
-            <div className="inline-flex items-center gap-2 bg-white border border-teal-200 text-teal-700 rounded-full px-3 py-1 mb-5 shadow-sm">
-              <Sparkles className="size-3.5" />
-              <span className="text-xs font-semibold uppercase tracking-wider">Nền tảng quản lý sức khỏe cá nhân</span>
+            {/* Banner định vị — giữ nguyên style gốc: gradient teal-emerald, chữ trắng, to */}
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full px-6 py-3 shadow-xl shadow-teal-500/30 mb-6">
+              <Sparkles className="size-5" />
+              <span className="text-base md:text-xl font-bold tracking-wide">Nền tảng quản lý sức khỏe cá nhân</span>
             </div>
 
             {/* H1 — TRẢ LỜI "AIVIHE LÀ GÌ" */}
