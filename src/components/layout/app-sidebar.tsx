@@ -248,19 +248,10 @@ export function AppSidebar({ userName, userAvatar, userRole, userPermissions = [
         ))}
       </nav>
 
-      {/* Footer actions — khác nhau theo role */}
+      {/* Footer actions — chỉ Đăng xuất.
+          'Xuất báo cáo sức khỏe' đã có ở menu THÔNG TIN SỨC KHỎE CÁ NHÂN
+          + nút trong dashboard health overview, nên bỏ ở footer để tránh trùng. */}
       <div className="p-2 border-t border-gray-100 bg-white/60 space-y-1">
-        {/* Xuất báo cáo sức khỏe — chỉ cho KH (citizen/member), KHÔNG cho staff */}
-        {(userRole === 'citizen' || userRole === 'member') && (
-          <Link
-            href="/dashboard/health-report"
-            onClick={onClose}
-            className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium transition shadow-sm"
-          >
-            <FileText className="size-4" />
-            Xuất báo cáo sức khỏe
-          </Link>
-        )}
         <Link
           href="/api/demo/logout"
           onClick={(e) => {
