@@ -1,30 +1,84 @@
+import Image from 'next/image'
 import {
   Watch, Activity, Heart, Wifi, AlertTriangle,
   HeartPulse, Thermometer, Droplets, Scale, Eye, Stethoscope, Wind, Microscope, ShieldCheck,
+  Smartphone, ExternalLink,
 } from 'lucide-react'
 
 /**
- * Section thiết bị IoT — viết lại cẩn thận theo đề xuất chuyên gia
- * Phân biệt rõ: "đã có" vs "đang triển khai" vs "dự kiến"
- * Thêm disclaimer: IoT chỉ hỗ trợ theo dõi, không thay thế đánh giá y khoa
+ * Section "Thiết bị & đối tác đo lường" — gộp MediExpress partnership + IoT devices.
+ *
+ * Thứ tự narrative (theo ý kiến chuyên gia — Progressive Disclosure):
+ *  1. Partnership banner — AIVIHE × MediExpress (đã ở sau khi user hiểu sản phẩm lõi)
+ *  2. AI Medical Station (image + 4 benefits "không cảm giác đi BV")
+ *  3. Lộ trình IoT — đã/đang/sẽ triển khai
+ *  4. 12 cảm biến y tế (9 std + 3 optional) + 8 hardware đi kèm
+ *  5. Disclaimer y khoa
  */
 export function IotHealthDevicesSection() {
   return (
     <section className="py-6 bg-gradient-to-b from-blue-50/30 to-white">
       <div className="max-w-5xl mx-auto px-4">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 mb-4">
-            <Wifi className="size-4 text-blue-600" />
-            <span className="text-sm text-blue-700 font-medium">Thong Dong Tech · Lộ trình thiết bị</span>
+
+        {/* ═══ HEADER — Partnership banner ═══ */}
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-2 bg-blue-600 text-white rounded-full px-4 py-1.5 shadow-md mb-3">
+            <span className="text-xs font-bold uppercase tracking-widest">🤝 Đối tác chiến lược</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            Tích hợp thiết bị theo dõi sức khỏe
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
+            AIVIHE × <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">MediExpress Vietnam</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed">
-            Phối hợp cùng MediExpress — đơn vị IoT y tế tại Việt Nam —
-            Thong Dong Tech đang từng bước tích hợp thiết bị wearable
-            để dữ liệu chỉ số tự động cập nhật lên AIVIHE.
+          <p className="max-w-2xl mx-auto text-slate-600 leading-relaxed">
+            Trạm AI Medical Hub + wearable + IoT — theo dõi sức khỏe{' '}
+            <span className="font-semibold">tự nhiên, không cảm giác đi bệnh viện</span>.
+            Dữ liệu tự đồng bộ vào hồ sơ AIVIHE, không cần nhập tay.
           </p>
+        </div>
+
+        {/* ═══ AI MEDICAL STATION — image + 4 benefits ═══ */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 mb-6">
+          <div className="grid md:grid-cols-2 gap-6 items-center">
+            {/* Image */}
+            <div className="flex justify-center md:justify-end">
+              <div className="relative">
+                <div className="absolute -inset-3 bg-gradient-to-br from-blue-200/40 to-teal-200/30 rounded-2xl blur-xl" />
+                <div className="relative bg-white rounded-xl border border-slate-200 p-2 shadow-md">
+                  <Image
+                    src="/medi-express-ai-medical-station.jpg"
+                    alt="AI Medical Station"
+                    width={320}
+                    height={420}
+                    className="w-56 md:w-64 h-72 md:h-80 object-contain rounded-lg"
+                  />
+                  <div className="mt-2 flex items-center justify-between text-xs px-1">
+                    <span className="text-slate-600 font-semibold">AI Medical Station</span>
+                    <a href="https://mediexpress.com.vn/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-700 font-semibold">
+                      mediexpress.com.vn <ExternalLink className="size-3" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 4 benefits */}
+            <div className="space-y-2.5">
+              <BenefitRow icon={Heart} color="bg-rose-100 text-rose-600" title="Đo nhanh tại trung tâm" desc="Trạm AI đo HA, cân, cao, BMI, SpO₂... vài phút. Tự đồng bộ AIVIHE." />
+              <BenefitRow icon={Smartphone} color="bg-blue-100 text-blue-600" title="Wearable đăng ký" desc="Đeo tay theo dõi nhịp tim, bước, giấc ngủ tại nhà — liên tục." />
+              <BenefitRow icon={Activity} color="bg-teal-100 text-teal-600" title="Tự nhiên — không cảm giác BV" desc="Ngồi thoải mái, không xếp hàng, không cần hẹn lịch." />
+              <BenefitRow icon={ShieldCheck} color="bg-emerald-100 text-emerald-600" title="Đối tác y tế chính thức" desc="MediExpress + Bệnh viện 199 — chuẩn y khoa, dữ liệu chính xác." />
+            </div>
+          </div>
+        </div>
+
+        {/* Sub-heading — chuyển tiếp sang lộ trình */}
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 mb-3">
+            <Wifi className="size-4 text-blue-600" />
+            <span className="text-sm text-blue-700 font-medium">Lộ trình tích hợp thiết bị</span>
+          </div>
+          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+            Dữ liệu chỉ số tự động cập nhật lên AIVIHE
+          </h3>
         </div>
 
         {/* Deployment status legend */}
@@ -184,6 +238,23 @@ export function IotHealthDevicesSection() {
         </div>
       </div>
     </section>
+  )
+}
+
+function BenefitRow({ icon: Icon, color, title, desc }: {
+  icon: React.ComponentType<{ className?: string }>
+  color: string; title: string; desc: string
+}) {
+  return (
+    <div className="flex items-start gap-2.5 p-2.5 rounded-lg bg-white border border-slate-200 hover:border-blue-300 transition-all">
+      <div className={`size-9 rounded-lg flex items-center justify-center shrink-0 ${color}`}>
+        <Icon className="size-5" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="text-sm md:text-base font-semibold text-slate-900 leading-tight">{title}</h4>
+        <p className="text-xs md:text-sm text-slate-600 leading-snug mt-0.5">{desc}</p>
+      </div>
+    </div>
   )
 }
 
