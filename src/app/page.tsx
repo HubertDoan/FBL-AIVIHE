@@ -69,8 +69,10 @@ export default function LandingPage() {
                 <span className="text-base font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">AIVIHE</span>
               </div>
             </div>
-            <div className="flex items-center gap-3 text-sm">
-              <a href="#dang-ky-bac-si" className="text-slate-500 hover:text-teal-700 transition-colors hidden md:inline">Bác sĩ tham gia mạng lưới?</a>
+            <div className="flex items-center gap-2 text-sm">
+              <a href="#dang-ky-bac-si" className="hidden md:inline-flex items-center font-medium text-blue-700 hover:text-blue-800 transition-colors px-4 py-2 rounded-lg border border-blue-200 hover:border-blue-400 bg-white/70 backdrop-blur">
+                Bác sĩ tham gia mạng lưới?
+              </a>
               <Link href="/login" className="font-medium text-slate-700 hover:text-teal-700 transition-colors px-4 py-2 rounded-lg border border-slate-200 hover:border-teal-300 bg-white/70 backdrop-blur">
                 Đăng nhập
               </Link>
