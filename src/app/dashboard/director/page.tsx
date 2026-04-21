@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Megaphone, Shield, Loader2, HandHeart, Send } from 'lucide-react'
+import { Megaphone, Shield, Loader2, HandHeart, Send, Stethoscope } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/hooks/use-auth'
 import { DirectorAnnouncementForm } from '@/components/director/director-announcement-form'
@@ -14,6 +14,7 @@ import { DirectorGreetingEditor } from '@/components/director/director-greeting-
 import { ConsultationRequestListForReception } from '@/components/reception/consultation-request-list-for-reception'
 import { DirectorServiceRegistrationApprovalList } from '@/components/director/director-service-registration-approval-list'
 import { BroadcastAnnouncementFormWithTargetSelector } from '@/components/director/broadcast-announcement-form-with-target-selector'
+import { DirectorFamilyDoctorRegistrationApprovalList } from '@/components/director/director-family-doctor-registration-approval-list'
 import type { DirectorAnnouncement } from '@/lib/demo/demo-director-announcement-data'
 import type { DirectorAnnouncementFormData } from '@/components/director/director-announcement-form'
 
@@ -125,6 +126,10 @@ export default function DirectorPage() {
 
       <Tabs defaultValue="consultation" className="space-y-4">
         <TabsList className="flex flex-wrap h-auto gap-1">
+          <TabsTrigger value="family-doctor" className="text-base gap-1.5">
+            <Stethoscope className="size-4" />
+            Duyệt BS gia đình
+          </TabsTrigger>
           <TabsTrigger value="consultation" className="text-base gap-1.5">
             Duyệt yêu cầu tư vấn
           </TabsTrigger>
@@ -147,6 +152,10 @@ export default function DirectorPage() {
             Lời chào
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="family-doctor">
+          <DirectorFamilyDoctorRegistrationApprovalList />
+        </TabsContent>
 
         <TabsContent value="consultation">
           <ConsultationRequestListForReception userRole={userRole} />

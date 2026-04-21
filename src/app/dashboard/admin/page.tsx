@@ -11,6 +11,7 @@ import { AnnouncementManager } from '@/components/admin/announcement-manager'
 import { ProgramManager } from '@/components/admin/program-manager'
 import { DoctorApprovalList } from '@/components/admin/doctor-approval-list'
 import { DoctorReferralList } from '@/components/admin/doctor-referral-list'
+import { AdminDoctorManagementPanel } from '@/components/admin/admin-doctor-management-panel'
 import { useAuth } from '@/hooks/use-auth'
 
 interface Stats {
@@ -28,14 +29,14 @@ interface Stats {
 function getVisibleTabs(role: string): string[] {
   switch (role) {
     case 'super_admin':
-      return ['users', 'doctors', 'referrals', 'announcements', 'programs', 'audit', 'stats']
+      return ['users', 'manage-doctors', 'doctors', 'referrals', 'announcements', 'programs', 'audit', 'stats']
     case 'director':
       return ['announcements', 'programs', 'stats']
     case 'branch_director':
       return ['announcements', 'stats']
     case 'admin':
     default:
-      return ['users', 'doctors', 'referrals', 'announcements', 'audit', 'stats']
+      return ['users', 'manage-doctors', 'doctors', 'referrals', 'announcements', 'audit', 'stats']
   }
 }
 
@@ -116,6 +117,12 @@ export default function AdminPage() {
               Người dùng
             </TabsTrigger>
           )}
+          {visibleTabs.includes('manage-doctors') && (
+            <TabsTrigger value="manage-doctors" className="gap-1.5 text-base">
+              <Stethoscope className="size-4" />
+              Nhập BS
+            </TabsTrigger>
+          )}
           {visibleTabs.includes('doctors') && (
             <TabsTrigger value="doctors" className="gap-1.5 text-base">
               <UserCheck className="size-4" />
@@ -163,6 +170,20 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent>
                 <MemberManagement />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {/* Manage Doctors Tab — admin inputs and verifies doctor profiles */}
+        {visibleTabs.includes('manage-doctors') && (
+          <TabsContent value="manage-doctors">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Nhập & quản lý hồ sơ bác sĩ</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AdminDoctorManagementPanel />
               </CardContent>
             </Card>
           </TabsContent>
