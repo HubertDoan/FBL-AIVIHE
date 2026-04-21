@@ -1,8 +1,9 @@
-import { Watch, Activity, Heart, Wifi } from 'lucide-react'
+import { Watch, Activity, Heart, Wifi, AlertTriangle } from 'lucide-react'
 
 /**
- * Section giới thiệu thiết bị IoT theo dõi sức khỏe
- * Thong Dong Tech cung cấp wearable devices giám sát realtime
+ * Section thiết bị IoT — viết lại cẩn thận theo đề xuất chuyên gia
+ * Phân biệt rõ: "đã có" vs "đang triển khai" vs "dự kiến"
+ * Thêm disclaimer: IoT chỉ hỗ trợ theo dõi, không thay thế đánh giá y khoa
  */
 export function IotHealthDevicesSection() {
   return (
@@ -11,24 +12,40 @@ export function IotHealthDevicesSection() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 mb-4">
             <Wifi className="size-4 text-blue-600" />
-            <span className="text-sm text-blue-700 font-medium">Thong Dong Tech</span>
+            <span className="text-sm text-blue-700 font-medium">Thong Dong Tech · Lộ trình thiết bị</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            Thiết bị IoT theo dõi sức khỏe
+            Tích hợp thiết bị theo dõi sức khỏe
           </h2>
           <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed">
-            Phối hợp cùng MediExpress — đơn vị tiên phong IoT y tế tại Việt Nam,
-            Thong Dong Tech cung cấp GoTrust Box, thiết bị đeo thông minh
-            giúp theo dõi chỉ số sức khỏe realtime — dữ liệu tự động cập nhật lên AIVIHE.
+            Phối hợp cùng MediExpress — đơn vị IoT y tế tại Việt Nam —
+            Thong Dong Tech đang từng bước tích hợp thiết bị wearable
+            để dữ liệu chỉ số tự động cập nhật lên AIVIHE.
           </p>
         </div>
 
-        {/* Metrics tracked */}
+        {/* Deployment status legend */}
+        <div className="flex flex-wrap justify-center gap-4 mb-6 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="size-2.5 rounded-full bg-teal-500 inline-block" />
+            <span className="text-slate-600">Đã triển khai</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="size-2.5 rounded-full bg-amber-400 inline-block" />
+            <span className="text-slate-600">Đang triển khai</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="size-2.5 rounded-full bg-slate-300 inline-block" />
+            <span className="text-slate-600">Dự kiến</span>
+          </div>
+        </div>
+
+        {/* Metrics tracked with status */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <MetricBadge icon={Heart} label="Huyết áp" color="red" />
-          <MetricBadge icon={Activity} label="Nhịp tim" color="pink" />
-          <MetricBadge icon={Watch} label="SpO2" color="blue" />
-          <MetricBadge icon={Activity} label="Đường huyết" color="amber" />
+          <MetricBadge icon={Heart} label="Huyết áp" color="red" status="active" />
+          <MetricBadge icon={Activity} label="Nhịp tim" color="pink" status="active" />
+          <MetricBadge icon={Watch} label="SpO2" color="blue" status="in-progress" />
+          <MetricBadge icon={Activity} label="Đường huyết" color="amber" status="planned" />
         </div>
 
         {/* Device features */}
@@ -36,40 +53,43 @@ export function IotHealthDevicesSection() {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Wearable Devices thông minh
+                Lộ trình tích hợp thiết bị
               </h3>
               <ul className="space-y-2.5">
                 {[
-                  'Đo huyết áp, nhịp tim, SpO2 liên tục 24/7',
-                  'Theo dõi đường huyết không xâm lấn',
-                  'Giám sát giấc ngủ và mức vận động',
-                  'Cảnh báo tức thì khi chỉ số bất thường',
-                  'Dữ liệu tự động đồng bộ lên AIVIHE realtime',
-                  'Bác sĩ gia đình theo dõi từ xa qua dashboard',
+                  { text: 'Nhập thủ công chỉ số huyết áp, nhịp tim vào AIVIHE', status: 'active' },
+                  { text: 'Kết nối GoTrust Box — đồng bộ tự động (đang triển khai)', status: 'in-progress' },
+                  { text: 'Wearable theo dõi SpO2, bước chân liên tục', status: 'in-progress' },
+                  { text: 'Theo dõi đường huyết, nhiệt độ, ECG', status: 'planned' },
+                  { text: 'Cảnh báo tự động khi chỉ số vượt ngưỡng', status: 'planned' },
+                  { text: 'Bác sĩ gia đình xem dashboard realtime', status: 'planned' },
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-gray-600">
-                    <span className="text-teal-500 font-bold mt-0.5">✓</span>
-                    <span>{item}</span>
+                    <StatusDot status={item.status} />
+                    <span className="text-sm">{item.text}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Các chỉ số sinh học được giám sát
+                Chỉ số dự kiến giám sát
               </h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: 'Huyết áp', unit: 'mmHg' },
-                  { label: 'Nhịp tim', unit: 'BPM' },
-                  { label: 'SpO2', unit: '%' },
-                  { label: 'Đường huyết', unit: 'mmol/L' },
-                  { label: 'Nhiệt độ', unit: '°C' },
-                  { label: 'Giấc ngủ', unit: 'giờ' },
-                  { label: 'Bước chân', unit: 'bước/ngày' },
-                  { label: 'ECG', unit: 'sóng điện tim' },
+                  { label: 'Huyết áp', unit: 'mmHg', status: 'active' },
+                  { label: 'Nhịp tim', unit: 'BPM', status: 'active' },
+                  { label: 'SpO2', unit: '%', status: 'in-progress' },
+                  { label: 'Bước chân', unit: 'bước/ngày', status: 'in-progress' },
+                  { label: 'Đường huyết', unit: 'mmol/L', status: 'planned' },
+                  { label: 'Nhiệt độ', unit: '°C', status: 'planned' },
+                  { label: 'Giấc ngủ', unit: 'giờ', status: 'planned' },
+                  { label: 'ECG', unit: 'sóng điện tim', status: 'planned' },
                 ].map((m, i) => (
-                  <div key={i} className="bg-slate-50 rounded-lg p-3 text-center">
+                  <div key={i} className="bg-slate-50 rounded-lg p-3 text-center relative">
+                    <div className="absolute top-1.5 right-1.5">
+                      <StatusDot status={m.status} size="sm" />
+                    </div>
                     <p className="font-semibold text-gray-900 text-sm">{m.label}</p>
                     <p className="text-gray-400 text-xs">{m.unit}</p>
                   </div>
@@ -78,15 +98,39 @@ export function IotHealthDevicesSection() {
             </div>
           </div>
         </div>
+
+        {/* Important disclaimer */}
+        <div className="mt-5 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+          <AlertTriangle className="size-4 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-amber-800 text-xs leading-relaxed">
+            <span className="font-semibold">Lưu ý quan trọng:</span>{' '}
+            Thiết bị IoT chỉ hỗ trợ theo dõi chỉ số sinh hiệu thường ngày —
+            không thay thế đánh giá y khoa của bác sĩ.
+            Mọi quyết định điều trị cần có chuyên môn y tế đảm nhận.
+          </p>
+        </div>
       </div>
     </section>
   )
 }
 
-function MetricBadge({ icon: Icon, label, color }: {
+function StatusDot({ status, size = 'md' }: { status: string; size?: 'sm' | 'md' }) {
+  const sizeClass = size === 'sm' ? 'size-2' : 'size-2.5'
+  const colorMap: Record<string, string> = {
+    active: 'bg-teal-500',
+    'in-progress': 'bg-amber-400',
+    planned: 'bg-slate-300',
+  }
+  return (
+    <span className={`${sizeClass} rounded-full ${colorMap[status] ?? 'bg-slate-300'} inline-block shrink-0 mt-1`} />
+  )
+}
+
+function MetricBadge({ icon: Icon, label, color, status }: {
   icon: React.ComponentType<{ className?: string }>
   label: string
   color: string
+  status: string
 }) {
   const colorMap: Record<string, string> = {
     red: 'bg-red-50 text-red-600 border-red-200',
@@ -94,10 +138,17 @@ function MetricBadge({ icon: Icon, label, color }: {
     blue: 'bg-blue-50 text-blue-600 border-blue-200',
     amber: 'bg-amber-50 text-amber-600 border-amber-200',
   }
+  const statusLabel: Record<string, string> = {
+    active: 'Đã có',
+    'in-progress': 'Đang triển khai',
+    planned: 'Dự kiến',
+  }
   return (
-    <div className={`flex items-center justify-center gap-2 rounded-xl border p-3 ${colorMap[color]}`}>
+    <div className={`flex flex-col items-center justify-center gap-1 rounded-xl border p-3 ${colorMap[color]}`}>
       <Icon className="size-5" />
       <span className="font-medium text-sm">{label}</span>
+      <span className="text-xs opacity-70">{statusLabel[status]}</span>
     </div>
   )
 }
+
