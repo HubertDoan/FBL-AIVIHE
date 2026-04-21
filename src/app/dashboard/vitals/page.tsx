@@ -4,46 +4,75 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Loader2, Plus, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft, Loader2, Plus, Ruler, Scale, HeartPulse, Droplets, Sparkles } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
-import type { VitalSignsRecord, MedicalRecord11Sections } from '@/lib/demo/demo-medical-record-eleven-sections-data'
+import { VitalsAddMeasurementDialogWithIndicatorSelectorAndImageOcr } from '@/components/vitals/vitals-add-measurement-dialog-with-indicator-selector-and-image-ocr'
 
 /**
- * Chỉ số sức khỏe — port từ SSK-VNeID v10
- * Layout: 8 metric cards (2 rows × 4) + history table + Thêm đo button
- * Module VI — VitalSigns · QĐ 1332/QĐ-BYT
+ * Chỉ số sức khỏe — 4 basic indicators (theo yêu cầu thầy):
+ * Chiều cao, Cân nặng, Huyết áp, Đường huyết
+ * Healthcare palette (teal/emerald). "Thêm đo" mở dialog với manual + image OCR.
  */
 
-const METRIC_DEFS = [
-  { key: 'height', label: 'Chiều cao', icon: '📏', unit: 'cm', color: '#8b5cf6', refRange: '', getter: (v: VitalSignsRecord) => String(v.height_cm) },
-  { key: 'weight', label: 'Cân nặng', icon: '⚖️', unit: 'kg', color: '#8b5cf6', refRange: '', getter: (v: VitalSignsRecord) => String(v.weight_kg) },
-  { key: 'bmi', label: 'BMI', icon: '📐', unit: '', color: '#0891b2', refRange: 'BT: 18.5–24.9', getter: (v: VitalSignsRecord) => v.bmi.toFixed(1) },
-  { key: 'bp_sys', label: 'HA tâm thu', icon: '🩺', unit: 'mmHg', color: '#dc2626', refRange: 'BT: <120', getter: (v: VitalSignsRecord) => String(v.blood_pressure_systolic) },
-  { key: 'bp_dia', label: 'HA tâm trương', icon: '🩺', unit: 'mmHg', color: '#dc2626', refRange: 'BT: <80', getter: (v: VitalSignsRecord) => String(v.blood_pressure_diastolic) },
-  { key: 'pulse', label: 'Nhịp tim', icon: '❤️', unit: 'lần/ph', color: '#e11d48', refRange: 'BT: 60–100', getter: (v: VitalSignsRecord) => String(v.pulse) },
-  { key: 'spo2', label: 'SpO₂', icon: '🫁', unit: '%', color: '#0284c7', refRange: 'BT: >95', getter: (v: VitalSignsRecord) => v.spo2 !== null ? String(v.spo2) : '—' },
-  { key: 'temp', label: 'Nhiệt độ', icon: '🌡️', unit: '°C', color: '#f59e0b', refRange: 'BT: 36–37.5', getter: (v: VitalSignsRecord) => v.temperature.toFixed(1) },
+interface VitalRecord {
+  id: string
+  indicator_type: string
+  value: Record<string, number>
+  unit: string | null
+  measured_at: string
+  source: 'manual' | 'image_ocr' | 'device'
+  notes: string | null
+}
+
+const BASIC_INDICATORS = [
+  { key: 'height',          icon: Ruler,      label: 'Chiều cao',  unit: 'cm',     color: 'from-purple-500 to-indigo-500', text: 'text-purple-700' },
+  { key: 'weight',          icon: Scale,      label: 'Cân nặng',   unit: 'kg',     color: 'from-blue-500 to-cyan-500',     text: 'text-blue-700' },
+  { key: 'blood_pressure',  icon: HeartPulse, label: 'Huyết áp',   unit: 'mmHg',   color: 'from-rose-500 to-pink-500',     text: 'text-rose-700' },
+  { key: 'blood_glucose',   icon: Droplets,   label: 'Đường huyết', unit: 'mg/dL', color: 'from-amber-500 to-orange-500',  text: 'text-amber-700' },
 ]
+
+const SOURCE_LABEL: Record<string, string> = {
+  manual: 'Nhập tay',
+  image_ocr: '📸 Ảnh máy đo (AI)',
+  device: 'Thiết bị IoT',
+}
 
 export default function VitalsPage() {
   const { user, loading: authLoading } = useAuth()
-  const [vitals, setVitals] = useState<VitalSignsRecord[]>([])
+  const [vitals, setVitals] = useState<VitalRecord[]>([])
   const [loading, setLoading] = useState(true)
-  const [view, setView] = useState<'table' | 'chart'>('table')
+  const [showDialog, setShowDialog] = useState(false)
 
-  useEffect(() => {
-    if (authLoading || !user) return
-    fetch('/api/medical-record')
-      .then(r => r.ok ? r.json() : null)
-      .then((d: MedicalRecord11Sections | null) => setVitals(d?.vital_signs || []))
-      .finally(() => setLoading(false))
-  }, [authLoading, user])
-
-  if (authLoading || loading) {
-    return <div className="flex items-center justify-center py-20 text-gray-500"><Loader2 className="size-5 animate-spin mr-2" /> Đang tải...</div>
+  async function fetchVitals() {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/vitals')
+      const data = await res.json()
+      setVitals(data.vitals ?? [])
+    } catch {
+      // silent
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const latest = vitals[0]
+  useEffect(() => {
+    if (!authLoading && user) fetchVitals()
+  }, [authLoading, user])
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center py-20 text-gray-500">
+        <Loader2 className="size-5 animate-spin mr-2" /> Đang tải...
+      </div>
+    )
+  }
+
+  // Latest reading per indicator
+  const latestByIndicator: Record<string, VitalRecord | null> = {}
+  for (const ind of BASIC_INDICATORS) {
+    latestByIndicator[ind.key] = vitals.find((v) => v.indicator_type === ind.key) || null
+  }
 
   return (
     <div className="space-y-5 max-w-5xl">
@@ -54,103 +83,127 @@ export default function VitalsPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">📊 Chỉ số sức khỏe</h1>
-          <p className="text-xs text-gray-500">Module VI — VitalSigns · QĐ 1332/QĐ-BYT · {vitals.length} lần đo</p>
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-slate-900">
+            <span className="text-2xl">📊</span> Chỉ số sức khỏe
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            4 chỉ số cơ bản · {vitals.length} lần đo · Hỗ trợ AI đọc ảnh máy đo
+          </p>
         </div>
-        <div className="flex gap-2">
-          <Button size="sm" variant={view === 'table' ? 'default' : 'outline'} onClick={() => setView('table')} className={view === 'table' ? 'bg-red-600 hover:bg-red-700' : ''}>
-            📋 Bảng
-          </Button>
-          <Button size="sm" variant={view === 'chart' ? 'default' : 'outline'} onClick={() => setView('chart')} className={view === 'chart' ? 'bg-red-600 hover:bg-red-700' : ''}>
-            📈 Biểu đồ
-          </Button>
-          <Button size="sm" className="bg-red-600 hover:bg-red-700 gap-1">
-            <Plus className="size-4" /> Thêm đo
-          </Button>
-        </div>
+        <Button
+          onClick={() => setShowDialog(true)}
+          className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 gap-1.5 shadow-md shadow-teal-500/20"
+        >
+          <Plus className="size-4" /> Thêm đo
+        </Button>
       </div>
 
-      {/* 8 metric cards — latest values */}
-      {latest && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {METRIC_DEFS.map(m => {
-            const val = m.getter(latest)
-            return (
-              <div
-                key={m.key}
-                className="bg-white rounded-xl border border-gray-200 p-3"
-                style={{ borderTop: `3px solid ${m.color}` }}
-              >
-                <p className="text-xs text-gray-500 flex items-center gap-1">{m.icon} {m.label}</p>
-                <p className="text-2xl font-extrabold mt-1" style={{ color: m.color }}>
-                  {val} <span className="text-xs font-normal text-gray-400">{m.unit}</span>
-                </p>
-                {m.refRange && <p className="text-[10px] text-gray-400">{m.refRange}</p>}
-                <p className="text-[10px] text-gray-400">{new Date(latest.measured_at).toLocaleDateString('vi-VN')}</p>
+      {/* 4 indicator cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {BASIC_INDICATORS.map((ind) => {
+          const Icon = ind.icon
+          const latest = latestByIndicator[ind.key]
+          return (
+            <div
+              key={ind.key}
+              className="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <div className={`size-8 rounded-lg bg-gradient-to-br ${ind.color} text-white flex items-center justify-center`}>
+                  <Icon className="size-4" />
+                </div>
+                <span className="text-sm font-semibold text-slate-700">{ind.label}</span>
               </div>
-            )
-          })}
-        </div>
-      )}
+              {latest ? (
+                <>
+                  <div className={`text-2xl font-extrabold ${ind.text}`}>
+                    {formatVitalValue(latest)}
+                    <span className="text-xs font-normal text-slate-400 ml-1">{latest.unit || ind.unit}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    {new Date(latest.measured_at).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                    {' · '}{SOURCE_LABEL[latest.source]}
+                  </p>
+                </>
+              ) : (
+                <p className="text-xs text-slate-400 italic">Chưa đo</p>
+              )}
+            </div>
+          )
+        })}
+      </div>
 
-      {/* History table */}
-      {view === 'table' && (
-        <Card>
-          <CardContent className="pt-4 pb-4 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-xs text-gray-500 uppercase">
-                  <th className="text-left py-2 px-2 font-semibold">Ngày</th>
-                  <th className="text-right py-2 px-1 font-semibold">📏 cm</th>
-                  <th className="text-right py-2 px-1 font-semibold">⚖️ kg</th>
-                  <th className="text-right py-2 px-1 font-semibold">BMI</th>
-                  <th className="text-right py-2 px-1 font-semibold">🩺 HA</th>
-                  <th className="text-right py-2 px-1 font-semibold">❤️ /ph</th>
-                  <th className="text-right py-2 px-1 font-semibold">🫁 SpO₂</th>
-                  <th className="text-right py-2 px-1 font-semibold">🌡️ °C</th>
-                  <th className="text-left py-2 px-2 font-semibold">Nơi đo</th>
-                  <th className="py-2 px-1"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {vitals.map(v => (
-                  <tr key={v.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-2.5 px-2 font-semibold text-gray-900">{new Date(v.measured_at).toLocaleDateString('vi-VN')}</td>
-                    <td className="py-2.5 px-1 text-right text-blue-600 font-medium">{v.height_cm}</td>
-                    <td className="py-2.5 px-1 text-right text-purple-600 font-medium">{v.weight_kg}</td>
-                    <td className="py-2.5 px-1 text-right font-medium">{v.bmi.toFixed(1)}</td>
-                    <td className={`py-2.5 px-1 text-right font-medium ${v.blood_pressure_systolic >= 140 ? 'text-red-600' : 'text-gray-900'}`}>
-                      {v.blood_pressure_systolic}/{v.blood_pressure_diastolic}
-                    </td>
-                    <td className="py-2.5 px-1 text-right text-pink-600 font-medium">{v.pulse}</td>
-                    <td className={`py-2.5 px-1 text-right font-medium ${(v.spo2 ?? 100) < 95 ? 'text-red-600' : 'text-cyan-600'}`}>
-                      {v.spo2 !== null ? `${v.spo2}%` : '—'}
-                    </td>
-                    <td className="py-2.5 px-1 text-right text-amber-600 font-medium">{v.temperature}</td>
-                    <td className="py-2.5 px-2 text-gray-600 text-xs">{v.source}{v.notes ? ` · ${v.notes}` : ''}</td>
-                    <td className="py-2.5 px-1 flex gap-1">
-                      <button className="p-1 hover:bg-amber-50 rounded" title="Sửa"><Pencil className="size-4 text-amber-600" /></button>
-                      <button className="p-1 hover:bg-red-50 rounded" title="Xóa"><Trash2 className="size-4 text-gray-400" /></button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {vitals.length === 0 && (
-              <p className="text-center text-gray-400 py-6">Chưa có dữ liệu đo.</p>
+      {/* History */}
+      <Card>
+        <CardContent className="pt-4 pb-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-slate-900">Lịch sử đo</h2>
+            {vitals.length > 0 && (
+              <span className="text-xs text-slate-500">{vitals.length} bản ghi</span>
             )}
-          </CardContent>
-        </Card>
-      )}
+          </div>
 
-      {/* Chart view placeholder */}
-      {view === 'chart' && (
-        <Card>
-          <CardContent className="pt-6 pb-6 text-center text-gray-500">
-            📈 Biểu đồ xu hướng — xem tại <Link href="/dashboard/timeline" className="text-teal-600 underline">Dòng thời gian</Link>
-          </CardContent>
-        </Card>
+          {loading ? (
+            <p className="text-center text-slate-400 py-6 text-sm">Đang tải...</p>
+          ) : vitals.length === 0 ? (
+            <div className="text-center py-8">
+              <Sparkles className="size-10 mx-auto text-teal-300 mb-2" />
+              <p className="text-sm text-slate-500 mb-3">Chưa có chỉ số nào được ghi nhận.</p>
+              <Button
+                onClick={() => setShowDialog(true)}
+                className="bg-teal-600 hover:bg-teal-700"
+              >
+                <Plus className="size-4 mr-1" /> Thêm chỉ số đầu tiên
+              </Button>
+            </div>
+          ) : (
+            <ul className="divide-y divide-slate-100">
+              {vitals.map((v) => {
+                const def = BASIC_INDICATORS.find((i) => i.key === v.indicator_type)
+                const Icon = def?.icon || HeartPulse
+                return (
+                  <li key={v.id} className="py-3 flex items-center gap-3">
+                    <div className={`size-9 rounded-lg bg-gradient-to-br ${def?.color || 'from-slate-400 to-slate-500'} text-white flex items-center justify-center shrink-0`}>
+                      <Icon className="size-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm font-semibold text-slate-900">{def?.label || v.indicator_type}</span>
+                        <span className={`text-base font-bold ${def?.text || 'text-slate-700'}`}>
+                          {formatVitalValue(v)}
+                        </span>
+                        <span className="text-xs text-slate-400">{v.unit || def?.unit}</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500">
+                        {new Date(v.measured_at).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        {' · '}{SOURCE_LABEL[v.source]}
+                        {v.notes && ` · ${v.notes}`}
+                      </p>
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Dialog */}
+      {showDialog && (
+        <VitalsAddMeasurementDialogWithIndicatorSelectorAndImageOcr
+          onClose={() => setShowDialog(false)}
+          onSaved={() => fetchVitals()}
+        />
       )}
     </div>
   )
+}
+
+/** Format value JSON theo từng indicator */
+function formatVitalValue(v: VitalRecord): string {
+  if (v.indicator_type === 'blood_pressure' && 'sys' in v.value) {
+    const pulse = v.value.pulse ? ` · ${v.value.pulse} bpm` : ''
+    return `${v.value.sys}/${v.value.dia}${pulse}`
+  }
+  return String(v.value.value ?? Object.values(v.value)[0] ?? '—')
 }
