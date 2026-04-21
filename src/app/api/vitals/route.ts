@@ -78,6 +78,42 @@ export async function POST(request: NextRequest) {
       console.error('[vitals POST] insert error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    // Nếu có ảnh nguồn — tạo source_documents để hiện trong "Tài liệu sức khỏe"
+    // (truy nguồn gốc minh chứng cho chỉ số đo)
+    if (source_image_url && finalSource === 'image_ocr') {
+      const indicatorLabel: Record<string, string> = {
+        blood_pressure: 'Huyết áp',
+        blood_glucose: 'Đường huyết',
+        weight: 'Cân nặng',
+        height: 'Chiều cao',
+        heart_rate: 'Nhịp tim',
+        spo2: 'SpO2',
+        temperature: 'Nhiệt độ',
+      }
+      const today = new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')
+      const filename = `anh-may-do-${indicator_type}-${today}.jpg`
+      try {
+        await supabase.from('source_documents').insert({
+          citizen_id: user.id,
+          file_url: source_image_url,
+          file_type: 'image/jpeg',
+          file_size_bytes: null,
+          original_filename: filename,
+          document_type: 'other',
+          document_date: (measured_at || new Date().toISOString()).slice(0, 10),
+          facility_name: 'Đo tại nhà',
+          uploaded_by: user.id,
+          is_classified: true,
+          ai_classification: 'vital_reading',
+          notes: `Ảnh chụp máy đo ${indicatorLabel[indicator_type] || indicator_type}. Vital ID: ${data.id}`,
+          metadata: { vital_id: data.id, indicator_type, value },
+        })
+      } catch (e) {
+        console.warn('[vitals POST] source_documents link failed:', (e as Error).message)
+      }
+    }
+
     return NextResponse.json({ ok: true, id: data.id })
   } catch (err) {
     console.error('[vitals POST] error:', err)

@@ -58,6 +58,7 @@ interface ExtractedReading {
   measured_at?: string | null
   confidence?: 'high' | 'medium' | 'low'
   notes?: string
+  source_image_url?: string | null  // Storage URL — lưu để truy nguồn gốc
 }
 
 export function VitalsAddMeasurementDialogWithIndicatorSelectorAndImageOcr({
@@ -92,7 +93,7 @@ export function VitalsAddMeasurementDialogWithIndicatorSelectorAndImageOcr({
         })
         return
       }
-      const ex = data.extracted as ExtractedReading
+      const ex = { ...(data.extracted as ExtractedReading), source_image_url: data.source_image_url || null }
       setExtracted(ex)
       // Map indicator_type từ AI nếu khớp với 4 indicator UI hỗ trợ
       const mappedKey = (['height', 'weight', 'blood_pressure', 'blood_glucose'] as IndicatorKey[])
@@ -142,6 +143,7 @@ export function VitalsAddMeasurementDialogWithIndicatorSelectorAndImageOcr({
           unit,
           measured_at: extracted?.measured_at || new Date().toISOString(),
           source: extracted ? 'image_ocr' : 'manual',
+          source_image_url: extracted?.source_image_url || null,
           notes: extracted?.notes || null,
         }),
       })
