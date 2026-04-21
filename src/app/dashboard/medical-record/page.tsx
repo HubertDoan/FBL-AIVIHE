@@ -67,7 +67,16 @@ export default function MedicalRecordPage() {
       <MedicalRecordLatestVitalsAndAbnormalPanel record={record} />
 
       {/* 11 sections accordion */}
-      <MedicalRecord11SectionsAccordion record={record} />
+      <MedicalRecord11SectionsAccordion
+        record={record}
+        onReload={() => {
+          setLoading(true)
+          fetch('/api/medical-record')
+            .then(r => r.ok ? r.json() : null)
+            .then(data => setRecord(data))
+            .finally(() => setLoading(false))
+        }}
+      />
 
       <div className="text-xs text-gray-500 border-t pt-3">
         <strong>Nguồn chuẩn:</strong> Thông tư 13/2025/TT-BYT · QĐ 1332 + 2733/QĐ-BYT.
