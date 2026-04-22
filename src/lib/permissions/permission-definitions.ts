@@ -28,7 +28,7 @@ export const PERMISSIONS = {
   BRANCHES_CLONE: 'branches.clone',
   BRANCHES_ASSIGN_STAFF: 'branches.assign_staff',
 
-  // Hồ sơ sức khỏe
+  // Thông tin sức khỏe
   HEALTH_RECORDS_VIEW_OWN: 'health_records.view_own',
   HEALTH_RECORDS_VIEW_FAMILY: 'health_records.view_family',
   HEALTH_RECORDS_VIEW_ASSIGNED: 'health_records.view_assigned_patients',
@@ -133,7 +133,7 @@ export const PERMISSION_GROUPS: Record<string, { label: string; permissions: Per
     ],
   },
   health_records: {
-    label: 'Hồ sơ sức khỏe',
+    label: 'Thông tin sức khỏe',
     permissions: [
       PERMISSIONS.HEALTH_RECORDS_VIEW_OWN,
       PERMISSIONS.HEALTH_RECORDS_VIEW_FAMILY,
@@ -287,7 +287,7 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   'module.health_record_clinic': 'Khám chữa bệnh',
   'module.notifications': 'Thông báo',
   'module.guide': 'Hướng dẫn',
-  'module.medical_record': 'Hồ sơ y tế (11 mục)',
+  'module.medical_record': 'Thông tin theo dõi sức khỏe (11 mục)',
   'module.consultation': 'Hỏi Bác sĩ',
   'module.ai_summary': 'AI Phân tích',
   'module.health_documents': 'Tài liệu sức khỏe',

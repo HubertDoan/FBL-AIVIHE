@@ -80,7 +80,7 @@ export function LandingPainPointsCentralSection() {
             <span className="text-teal-600 font-bold text-sm">AIVIHE giải quyết điều này</span>
             <span className="text-slate-400">→</span>
             <span className="text-slate-600 text-sm">
-              Một hồ sơ trung tâm, kết nối tất cả điểm chạm
+              Ghi nhận và sắp xếp thông tin theo thời gian, kết nối các điểm chạm chăm sóc
             </span>
           </div>
         </div>

@@ -15,7 +15,7 @@ Health Data Backbone cho hệ sinh thái Thong Dong Life.
 ## 10 Modules
 
 1. **Customer Master** — mã TDL, hồ sơ hành chính, phân loại khách hàng
-2. **Health Summary** — hồ sơ sức khỏe chung, cảnh báo nhanh, summary cho Daycare
+2. **Health Summary** — tổng hợp thông tin sức khỏe chung, cảnh báo nhanh, summary cho Daycare
 3. **Family Doctor EMR** — khám, bệnh sử, chẩn đoán, bệnh mạn tính, kế hoạch theo dõi
 4. **Rehab EMR** — đánh giá chức năng, trị liệu, tiến triển PHCN
 5. **Vitals Tracking** — time-series chỉ số, biểu đồ, rule cảnh báo ngưỡng

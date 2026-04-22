@@ -67,7 +67,7 @@ export default function GuidePage() {
             title="THÔNG TIN SỨC KHỎE CÁ NHÂN"
             color="teal"
             items={[
-              { href: '/dashboard/medical-record', icon: FileText, label: 'Thông tin sức khỏe của tôi', desc: 'Hồ sơ y tế 11 mục: dị ứng, tiền sử bệnh, bệnh nền, tiêm chủng... Bạn tự nhập được 5 mục bằng nút "+ Thêm"' },
+              { href: '/dashboard/medical-record', icon: FileText, label: 'Thông tin sức khỏe của tôi', desc: 'Thông tin theo dõi sức khỏe 11 mục: dị ứng, tiền sử bệnh, bệnh nền, tiêm chủng... Bạn tự nhập được 5 mục bằng nút "+ Thêm"' },
               { href: '/dashboard/vitals', icon: HeartPulse, label: 'Chỉ số sức khỏe', desc: '4 chỉ số cơ bản (cao, nặng, HA, đường huyết). 📸 Chụp ảnh máy đo (Omron, OneTouch...) — AI tự đọc giá trị' },
               { href: '/dashboard/upload', icon: Upload, label: 'Upload tài liệu', desc: 'Tải kết quả khám/đơn thuốc/MRI. AI đọc, kiểm tra tên+ngày sinh, bạn xác nhận trước khi lưu' },
               { href: '/dashboard/ai-summary', icon: Sparkles, label: 'AI tổng hợp', desc: 'Báo cáo AI phân tích toàn bộ dữ liệu sức khỏe' },
@@ -104,7 +104,7 @@ export default function GuidePage() {
             items={[
               { href: '/dashboard/notifications', icon: Bell, label: 'Thông báo', desc: '3 loại: 🔧 hệ thống (kỹ thuật), 📢 sự kiện/khuyến mãi (GĐ), 🩺 cá nhân (lịch tái khám, thuốc)' },
               { href: '/dashboard/messages', icon: MessageSquare, label: 'Tin nhắn', desc: 'Chat 2-chiều với Hành chính (Realtime). Read receipt ✓✓. Hỗ trợ 8h-17h, ngoài giờ trả lời trong 24h' },
-              { href: '/dashboard/family', icon: Users, label: 'Gia đình', desc: 'Mời người thân (con/cháu) xem hồ sơ sức khỏe của bạn. Bạn quyết định ai được xem gì' },
+              { href: '/dashboard/family', icon: Users, label: 'Gia đình', desc: 'Mời người thân (con/cháu) xem thông tin sức khỏe của bạn. Bạn quyết định ai được xem gì' },
             ]}
           />
 

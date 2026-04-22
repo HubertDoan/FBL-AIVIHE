@@ -62,9 +62,9 @@ export default function HealthRecordPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold">Hồ sơ sức khỏe AIVIHE</h1>
+        <h1 className="text-2xl font-bold">Thông tin sức khỏe của tôi</h1>
         <p className="text-muted-foreground mt-1">
-          Tổng hợp dữ liệu từ Daycare, Bác sĩ gia đình, PHCN và các lần khám chuyên khoa
+          Ghi nhận và sắp xếp thông tin từ Daycare, Bác sĩ gia đình, PHCN và các lần khám chuyên khoa theo thời gian
         </p>
       </div>
 

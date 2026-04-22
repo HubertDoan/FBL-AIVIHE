@@ -70,10 +70,10 @@ export function LandingInformationJourneyFlowDiagram() {
             Hành trình thông tin
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
-            AIVIHE — Trung tâm kết nối không đứt gãy
+            AIVIHE — Nền tảng kết nối không đứt gãy
           </h2>
           <p className="text-slate-600 text-sm">
-            Một hồ sơ duy nhất — tất cả các bên nhìn thấy cùng một sự thật
+            Ghi nhận và sắp xếp thông tin theo thời gian — các bên cùng theo dõi hành trình chăm sóc
           </p>
         </div>
 
@@ -84,10 +84,10 @@ export function LandingInformationJourneyFlowDiagram() {
             <div className="relative">
               <div className="bg-gradient-to-br from-teal-600 to-emerald-600 rounded-2xl px-8 py-5 text-white text-center shadow-xl shadow-teal-500/20">
                 <div className="text-xs font-bold tracking-widest uppercase text-teal-200 mb-1">
-                  Trung tâm dữ liệu
+                  Nền tảng kết nối
                 </div>
                 <div className="text-2xl font-bold">AIVIHE</div>
-                <div className="text-teal-100 text-xs mt-1">Hồ sơ sức khỏe số trung tâm</div>
+                <div className="text-teal-100 text-xs mt-1">Ghi nhận thông tin sức khỏe theo thời gian</div>
               </div>
               {/* Pulsing ring */}
               <div className="absolute inset-0 rounded-2xl bg-teal-400/20 animate-ping" style={{ animationDuration: '3s' }} />

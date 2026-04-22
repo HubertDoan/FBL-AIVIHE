@@ -12,7 +12,7 @@ import { LandingDoctorApplicationForm } from './landing-doctor-application-form'
 const BENEFITS = [
   'Tiếp cận mạng lưới khách hàng cao tuổi tại Hà Nội',
   'Lịch làm việc linh hoạt — toàn thời gian hoặc bán thời gian',
-  'Hỗ trợ hồ sơ điện tử AIVIHE — theo dõi sức khỏe bệnh nhân liên tục',
+  'Hỗ trợ ghi nhận thông tin sức khỏe trên AIVIHE — theo dõi bệnh nhân liên tục theo thời gian',
   'Thu nhập rõ ràng — theo buổi, theo ngày hoặc theo gói',
 ]
 

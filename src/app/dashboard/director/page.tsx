@@ -128,7 +128,7 @@ export default function DirectorPage() {
       </div>
 
       <Tabs defaultValue="kpi" className="space-y-4">
-        <TabsList className="flex flex-wrap h-auto gap-1">
+        <TabsList className="flex flex-wrap gap-1 group-data-horizontal/tabs:h-auto py-1">
           <TabsTrigger value="kpi" className="text-base gap-1.5">
             <LayoutDashboard className="size-4" />
             Tổng quan KPIs

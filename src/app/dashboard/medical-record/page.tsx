@@ -11,7 +11,7 @@ import { MedicalRecordLatestVitalsAndAbnormalPanel } from '@/components/medical-
 import type { MedicalRecord11Sections } from '@/lib/demo/demo-medical-record-eleven-sections-data'
 
 /**
- * Hồ sơ y tế — redesign theo SSK-VNeID v10:
+ * Thông tin theo dõi sức khỏe — redesign theo SSK-VNeID v10:
  * 1. Patient header gradient card (red, name + DOB + BHYT + recent events)
  * 2. 12 KPI module cards grid (color-coded borders)
  * 3. Chỉ số gần nhất + Bất thường panel

@@ -135,7 +135,7 @@ export default function ReceptionPage() {
                 'NV hành chính gọi điện KH xác nhận lịch đến trung tâm',
                 'Chuyển thông tin KH (tên, SĐT, ghi chú) sang lễ tân Daycare',
                 'Lễ tân Daycare tại thongdonglife.vn tiếp nhận và khai hồ sơ Daycare',
-                'Hồ sơ sức khỏe trên AIVIHE tự động liên thông khi KH check-in Daycare',
+                'Thông tin sức khỏe trên AIVIHE tự động liên thông khi KH check-in Daycare',
               ]}
               link="https://thongdonglife.vn"
               linkLabel="Mở Thong Dong Daycare"

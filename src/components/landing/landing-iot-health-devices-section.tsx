@@ -168,7 +168,7 @@ export function IotHealthDevicesSection() {
               <span className="block text-xs font-normal text-slate-500 mt-0.5">Trạm AI Medical Hub MDEC-003 · MediExpress Vietnam</span>
             </h3>
             <p className="text-xs text-slate-600 mt-1.5 max-w-xl mx-auto">
-              Mỗi cảm biến ghi nhận một chỉ số sinh hiệu — dữ liệu tự đồng bộ hồ sơ sức khỏe AIVIHE, không nhập tay.
+              Mỗi cảm biến ghi nhận một chỉ số sinh hiệu — dữ liệu tự đồng bộ về AIVIHE để theo dõi theo thời gian, không nhập tay.
             </p>
           </div>
 

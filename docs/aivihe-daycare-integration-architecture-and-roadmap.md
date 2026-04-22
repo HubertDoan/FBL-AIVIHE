@@ -139,7 +139,7 @@ Khách hàng
 └── Hồ sơ chung
     ├── Tab 1. Thông tin chung            (Daycare)
     ├── Tab 2. Daycare                    (Daycare)
-    ├── Tab 3. Hồ sơ sức khỏe chung       (Shared — BSGĐ ghi, Daycare đọc hạn chế)
+    ├── Tab 3. Thông tin sức khỏe chung    (Shared — BSGĐ ghi, Daycare đọc hạn chế)
     ├── Tab 4. Bác sỹ gia đình            (AIVIHe)
     ├── Tab 5. PHCN                       (AIVIHe / Rehab)
     ├── Tab 6. Chỉ số theo dõi            (mixed: Daycare + AIVIHe + wearable)
@@ -212,7 +212,7 @@ Step 5. Nếu khách đăng ký PHCN:
 | `rehab_therapist` | R | R | R | **R/W** | R | R | R/W (rehab part) | R/W | R (rehab docs) |
 | `family_viewer` | R | R (scope=general_care) | — | — | R (snapshot) | R (reminders) | R | R (open only) | — |
 
-### 9.2 Field-level trong Tab 3 "Hồ sơ sức khỏe chung"
+### 9.2 Field-level trong Tab 3 "Thông tin sức khỏe chung"
 | Field | Daycare (care_staff/nurse) | BSGĐ | PHCN |
 |---|---|---|---|
 | `blood_type`, `height_cm`, `weight_kg` | R/W (đo tại Daycare) | R/W | R |

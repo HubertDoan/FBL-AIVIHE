@@ -88,7 +88,7 @@ export function FamilyMemberHealth({
         <DialogHeader>
           <DialogTitle className="text-xl flex items-center gap-2">
             <Heart className="size-5 text-red-500" />
-            Hồ sơ sức khỏe - {memberName}
+            Thông tin sức khỏe - {memberName}
           </DialogTitle>
         </DialogHeader>
 

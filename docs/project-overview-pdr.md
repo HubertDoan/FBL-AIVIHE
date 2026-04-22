@@ -27,7 +27,7 @@
 | # | Module | Vai Trò | Trạng Thái |
 |---|--------|---------|-----------|
 | 1 | **Customer Master** | Mã TDL, hồ sơ hành chính, phân loại KH | ✅ Done |
-| 2 | **Health Summary** | Hồ sơ sức khỏe chung, cảnh báo, summary Daycare | ✅ Done |
+| 2 | **Health Summary** | Tổng hợp thông tin sức khỏe chung, cảnh báo, summary Daycare | ✅ Done |
 | 3 | **Family Doctor EMR** | Khám, bệnh sử, chẩn đoán, bệnh mạn tính | 🚧 In Progress |
 | 4 | **Rehab EMR** | Đánh giá chức năng, trị liệu PHCN | ⏳ Planned |
 | 5 | **Vitals Tracking** | Time-series chỉ số, biểu đồ, rule cảnh báo | 🚧 In Progress |
@@ -176,7 +176,7 @@ TDL-{LOCATION}-{SEQUENCE}
   ...
 ```
 
-**Rule:** Một khách hàng = 1 mã TDL = 1 hồ sơ sức khỏe thống nhất
+**Rule:** Một khách hàng = 1 mã TDL = nguồn thông tin sức khỏe thống nhất theo thời gian
 
 ### 3-Layer Data Architecture
 ```

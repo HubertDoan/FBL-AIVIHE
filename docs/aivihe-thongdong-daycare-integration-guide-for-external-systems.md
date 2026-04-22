@@ -98,7 +98,7 @@ interface Citizen {
   updated_at: string;
 }
 
-// HealthProfile — hồ sơ sức khỏe cơ bản
+// HealthProfile — thông tin sức khỏe cơ bản
 interface HealthProfile {
   id: string;
   citizen_id: string;
@@ -242,7 +242,7 @@ Lấy thông tin profile user hiện tại.
 ---
 
 #### `GET /api/profile/health`
-Lấy hồ sơ sức khỏe đầy đủ (Layer 2 confirmed records).
+Lấy thông tin sức khỏe đầy đủ (Layer 2 confirmed records).
 
 **Response 200:**
 ```json

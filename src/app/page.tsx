@@ -128,6 +128,22 @@ export default function LandingPage() {
               Lưu tài liệu, đơn thuốc, chỉ số của người thân tại <span className="font-semibold text-slate-900">một nơi</span> — để không còn thất lạc, không còn kể lại từ đầu mỗi lần đi khám. <span className="font-semibold text-slate-900">Trí tuệ nhân tạo (AI)</span> giúp cập nhật thông tin, tổng hợp kết quả và phân tích xu hướng — để mỗi cá nhân hiểu rõ tình trạng sức khỏe của mình.
             </p>
 
+            {/* 3-lớp định hướng chuẩn — theo tinh thần AIVIHE (PGS.TS. Doãn Ngọc Hải) */}
+            <div className="grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto mb-6">
+              <div className="bg-white/70 backdrop-blur border border-teal-100 rounded-xl px-4 py-3 text-left">
+                <div className="text-xs font-bold text-teal-700 uppercase tracking-wide mb-1">1. Ghi nhận</div>
+                <div className="text-sm text-slate-700">Sắp xếp thông tin sức khỏe theo thời gian</div>
+              </div>
+              <div className="bg-white/70 backdrop-blur border border-emerald-100 rounded-xl px-4 py-3 text-left">
+                <div className="text-xs font-bold text-emerald-700 uppercase tracking-wide mb-1">2. AI hỗ trợ</div>
+                <div className="text-sm text-slate-700">Tổng hợp và gợi ý theo dõi</div>
+              </div>
+              <div className="bg-white/70 backdrop-blur border border-cyan-100 rounded-xl px-4 py-3 text-left">
+                <div className="text-xs font-bold text-cyan-700 uppercase tracking-wide mb-1">3. Bác sĩ gia đình</div>
+                <div className="text-sm text-slate-700">Có thêm căn cứ tư vấn, dự phòng, phát hiện sớm</div>
+              </div>
+            </div>
+
             {/* CTA — TRẢ LỜI "LÀM GÌ TIẾP THEO" (1 nút chính + 1 text link) */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
               <Link href="/register" className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-7 py-3.5 rounded-lg shadow-lg shadow-teal-500/30 hover:shadow-xl transition-all text-base md:text-lg">
@@ -156,7 +172,7 @@ export default function LandingPage() {
             <div className="inline-block text-xs font-bold text-teal-600 tracking-widest uppercase mb-2">Giải pháp</div>
             <h2 className="text-2xl md:text-3xl font-bold mb-2 text-slate-900">AIVIHE giải quyết như thế nào</h2>
             <p className="text-slate-600 text-sm md:text-base leading-relaxed">
-              Một hồ sơ trung tâm — kết nối tất cả, giữ thông tin liên tục không đứt gãy
+              Ghi nhận và sắp xếp thông tin sức khỏe theo thời gian — kết nối các bên trên hành trình chăm sóc
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
