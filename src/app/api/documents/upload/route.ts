@@ -2,13 +2,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { uploadDocument } from '@/lib/supabase/storage'
 import { isDemoMode, getDemoUser } from '@/lib/demo/demo-api-helper'
+import {
+  validateUploadedFile,
+  sanitizeFilename,
+} from '@/lib/security/file-upload-magic-byte-validator'
+import {
+  checkRateLimit,
+  getClientIp,
+} from '@/lib/security/rate-limit-upstash-sliding-window'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
-const ALLOWED_TYPES = [
+const ALLOWED_MIME_TYPES = [
   'image/jpeg',
   'image/png',
   'application/pdf',
   'image/heic',
+  'image/webp',
 ]
 
 /**
@@ -20,6 +29,11 @@ const ALLOWED_TYPES = [
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 20 uploads/day/IP (cost control + abuse)
+    const clientIp = getClientIp(request)
+    const limited = await checkRateLimit('aiOcrByUser', clientIp)
+    if (limited) return limited
+
     const formData = await request.formData()
     const file = formData.get('file') as File | null
     const citizenId = formData.get('citizenId') as string | null
@@ -31,15 +45,16 @@ export async function POST(request: NextRequest) {
     if (!citizenId) {
       return NextResponse.json({ error: 'Thiếu ID công dân.' }, { status: 400 })
     }
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: 'Tệp quá lớn, tối đa 10MB.' }, { status: 400 })
+
+    // Hardened validation — magic byte + size + filename sanitization
+    const validation = await validateUploadedFile(file, {
+      maxBytes: MAX_FILE_SIZE,
+      allowedMimes: ALLOWED_MIME_TYPES,
+    })
+    if (!validation.ok) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
     }
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return NextResponse.json(
-        { error: 'Định dạng không hỗ trợ. Chấp nhận: JPEG, PNG, PDF, HEIC.' },
-        { status: 400 }
-      )
-    }
+    const safeFilename = sanitizeFilename(file.name)
 
     // ── Demo mode — trả về document id giả để flow tiếp tục ──────────────────
     if (isDemoMode()) {
@@ -71,9 +86,11 @@ export async function POST(request: NextRequest) {
       .insert({
         citizen_id: citizenId,
         file_url: path,
-        file_type: file.type,
+        // Dùng MIME verify bằng magic byte — không trust client
+        file_type: validation.detectedMime,
         file_size_bytes: file.size,
-        original_filename: file.name,
+        // Sanitize filename trước khi lưu DB (tránh XSS ở UI list)
+        original_filename: safeFilename,
         document_type: 'other',
         notes: notes || null,
         is_classified: false,

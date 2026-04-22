@@ -3,6 +3,11 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { validateUploadedFile } from '@/lib/security/file-upload-magic-byte-validator'
+import {
+  checkRateLimit,
+  getClientIp,
+} from '@/lib/security/rate-limit-upstash-sliding-window'
 
 const SYSTEM_PROMPT = `Bạn là AI assistant chuyên đọc màn hình thiết bị y tế gia đình.
 
@@ -38,20 +43,31 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Rate limit: 20 OCR calls/day/IP (Anthropic API cost control)
+    const clientIp = getClientIp(request)
+    const limited = await checkRateLimit('aiOcrByUser', clientIp)
+    if (limited) return limited
+
     const formData = await request.formData()
     const file = formData.get('image') as File | null
     if (!file) {
       return NextResponse.json({ error: 'Thiếu ảnh' }, { status: 400 })
     }
 
+    // Hardened validation — magic byte verify (chặn spoofing/malware)
+    type MediaType = 'image/jpeg' | 'image/png' | 'image/webp'
+    const ALLOWED: MediaType[] = ['image/jpeg', 'image/png', 'image/webp']
+    const validation = await validateUploadedFile(file, {
+      maxBytes: 10 * 1024 * 1024,
+      allowedMimes: ALLOWED,
+    })
+    if (!validation.ok) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
+    }
+    const mediaType = validation.detectedMime as MediaType
+
     const buffer = Buffer.from(await file.arrayBuffer())
     const base64 = buffer.toString('base64')
-    const mediaTypeRaw = file.type || 'image/jpeg'
-    type MediaType = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
-    const VALID_MEDIA: MediaType[] = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-    const mediaType: MediaType = VALID_MEDIA.includes(mediaTypeRaw as MediaType)
-      ? mediaTypeRaw as MediaType
-      : 'image/jpeg'
 
     // Run AI OCR + Storage upload in parallel
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
