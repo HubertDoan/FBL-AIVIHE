@@ -18,6 +18,7 @@ import { LandingDoctorApplicationSection } from '@/components/landing/landing-do
 import { LandingPainPointsCentralSection } from '@/components/landing/landing-pain-points-central-section'
 import { LandingBenefitsByUserGroupTabs } from '@/components/landing/landing-benefits-by-user-group-tabs'
 import { LandingInformationJourneyFlowDiagram } from '@/components/landing/landing-information-journey-flow-diagram'
+import { LandingCollapsibleSection } from '@/components/landing/landing-click-to-expand-collapsible-section-wrapper'
 
 /**
  * Landing aivihe.vn — Progressive Disclosure Layout (theo ý kiến chuyên gia 21/04/2026).
@@ -183,8 +184,15 @@ export default function LandingPage() {
       {/* ===== 5. LỢI ÍCH 5 NHÓM (tabs — JTBD) ===== */}
       <LandingBenefitsByUserGroupTabs />
 
-      {/* ===== 6. CÁCH AI HOẠT ĐỘNG ===== */}
-      <HowAiHelpsSection />
+      {/* ===== 6. CÁCH AI HOẠT ĐỘNG (collapse — không phải decision primary) ===== */}
+      <LandingCollapsibleSection
+        id="cach-ai"
+        label="Xem cách AI hỗ trợ chi tiết"
+        labelOpen="Ẩn chi tiết AI"
+        accent="teal"
+      >
+        <HowAiHelpsSection />
+      </LandingCollapsibleSection>
 
       {/* ===== 7. NGUYÊN TẮC AN TOÀN (Trust builder) ===== */}
       <section className="py-6 bg-white">
@@ -219,8 +227,15 @@ export default function LandingPage() {
       {/* ===== 11. KÊNH TIẾP CẬN ===== */}
       <LandingAccessChannelsSection />
 
-      {/* ===== 12. ĐỘI NGŨ & ĐỐI TÁC ===== */}
-      <PartnersAndAdvisorsSection />
+      {/* ===== 12. ĐỘI NGŨ & ĐỐI TÁC (collapse — trust builder, không là decision driver) ===== */}
+      <LandingCollapsibleSection
+        id="doi-ngu"
+        label="Xem đội ngũ chuyên gia & đối tác"
+        labelOpen="Ẩn đội ngũ chuyên gia"
+        accent="slate"
+      >
+        <PartnersAndAdvisorsSection />
+      </LandingCollapsibleSection>
 
       {/* ===== 13. FORM ĐĂNG KÝ BS (B2B funnel riêng, không cạnh tranh hero) ===== */}
       <div id="dang-ky-bac-si">
