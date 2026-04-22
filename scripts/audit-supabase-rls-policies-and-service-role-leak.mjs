@@ -36,53 +36,27 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
 })
 
 // ──────────────────────────────────────────────────────────────────────
-// 1. Query pg_tables + pg_policies via RPC (Supabase Postgres introspection)
+// 1. Query pg_tables + pg_policies via RPC `audit_rls_policies`
+//    (được tạo bởi migration 00038 — read-only, service role only)
 // ──────────────────────────────────────────────────────────────────────
 
-const CHECK_SQL = `
-  SELECT
-    t.tablename,
-    t.schemaname,
-    c.relrowsecurity AS rls_enabled,
-    c.relforcerowsecurity AS rls_forced,
-    COALESCE(
-      (SELECT jsonb_agg(jsonb_build_object(
-        'policyname', p.policyname,
-        'cmd', p.cmd,
-        'qual', p.qual,
-        'with_check', p.with_check,
-        'roles', p.roles
-      )) FROM pg_policies p WHERE p.schemaname = t.schemaname AND p.tablename = t.tablename),
-      '[]'::jsonb
-    ) AS policies
-  FROM pg_tables t
-  JOIN pg_class c ON c.relname = t.tablename
-  JOIN pg_namespace n ON n.oid = c.relnamespace AND n.nspname = t.schemaname
-  WHERE t.schemaname = 'public'
-  ORDER BY t.tablename;
-`
-
+/**
+ * Gọi RPC `audit_rls_policies` (migration 00038).
+ * Nếu RPC chưa apply → in hướng dẫn paste migration SQL vào Supabase SQL Editor.
+ */
 async function auditRls() {
-  // Supabase JS SDK không có raw SQL trực tiếp — dùng rpc hoặc REST fetch
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
-    method: 'POST',
-    headers: {
-      apikey: SERVICE_KEY,
-      Authorization: `Bearer ${SERVICE_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ sql: CHECK_SQL }),
-  })
+  const { data, error } = await supabase.rpc('audit_rls_policies')
 
-  if (!res.ok) {
-    // Fallback: nếu không có exec_sql RPC → hướng dẫn user tạo
-    console.error('⚠️  exec_sql RPC not found. Run this SQL in Supabase SQL Editor manually:')
-    console.error('\n' + CHECK_SQL + '\n')
-    console.error('Rồi paste kết quả JSON vào plans/reports/rls-audit-manual.json')
+  if (error) {
+    // RPC chưa apply — hướng dẫn thầy paste migration
+    console.error('\n⚠️  RPC `audit_rls_policies` chưa có trong Supabase.')
+    console.error('   Paste migration sau vào Supabase SQL Editor (1 lần duy nhất):\n')
+    console.error('   📄 supabase/migrations/00038-create-audit-rls-policies-rpc-for-security-scanning.sql\n')
+    console.error('   Lỗi: ' + (error.message || JSON.stringify(error)))
     return null
   }
 
-  return res.json()
+  return data
 }
 
 // ──────────────────────────────────────────────────────────────────────
