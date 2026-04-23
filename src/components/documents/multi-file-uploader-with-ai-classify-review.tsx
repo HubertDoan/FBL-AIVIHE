@@ -94,7 +94,7 @@ export function MultiFileUploaderWithAiClassifyReview({ citizenId, customerName,
       const clsRes = await fetch('/api/documents/classify-and-extract', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename: item.file.name, customer_name: customerName }),
+        body: JSON.stringify({ filename: item.file.name, customer_name: customerName, document_id: uploadData.documentId }),
       })
       const clsData = await clsRes.json()
       if (!clsRes.ok) {

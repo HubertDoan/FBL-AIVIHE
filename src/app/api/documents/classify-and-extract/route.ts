@@ -1,12 +1,12 @@
 // POST /api/documents/classify-and-extract
-// Nhận filename + content hint, trả về category (daycare/family-doctor/rehab/clinic)
-// + extracted patient name + key fields (demo mock)
-//
-// Production: gọi Claude Vision API để classify + extract thật.
-// Demo: suy luận từ tên file + trả mock data để user kiểm tra.
+// Production: dùng Claude Vision OCR để nhận diện và trích xuất dữ liệu từ ảnh/tài liệu thật.
+// Demo: suy luận từ tên file + trả mock data.
 
 import { NextRequest, NextResponse } from 'next/server'
 import { isDemoMode, getDemoUser } from '@/lib/demo/demo-api-helper'
+import { callClaudeVision } from '@/lib/ai/claude-client'
+import { createServiceClient, createClient } from '@/lib/supabase/server'
+import { getDocumentUrl } from '@/lib/supabase/storage'
 
 type Category = 'family-doctor' | 'rehab' | 'clinic' | 'daycare'
 
@@ -34,129 +34,98 @@ const CATEGORY_LABELS: Record<Category, string> = {
   daycare: 'Daycare',
 }
 
-/** Rule-based classifier — dựa trên filename keywords */
+const VISION_SUPPORTED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+
+/** Rule-based fallback — dựa trên filename keywords */
 function classifyByFilename(filename: string): Category {
   const lower = filename.toLowerCase()
   if (/phcn|rehab|tri[ -]?li[eê]u|ph[uụ]c[ -]?h[oồ]i/.test(lower)) return 'rehab'
   if (/daycare|sinh[ -]?ho[aạ]t|check[ -]?in/.test(lower)) return 'daycare'
   if (/bsgd|bs[ -]?gia[ -]?d[iì]nh|family[ -]?doctor|kham[ -]?t[uư][ -]?v[aấ]n/.test(lower)) return 'family-doctor'
-  // X-quang / siêu âm / xét nghiệm / kết quả / BV → chuyên khoa
-  if (/xquang|xet[ -]?nghi[eệ]m|sieu[ -]?am|mri|ct|ket[ -]?qua|benh[ -]?vien|bv[ -]?|chuy[eê]n[ -]?khoa|tim[ -]?m[aạ]ch|khop|co[ -]?xuong/.test(lower)) return 'clinic'
-  // Default
+  if (/xquang|xn |xet[ -]?nghi[eệ]m|sieu[ -]?am|mri|ct[ -]|ket[ -]?qua|benh[ -]?vien|bv[ -]|chuy[eê]n[ -]?khoa|huyet|mau[ -]|sinh[ -]?hoa/.test(lower)) return 'clinic'
   return 'clinic'
 }
 
-/** Mock extracted fields — thực tế sẽ từ Claude Vision OCR */
+function buildOcrPrompt(customerName: string) {
+  const system = `Bạn là AI chuyên đọc tài liệu y tế tiếng Việt. Nhiệm vụ: trích xuất thông tin từ ảnh tài liệu y tế và trả về JSON thuần túy (không có markdown, không có code block).`
+
+  const user = `Đọc tài liệu y tế trong ảnh và trả về JSON với cấu trúc sau (tất cả giá trị đều là string hoặc array of string, null nếu không tìm thấy):
+
+{
+  "category": "clinic" | "family-doctor" | "rehab" | "daycare",
+  "category_label": "tên loại tài liệu tiếng Việt",
+  "confidence": 0.0-1.0,
+  "extracted_patient_name": "họ tên bệnh nhân",
+  "extracted_date": "YYYY-MM-DD hoặc null",
+  "extracted_facility": "tên cơ sở y tế",
+  "extracted_doctor": "tên bác sĩ/kỹ thuật viên",
+  "extracted_diagnosis": "chẩn đoán hoặc mục đích khám",
+  "extracted_specialty": "chuyên khoa",
+  "extracted_reason": "lý do khám",
+  "extracted_tests": ["tên xét nghiệm: kết quả đơn vị (tham chiếu)", ...],
+  "extracted_medications": ["thuốc: liều dùng", ...],
+  "extracted_recommendations": ["hướng dẫn 1", ...],
+  "raw_text_preview": "tóm tắt nội dung chính tối đa 200 ký tự"
+}
+
+Phân loại category:
+- "clinic": xét nghiệm, X-quang, siêu âm, MRI, CT, kết quả, bệnh viện, phòng khám chuyên khoa
+- "family-doctor": khám tổng quát, BS gia đình, tư vấn sức khỏe
+- "rehab": vật lý trị liệu, PHCN, phục hồi chức năng
+- "daycare": sinh hoạt ngày, check-in, hoạt động
+
+Tên bệnh nhân mặc định nếu không đọc được: "${customerName}".
+Trả về JSON thuần túy, không giải thích thêm.`
+
+  return { system, user }
+}
+
+/** Claude Vision OCR thật — dùng documentId để lấy file từ storage */
+async function classifyWithVision(documentId: string, customerName: string): Promise<ClassifyResult | null> {
+  try {
+    const svc = await createServiceClient()
+    const { data: doc } = await svc
+      .from('source_documents')
+      .select('file_url, file_type, original_filename')
+      .eq('id', documentId)
+      .single()
+
+    if (!doc) return null
+
+    const mimeType = doc.file_type || 'image/jpeg'
+    if (!VISION_SUPPORTED_TYPES.includes(mimeType)) return null // PDF/HEIC: fallback
+
+    const signedUrl = await getDocumentUrl(svc, doc.file_url)
+    const response = await fetch(signedUrl)
+    const arrayBuffer = await response.arrayBuffer()
+    const base64 = Buffer.from(arrayBuffer).toString('base64')
+
+    const { system, user } = buildOcrPrompt(customerName)
+    const rawResponse = await callClaudeVision(base64, mimeType, system, user)
+
+    const jsonMatch = rawResponse.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) return null
+
+    const parsed = JSON.parse(jsonMatch[0]) as ClassifyResult
+    if (!parsed.category || !CATEGORY_LABELS[parsed.category]) {
+      parsed.category = classifyByFilename(doc.original_filename || '')
+    }
+    parsed.category_label = CATEGORY_LABELS[parsed.category]
+    return parsed
+  } catch {
+    return null
+  }
+}
+
+/** Mock extraction cho demo */
 function generateMockExtraction(category: Category, filename: string, customerName: string): ClassifyResult {
   const today = new Date().toISOString().slice(0, 10)
-  const base = {
+  const base: ClassifyResult = {
     category,
     category_label: CATEGORY_LABELS[category],
     confidence: 0.75 + Math.random() * 0.2,
-    extracted_patient_name: customerName, // Demo: assume đúng tên KH
-    extracted_date: today,
-    extracted_tests: [] as string[],
-    extracted_medications: [] as string[],
-    extracted_recommendations: [] as string[],
-    raw_text_preview: `[Mock] AI đã trích xuất nội dung từ "${filename}". Trong môi trường production, đây sẽ là đoạn text thật từ Claude Vision OCR.`,
-  }
-
-  if (category === 'clinic') {
-    return {
-      ...base,
-      extracted_facility: 'Bệnh viện Phục hồi chức năng Hà Nội',
-      extracted_doctor: 'BS. Phạm Văn Đức',
-      extracted_specialty: 'Cơ xương khớp',
-      extracted_diagnosis: 'Chưa có chẩn đoán rõ — cần BS xem xét',
-      extracted_reason: 'Kiểm tra định kỳ',
-      extracted_tests: ['X-quang', 'Xét nghiệm máu cơ bản'],
-      extracted_medications: [],
-      extracted_recommendations: ['Tái khám sau 3 tháng'],
-    }
-  }
-  if (category === 'family-doctor') {
-    return {
-      ...base,
-      extracted_facility: 'Phòng khám BS gia đình Thong Dong',
-      extracted_doctor: 'BS. Nguyễn Hải',
-      extracted_specialty: null,
-      extracted_diagnosis: 'Khám định kỳ',
-      extracted_reason: 'Theo dõi sức khỏe tổng quát',
-      extracted_tests: [],
-      extracted_medications: ['Vitamin D3 1000IU/ngày'],
-      extracted_recommendations: ['Giữ chế độ ăn uống hợp lý', 'Tập thể dục nhẹ 30 phút/ngày'],
-    }
-  }
-  if (category === 'rehab') {
-    return {
-      ...base,
-      extracted_facility: 'Trung tâm Thong Dong Daycare — khu PHCN',
-      extracted_doctor: 'KTV Trần Minh',
-      extracted_specialty: null,
-      extracted_diagnosis: 'Trị liệu vận động',
-      extracted_reason: 'Buổi trị liệu định kỳ',
-      extracted_tests: [],
-      extracted_medications: [],
-      extracted_recommendations: ['Tập bài tập tại nhà 2 lần/ngày'],
-    }
-  }
-  // daycare
-  return {
-    ...base,
-    extracted_facility: 'Thong Dong Daycare HaPu',
-    extracted_doctor: null,
-    extracted_specialty: null,
-    extracted_diagnosis: null,
-    extracted_reason: 'Ghi nhận hoạt động hằng ngày',
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    let customerName = 'Khách hàng'
-
-    if (isDemoMode()) {
-      const user = await getDemoUser(request)
-      if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-      customerName = user.fullName || customerName
-    } else {
-      // Production: auth via Supabase session
-      const { createClient } = await import('@/lib/supabase/server')
-      const supabase = await createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-      const { data: citizen } = await supabase
-        .from('citizens')
-        .select('full_name')
-        .eq('id', user.id)
-        .single()
-      if (citizen?.full_name) customerName = citizen.full_name
-    }
-
-    const body = await request.json()
-    const filename: string = body.filename || 'unnamed'
-    const overrideName: string = body.customer_name || customerName
-
-    const category = classifyByFilename(filename)
-    const result = isDemoMode()
-      ? generateMockExtraction(category, filename, overrideName)
-      : generateProductionExtraction(category, filename, overrideName)
-
-    return NextResponse.json({ ok: true, result })
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Unknown'
-    return NextResponse.json({ error: msg }, { status: 500 })
-  }
-}
-
-/** Production extraction — rule-based filename classification, fields left for user to review/edit */
-function generateProductionExtraction(category: Category, filename: string, customerName: string): ClassifyResult {
-  return {
-    category,
-    category_label: CATEGORY_LABELS[category],
-    confidence: 0.6,
     extracted_patient_name: customerName,
-    extracted_date: null,
+    extracted_date: today,
     extracted_facility: null,
     extracted_doctor: null,
     extracted_diagnosis: null,
@@ -165,6 +134,74 @@ function generateProductionExtraction(category: Category, filename: string, cust
     extracted_tests: [],
     extracted_medications: [],
     extracted_recommendations: [],
-    raw_text_preview: `Phân loại tự động dựa trên tên file "${filename}". Vui lòng kiểm tra và điều chỉnh thông tin.`,
+    raw_text_preview: `[Demo] AI đã trích xuất nội dung từ "${filename}".`,
+  }
+  if (category === 'clinic') {
+    return { ...base, extracted_facility: 'Bệnh viện đa khoa', extracted_doctor: 'BS. Phạm Văn Đức', extracted_specialty: 'Cơ xương khớp', extracted_diagnosis: 'Khám định kỳ', extracted_reason: 'Kiểm tra sức khỏe', extracted_tests: ['X-quang', 'Xét nghiệm máu cơ bản'] }
+  }
+  if (category === 'family-doctor') {
+    return { ...base, extracted_facility: 'Phòng khám BS gia đình Thong Dong', extracted_doctor: 'BS. Nguyễn Hải', extracted_diagnosis: 'Khám định kỳ', extracted_reason: 'Theo dõi sức khỏe tổng quát', extracted_medications: ['Vitamin D3 1000IU/ngày'] }
+  }
+  if (category === 'rehab') {
+    return { ...base, extracted_facility: 'Thong Dong Daycare — khu PHCN', extracted_doctor: 'KTV Trần Minh', extracted_diagnosis: 'Trị liệu vận động' }
+  }
+  return { ...base, extracted_facility: 'Thong Dong Daycare HaPu', extracted_reason: 'Ghi nhận hoạt động hằng ngày' }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    let customerName = 'Khách hàng'
+    const body = await request.json()
+    const filename: string = body.filename || 'unnamed'
+    const documentId: string | null = body.document_id || null
+
+    if (isDemoMode()) {
+      const user = await getDemoUser(request)
+      if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      customerName = body.customer_name || user.fullName || customerName
+      const category = classifyByFilename(filename)
+      const result = generateMockExtraction(category, filename, customerName)
+      return NextResponse.json({ ok: true, result })
+    }
+
+    // Production: auth check
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    // Lấy tên bệnh nhân từ citizens
+    const { data: citizen } = await supabase.from('citizens').select('full_name').eq('id', user.id).single()
+    customerName = body.customer_name || citizen?.full_name || customerName
+
+    // Thử OCR với Claude Vision nếu có documentId + API key
+    if (documentId && process.env.ANTHROPIC_API_KEY) {
+      const visionResult = await classifyWithVision(documentId, customerName)
+      if (visionResult) {
+        return NextResponse.json({ ok: true, result: visionResult })
+      }
+    }
+
+    // Fallback: phân loại theo tên file
+    const category = classifyByFilename(filename)
+    const result: ClassifyResult = {
+      category,
+      category_label: CATEGORY_LABELS[category],
+      confidence: 0.5,
+      extracted_patient_name: customerName,
+      extracted_date: null,
+      extracted_facility: null,
+      extracted_doctor: null,
+      extracted_diagnosis: null,
+      extracted_specialty: null,
+      extracted_reason: null,
+      extracted_tests: [],
+      extracted_medications: [],
+      extracted_recommendations: [],
+      raw_text_preview: `Phân loại theo tên file "${filename}". Vui lòng kiểm tra và điều chỉnh.`,
+    }
+    return NextResponse.json({ ok: true, result })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Unknown'
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
