@@ -62,7 +62,7 @@ function buildOcrPrompt(customerName: string) {
   "extracted_diagnosis": "chẩn đoán hoặc mục đích khám",
   "extracted_specialty": "chuyên khoa",
   "extracted_reason": "lý do khám",
-  "extracted_tests": ["tên xét nghiệm: kết quả đơn vị (tham chiếu)", ...],
+  "extracted_tests": ["TÊN XÉT NGHIỆM::KẾT QUẢ::ĐƠN VỊ::THAM CHIẾU", ...],
   "extracted_medications": ["thuốc: liều dùng", ...],
   "extracted_recommendations": ["hướng dẫn 1", ...],
   "raw_text_preview": "tóm tắt nội dung chính tối đa 200 ký tự"

@@ -35,6 +35,57 @@ export interface AiClassifyResult {
   raw_text_preview: string
 }
 
+// Parse "NAME::VALUE::UNIT::REF" — fallback giữ nguyên chuỗi nếu không có separator
+function parseTestRow(raw: string) {
+  const p = raw.split('::').map(s => s.trim())
+  if (p.length >= 2) return { name: p[0], value: p[1], unit: p[2] || '', ref: p[3] || '' }
+  // Legacy format: "NAME: VALUE UNIT (REF)" — best-effort parse
+  const m = raw.match(/^(.+?):\s*([\d.,]+)\s*([^\s(]+)?\s*(?:\(([^)]+)\))?$/)
+  if (m) return { name: m[1].trim(), value: m[2], unit: m[3] || '', ref: m[4] || '' }
+  return { name: raw, value: '', unit: '', ref: '' }
+}
+
+// Bảng xét nghiệm có thể chỉnh sửa từng ô
+function TestsTable({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const rows = value.split('\n').map(s => s.trim()).filter(Boolean)
+  const parsed = rows.map(parseTestRow)
+  const hasStructured = rows.some(r => r.includes('::'))
+
+  if (!hasStructured || rows.length === 0) {
+    return <Textarea value={value} onChange={e => onChange(e.target.value)} rows={4} className="text-xs font-mono" placeholder="Mỗi dòng 1 xét nghiệm" />
+  }
+
+  function updateCell(idx: number, field: 'name' | 'value' | 'unit' | 'ref', val: string) {
+    const updated = parsed.map((r, i) => i === idx ? { ...r, [field]: val } : r)
+    onChange(updated.map(r => `${r.name}::${r.value}::${r.unit}::${r.ref}`).join('\n'))
+  }
+
+  return (
+    <div className="overflow-x-auto rounded border border-gray-200">
+      <table className="w-full text-xs">
+        <thead className="bg-gray-50 text-gray-600">
+          <tr>
+            <th className="text-left px-2 py-1.5 font-medium w-[45%]">Tên xét nghiệm</th>
+            <th className="text-right px-2 py-1.5 font-medium w-[15%]">Kết quả</th>
+            <th className="text-left px-2 py-1.5 font-medium w-[12%]">Đơn vị</th>
+            <th className="text-left px-2 py-1.5 font-medium w-[28%]">Tham chiếu</th>
+          </tr>
+        </thead>
+        <tbody>
+          {parsed.map((row, i) => (
+            <tr key={i} className="border-t border-gray-100 hover:bg-gray-50">
+              <td className="px-1 py-1"><input className="w-full text-xs bg-transparent outline-none focus:bg-white focus:ring-1 focus:ring-teal-300 rounded px-1" value={row.name} onChange={e => updateCell(i, 'name', e.target.value)} /></td>
+              <td className="px-1 py-1"><input className="w-full text-xs text-right bg-transparent outline-none focus:bg-white focus:ring-1 focus:ring-teal-300 rounded px-1 font-medium" value={row.value} onChange={e => updateCell(i, 'value', e.target.value)} /></td>
+              <td className="px-1 py-1"><input className="w-full text-xs bg-transparent outline-none focus:bg-white focus:ring-1 focus:ring-teal-300 rounded px-1 text-gray-500" value={row.unit} onChange={e => updateCell(i, 'unit', e.target.value)} /></td>
+              <td className="px-1 py-1"><input className="w-full text-xs bg-transparent outline-none focus:bg-white focus:ring-1 focus:ring-teal-300 rounded px-1 text-gray-400" value={row.ref} onChange={e => updateCell(i, 'ref', e.target.value)} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 const CATEGORIES = [
   { value: 'daycare', label: '🏠 Daycare' },
   { value: 'family-doctor', label: '👨‍⚕️ Bác sĩ gia đình' },
@@ -219,13 +270,15 @@ export function DocumentClassificationReviewDialog({
             <Textarea value={diagnosis} onChange={e => setDiagnosis(e.target.value)} rows={2} />
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-3">
+          {/* Xét nghiệm — bảng nếu có dữ liệu ::, textarea để edit */}
+          <div className="space-y-1.5">
+            <Label className="text-sm font-semibold">Xét nghiệm</Label>
+            <TestsTable value={tests} onChange={setTests} />
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-sm">Xét nghiệm (mỗi dòng 1 mục)</Label>
-              <Textarea value={tests} onChange={e => setTests(e.target.value)} rows={3} className="text-xs" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm">Đơn thuốc</Label>
+              <Label className="text-sm">Đơn thuốc (mỗi dòng 1 mục)</Label>
               <Textarea value={meds} onChange={e => setMeds(e.target.value)} rows={3} className="text-xs" />
             </div>
             <div className="space-y-1.5">
