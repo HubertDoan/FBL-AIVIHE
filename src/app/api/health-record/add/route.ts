@@ -102,9 +102,9 @@ export async function POST(request: NextRequest) {
     const parsedTests = tests.map(parseTestString)
     const visitDate = data.date || new Date().toISOString().slice(0, 10)
 
-    // Layer 1: update source_documents
+    // Layer 1: update source_documents (critical — fail nếu lỗi)
     if (documentId) {
-      await svc.from('source_documents').update({
+      const { error: docErr } = await svc.from('source_documents').update({
         document_type: CATEGORY_TO_DOC_TYPE[category] || 'other',
         document_date: visitDate,
         facility_name: data.facility || null,
@@ -112,24 +112,28 @@ export async function POST(request: NextRequest) {
         ai_classification: JSON.stringify({ category, doctor: data.doctor_name, specialty: data.specialty, reason: data.reason, diagnosis: data.diagnosis, tests, medications: data.medications, recommendations: data.recommendations, confirmed_by: user.id, confirmed_at: new Date().toISOString() }),
         metadata: { category, specialty: data.specialty || null, reason: data.reason || null, diagnosis: data.diagnosis || null, doctor: data.doctor_name || null, tests_count: tests.length },
       }).eq('id', documentId)
+      if (docErr) console.error('[health-record/add] source_documents update error:', docErr.message)
 
-      // Layer 2: extracted_records
+      // Layer 2: extracted_records (best effort)
       if (parsedTests.length > 0) {
-        await svc.from('extracted_records').insert(parsedTests.map(t => ({
-          document_id: documentId,
-          field_name: t.name,
-          field_value: t.value,
-          unit: t.unit,
-          reference_range: t.ref,
-          confidence_score: 0.9,
-          ai_model: 'claude-sonnet-4',
-          status: 'confirmed',
-        })))
+        try {
+          await svc.from('extracted_records').insert(parsedTests.map(t => ({
+            document_id: documentId,
+            field_name: t.name,
+            field_value: t.value,
+            unit: t.unit,
+            reference_range: t.ref,
+            confidence_score: 0.9,
+            ai_model: 'claude-sonnet-4',
+            status: 'confirmed',
+          })))
+        } catch (e) { console.error('[health-record/add] extracted_records error:', e) }
       }
     }
 
-    // Layer 3: health_visits + lab_tests (EMR tables)
+    // Layer 3: health_visits + lab_tests (best effort — tables may not be migrated yet)
     let visitId: string | null = null
+    try {
     if (category !== 'daycare') {
       const visitType = category === 'clinic' ? 'specialist' : category === 'rehab' ? 'follow_up' : 'checkup'
       const { data: visit, error: visitErr } = await svc.from('health_visits').insert({
@@ -142,23 +146,27 @@ export async function POST(request: NextRequest) {
         notes: data.diagnosis || null,
         source_document_id: documentId,
       }).select('id').single()
-      if (!visitErr && visit) visitId = visit.id
+      if (visitErr) console.error('[health-record/add] health_visits error:', visitErr.message)
+      else if (visit) visitId = visit.id
     }
+    } catch (e) { console.error('[health-record/add] health_visits exception:', e) }
 
     // lab_tests: lưu từng chỉ số xét nghiệm
     if (category === 'clinic' && parsedTests.length > 0 && visitId) {
-      await svc.from('lab_tests').insert(parsedTests.map(t => ({
-        citizen_id: user.id,
-        visit_id: visitId,
-        source_document_id: documentId,
-        test_name: t.name,
-        result_value: t.value,
-        unit: t.unit,
-        reference_range: t.ref,
-        is_abnormal: isAbnormal(t.value, t.ref),
-        test_date: visitDate,
-        test_type: 'hematology',
-      })))
+      try {
+        await svc.from('lab_tests').insert(parsedTests.map(t => ({
+          citizen_id: user.id,
+          visit_id: visitId,
+          source_document_id: documentId,
+          test_name: t.name,
+          result_value: t.value,
+          unit: t.unit,
+          reference_range: t.ref,
+          is_abnormal: isAbnormal(t.value, t.ref),
+          test_date: visitDate,
+          test_type: 'hematology',
+        })))
+      } catch (e) { console.error('[health-record/add] lab_tests error:', e) }
     }
 
     await svc.from('audit_logs').insert({
