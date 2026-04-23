@@ -113,9 +113,9 @@ export function DocumentClassificationReviewDialog({
   const [specialty, setSpecialty] = useState(classifyResult.extracted_specialty || '')
   const [reason, setReason] = useState(classifyResult.extracted_reason || '')
   const [diagnosis, setDiagnosis] = useState(classifyResult.extracted_diagnosis || '')
-  const [tests, setTests] = useState(classifyResult.extracted_tests.join('\n'))
-  const [meds, setMeds] = useState(classifyResult.extracted_medications.join('\n'))
-  const [recs, setRecs] = useState(classifyResult.extracted_recommendations.join('\n'))
+  const [tests, setTests] = useState((classifyResult.extracted_tests ?? []).join('\n'))
+  const [meds, setMeds] = useState((classifyResult.extracted_medications ?? []).join('\n'))
+  const [recs, setRecs] = useState((classifyResult.extracted_recommendations ?? []).join('\n'))
   const [saving, setSaving] = useState(false)
 
   const nameMismatch = useMemo(() => {
