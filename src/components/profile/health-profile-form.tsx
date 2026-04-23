@@ -24,6 +24,52 @@ interface HealthProfileFormProps {
   onSave: (data: Partial<HealthProfile>) => Promise<void>
 }
 
+type TagFieldName = 'allergies' | 'conditions' | 'medications'
+
+// Module-level component — tránh remount Input mỗi render (bug "chỉ nhập 1 ký tự")
+function TagField({ label, field, items, editing, tagInput, setTagInput, onRemove, onAdd }: {
+  label: string
+  field: TagFieldName
+  items: string[]
+  editing: boolean
+  tagInput: Record<TagFieldName, string>
+  setTagInput: React.Dispatch<React.SetStateAction<Record<TagFieldName, string>>>
+  onRemove: (field: TagFieldName, idx: number) => void
+  onAdd: (field: TagFieldName) => void
+}) {
+  return (
+    <div className="space-y-2">
+      <Label className="text-base font-medium">{label}</Label>
+      <div className="flex flex-wrap gap-2 mb-2">
+        {items.map((item, i) => (
+          <Badge key={i} variant="secondary" className="text-base px-3 py-1 h-auto">
+            {item}
+            {editing && (
+              <button onClick={() => onRemove(field, i)} className="ml-1">
+                <X className="size-3" />
+              </button>
+            )}
+          </Badge>
+        ))}
+      </div>
+      {editing && (
+        <div className="flex gap-2">
+          <Input
+            className="h-12 text-lg flex-1"
+            placeholder={`Thêm ${label.toLowerCase()}...`}
+            value={tagInput[field]}
+            onChange={(e) => setTagInput((p) => ({ ...p, [field]: e.target.value }))}
+            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), onAdd(field))}
+          />
+          <Button variant="outline" className="h-12" onClick={() => onAdd(field)}>
+            Thêm
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function HealthProfileForm({ profile, editing, onSave }: HealthProfileFormProps) {
   const [bloodType, setBloodType] = useState(profile?.blood_type ?? '')
   const [heightCm, setHeightCm] = useState(profile?.height_cm?.toString() ?? '')
@@ -74,38 +120,6 @@ export function HealthProfileForm({ profile, editing, onSave }: HealthProfileFor
     }
   }
 
-  const TagField = ({ label, field, items }: { label: string; field: 'allergies' | 'conditions' | 'medications'; items: string[] }) => (
-    <div className="space-y-2">
-      <Label className="text-base font-medium">{label}</Label>
-      <div className="flex flex-wrap gap-2 mb-2">
-        {items.map((item, i) => (
-          <Badge key={i} variant="secondary" className="text-base px-3 py-1 h-auto">
-            {item}
-            {editing && (
-              <button onClick={() => removeTag(field, i)} className="ml-1">
-                <X className="size-3" />
-              </button>
-            )}
-          </Badge>
-        ))}
-      </div>
-      {editing && (
-        <div className="flex gap-2">
-          <Input
-            className="h-12 text-lg flex-1"
-            placeholder={`Thêm ${label.toLowerCase()}...`}
-            value={tagInput[field]}
-            onChange={(e) => setTagInput((p) => ({ ...p, [field]: e.target.value }))}
-            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag(field))}
-          />
-          <Button variant="outline" className="h-12" onClick={() => addTag(field)}>
-            Thêm
-          </Button>
-        </div>
-      )}
-    </div>
-  )
-
   return (
     <div className="space-y-5">
       <div className="space-y-2">
@@ -143,9 +157,9 @@ export function HealthProfileForm({ profile, editing, onSave }: HealthProfileFor
         </p>
       )}
 
-      <TagField label="Dị ứng" field="allergies" items={allergies} />
-      <TagField label="Bệnh mãn tính" field="conditions" items={conditions} />
-      <TagField label="Thuốc đang dùng" field="medications" items={medications} />
+      <TagField editing={editing} tagInput={tagInput} setTagInput={setTagInput} onRemove={removeTag} onAdd={addTag} label="Dị ứng" field="allergies" items={allergies} />
+      <TagField editing={editing} tagInput={tagInput} setTagInput={setTagInput} onRemove={removeTag} onAdd={addTag} label="Bệnh mãn tính" field="conditions" items={conditions} />
+      <TagField editing={editing} tagInput={tagInput} setTagInput={setTagInput} onRemove={removeTag} onAdd={addTag} label="Thuốc đang dùng" field="medications" items={medications} />
 
       <div className="space-y-2">
         <Label className="text-base font-medium">Lối sống</Label>
