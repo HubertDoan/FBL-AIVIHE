@@ -49,9 +49,8 @@ function parseTestRow(raw: string) {
 function TestsTable({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const rows = value.split('\n').map(s => s.trim()).filter(Boolean)
   const parsed = rows.map(parseTestRow)
-  const hasStructured = rows.some(r => r.includes('::'))
-
-  if (!hasStructured || rows.length === 0) {
+  // Luôn hiển thị bảng nếu có thể parse, fallback textarea khi rows rỗng
+  if (rows.length === 0) {
     return <Textarea value={value} onChange={e => onChange(e.target.value)} rows={4} className="text-xs font-mono" placeholder="Mỗi dòng 1 xét nghiệm" />
   }
 

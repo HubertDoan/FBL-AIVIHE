@@ -22,15 +22,31 @@ const CATEGORY_TO_DOC_TYPE: Record<Category, string> = {
   daycare: 'other',
 }
 
-// Parse "NAME::VALUE::UNIT::REF" → extracted_records row
-function parseTestString(raw: string) {
-  const parts = raw.split('::').map(s => s.trim())
-  return {
-    field_name: parts[0] || raw,
-    field_value: parts[1] || null,
-    unit: parts[2] || null,
-    reference_range: parts[3] || null,
-  }
+interface ParsedTest {
+  name: string
+  value: string | null
+  unit: string | null
+  ref: string | null
+}
+
+// Parse "NAME::VALUE::UNIT::REF" hoặc legacy "NAME: VALUE UNIT (REF)"
+function parseTestString(raw: string): ParsedTest {
+  const p = raw.split('::').map(s => s.trim())
+  if (p.length >= 2) return { name: p[0], value: p[1] || null, unit: p[2] || null, ref: p[3] || null }
+  const m = raw.match(/^(.+?):\s*([\d.,]+)\s*([^\s(]+)?\s*(?:\(([^)]+)\))?$/)
+  if (m) return { name: m[1].trim(), value: m[2], unit: m[3] || null, ref: m[4] || null }
+  return { name: raw, value: null, unit: null, ref: null }
+}
+
+// Kiểm tra kết quả có nằm ngoài tham chiếu không
+function isAbnormal(value: string | null, ref: string | null): boolean {
+  if (!value || !ref) return false
+  const v = parseFloat(value.replace(',', '.'))
+  if (isNaN(v)) return false
+  const m = ref.match(/([\d.,]+)\s*[-–]\s*([\d.,]+)/)
+  if (!m) return false
+  const lo = parseFloat(m[1].replace(',', '.')), hi = parseFloat(m[2].replace(',', '.'))
+  return v < lo || v > hi
 }
 
 export async function POST(request: NextRequest) {
@@ -82,61 +98,78 @@ export async function POST(request: NextRequest) {
 
     const svc = await createServiceClient()
 
-    // Layer 1: update source_documents với classification result
+    const tests: string[] = data.tests || []
+    const parsedTests = tests.map(parseTestString)
+    const visitDate = data.date || new Date().toISOString().slice(0, 10)
+
+    // Layer 1: update source_documents
     if (documentId) {
-      const docType = CATEGORY_TO_DOC_TYPE[category] || 'other'
       await svc.from('source_documents').update({
-        document_type: docType,
-        document_date: data.date || null,
+        document_type: CATEGORY_TO_DOC_TYPE[category] || 'other',
+        document_date: visitDate,
         facility_name: data.facility || null,
         is_classified: true,
-        ai_classification: JSON.stringify({
-          category,
-          doctor: data.doctor_name,
-          specialty: data.specialty,
-          reason: data.reason,
-          diagnosis: data.diagnosis,
-          tests: data.tests,
-          medications: data.medications,
-          recommendations: data.recommendations,
-          confirmed_by: user.id,
-          confirmed_at: new Date().toISOString(),
-        }),
-        metadata: {
-          category,
-          specialty: data.specialty || null,
-          reason: data.reason || null,
-          diagnosis: data.diagnosis || null,
-          doctor: data.doctor_name || null,
-          tests_count: (data.tests || []).length,
-          medications_count: (data.medications || []).length,
-        },
+        ai_classification: JSON.stringify({ category, doctor: data.doctor_name, specialty: data.specialty, reason: data.reason, diagnosis: data.diagnosis, tests, medications: data.medications, recommendations: data.recommendations, confirmed_by: user.id, confirmed_at: new Date().toISOString() }),
+        metadata: { category, specialty: data.specialty || null, reason: data.reason || null, diagnosis: data.diagnosis || null, doctor: data.doctor_name || null, tests_count: tests.length },
       }).eq('id', documentId)
 
-      // Layer 2: insert extracted_records — mỗi xét nghiệm là 1 row
-      const tests: string[] = data.tests || []
-      if (tests.length > 0) {
-        const rows = tests.map((t: string) => ({
+      // Layer 2: extracted_records
+      if (parsedTests.length > 0) {
+        await svc.from('extracted_records').insert(parsedTests.map(t => ({
           document_id: documentId,
-          ...parseTestString(t),
+          field_name: t.name,
+          field_value: t.value,
+          unit: t.unit,
+          reference_range: t.ref,
           confidence_score: 0.9,
           ai_model: 'claude-sonnet-4',
-          status: 'confirmed' as const,
-        }))
-        await svc.from('extracted_records').insert(rows)
+          status: 'confirmed',
+        })))
       }
     }
 
-    // Audit log
+    // Layer 3: health_visits + lab_tests (EMR tables)
+    let visitId: string | null = null
+    if (category !== 'daycare') {
+      const visitType = category === 'clinic' ? 'specialist' : category === 'rehab' ? 'follow_up' : 'checkup'
+      const { data: visit, error: visitErr } = await svc.from('health_visits').insert({
+        citizen_id: user.id,
+        facility: data.facility || null,
+        doctor_name: data.doctor_name || null,
+        visit_type: visitType,
+        reason: data.reason || data.diagnosis || null,
+        visit_date: visitDate,
+        notes: data.diagnosis || null,
+        source_document_id: documentId,
+      }).select('id').single()
+      if (!visitErr && visit) visitId = visit.id
+    }
+
+    // lab_tests: lưu từng chỉ số xét nghiệm
+    if (category === 'clinic' && parsedTests.length > 0 && visitId) {
+      await svc.from('lab_tests').insert(parsedTests.map(t => ({
+        citizen_id: user.id,
+        visit_id: visitId,
+        source_document_id: documentId,
+        test_name: t.name,
+        result_value: t.value,
+        unit: t.unit,
+        reference_range: t.ref,
+        is_abnormal: isAbnormal(t.value, t.ref),
+        test_date: visitDate,
+        test_type: 'hematology',
+      })))
+    }
+
     await svc.from('audit_logs').insert({
       user_id: user.id,
       action: 'confirm_document',
       target_table: 'source_documents',
       target_id: documentId,
-      details: { category, facility: data.facility, date: data.date, tests_count: (data.tests || []).length },
+      details: { category, facility: data.facility, date: visitDate, tests_count: tests.length, visit_id: visitId },
     })
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true, visitId })
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Unknown'
     return NextResponse.json({ error: 'Lưu thất bại: ' + msg }, { status: 500 })
