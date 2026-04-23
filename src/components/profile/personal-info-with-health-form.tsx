@@ -24,6 +24,54 @@ interface Props {
   onSave: (citizenData: Partial<Citizen>, healthData: Partial<HealthProfile>) => Promise<void>
 }
 
+// Module-level stable component — tránh remount Input mỗi render (bug "chỉ nhập 1 ký tự")
+function Field({ label, value, onChange, type = 'text', readOnly = false, editing }: {
+  label: string; value: string; onChange: (v: string) => void
+  type?: string; readOnly?: boolean; editing: boolean
+}) {
+  return (
+    <div className="space-y-1">
+      <Label className="text-base font-medium">{label}</Label>
+      <Input className="h-12 text-lg" type={type} value={value} readOnly={!editing || readOnly} onChange={e => onChange(e.target.value)} />
+    </div>
+  )
+}
+
+type TagFieldName = 'allergies' | 'conditions' | 'congenital' | 'medications'
+
+function TagField({ label, field, items, setter, editing, tagInput, setTagInput, onAdd }: {
+  label: string
+  field: TagFieldName
+  items: string[]
+  setter: React.Dispatch<React.SetStateAction<string[]>>
+  editing: boolean
+  tagInput: Record<TagFieldName, string>
+  setTagInput: React.Dispatch<React.SetStateAction<Record<TagFieldName, string>>>
+  onAdd: (field: TagFieldName, setter: React.Dispatch<React.SetStateAction<string[]>>) => void
+}) {
+  return (
+    <div className="space-y-1">
+      <Label className="text-base font-medium">{label}</Label>
+      <div className="flex flex-wrap gap-2 mb-1">
+        {items.map((item, i) => (
+          <Badge key={i} variant="secondary" className="text-base px-3 py-1 h-auto">
+            {item}
+            {editing && <button onClick={() => setter(prev => prev.filter((_, j) => j !== i))} className="ml-1"><X className="size-3" /></button>}
+          </Badge>
+        ))}
+      </div>
+      {editing && (
+        <div className="flex gap-2">
+          <Input className="h-12 text-lg flex-1" placeholder={`Thêm ${label.toLowerCase()}...`} value={tagInput[field]}
+            onChange={e => setTagInput(p => ({ ...p, [field]: e.target.value }))}
+            onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), onAdd(field, setter))} />
+          <Button variant="outline" className="h-12" onClick={() => onAdd(field, setter)}>Thêm</Button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function PersonalInfoWithHealthForm({ citizen, healthProfile, editing, onSave }: Props) {
   const hp = healthProfile
   const [form, setForm] = useState({
@@ -70,41 +118,12 @@ export function PersonalInfoWithHealthForm({ citizen, healthProfile, editing, on
     } finally { setSaving(false) }
   }
 
-  const Field = ({ label, value, onChange, type = 'text', readOnly = false }: { label: string; value: string; onChange: (v: string) => void; type?: string; readOnly?: boolean }) => (
-    <div className="space-y-1">
-      <Label className="text-base font-medium">{label}</Label>
-      <Input className="h-12 text-lg" type={type} value={value} readOnly={!editing || readOnly} onChange={e => onChange(e.target.value)} />
-    </div>
-  )
-
-  const TagField = ({ label, field, items, setter }: { label: string; field: keyof typeof tagInput; items: string[]; setter: React.Dispatch<React.SetStateAction<string[]>> }) => (
-    <div className="space-y-1">
-      <Label className="text-base font-medium">{label}</Label>
-      <div className="flex flex-wrap gap-2 mb-1">
-        {items.map((item, i) => (
-          <Badge key={i} variant="secondary" className="text-base px-3 py-1 h-auto">
-            {item}
-            {editing && <button onClick={() => setter(prev => prev.filter((_, j) => j !== i))} className="ml-1"><X className="size-3" /></button>}
-          </Badge>
-        ))}
-      </div>
-      {editing && (
-        <div className="flex gap-2">
-          <Input className="h-12 text-lg flex-1" placeholder={`Thêm ${label.toLowerCase()}...`} value={tagInput[field]}
-            onChange={e => setTagInput(p => ({ ...p, [field]: e.target.value }))}
-            onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addTag(field, setter))} />
-          <Button variant="outline" className="h-12" onClick={() => addTag(field, setter)}>Thêm</Button>
-        </div>
-      )}
-    </div>
-  )
-
   return (
     <div className="space-y-6">
       {/* Thông tin cơ bản */}
       <div className="space-y-4">
-        <Field label="Họ và tên" value={form.full_name} onChange={v => setForm(p => ({ ...p, full_name: v }))} />
-        <Field label="Ngày sinh" value={form.date_of_birth} onChange={v => setForm(p => ({ ...p, date_of_birth: v }))} type="date" />
+        <Field editing={editing} label="Họ và tên" value={form.full_name} onChange={v => setForm(p => ({ ...p, full_name: v }))} />
+        <Field editing={editing} label="Ngày sinh" value={form.date_of_birth} onChange={v => setForm(p => ({ ...p, date_of_birth: v }))} type="date" />
         <div className="space-y-1">
           <Label className="text-base font-medium">Giới tính</Label>
           {editing ? (
@@ -114,11 +133,11 @@ export function PersonalInfoWithHealthForm({ citizen, healthProfile, editing, on
             </Select>
           ) : <Input className="h-12 text-lg" readOnly value={GENDERS.find(g => g.value === form.gender)?.label ?? ''} />}
         </div>
-        <Field label="Số điện thoại" value={citizen?.phone ?? ''} onChange={() => {}} readOnly />
-        <Field label="Địa chỉ" value={form.address} onChange={v => setForm(p => ({ ...p, address: v }))} />
-        <Field label="Số CMND/CCCD" value={form.national_id} onChange={v => setForm(p => ({ ...p, national_id: v }))} />
-        <Field label="Dân tộc" value={form.ethnicity} onChange={v => setForm(p => ({ ...p, ethnicity: v }))} />
-        <Field label="Nghề nghiệp" value={form.occupation} onChange={v => setForm(p => ({ ...p, occupation: v }))} />
+        <Field editing={editing} label="Số điện thoại" value={citizen?.phone ?? ''} onChange={() => {}} readOnly />
+        <Field editing={editing} label="Địa chỉ" value={form.address} onChange={v => setForm(p => ({ ...p, address: v }))} />
+        <Field editing={editing} label="Số CMND/CCCD" value={form.national_id} onChange={v => setForm(p => ({ ...p, national_id: v }))} />
+        <Field editing={editing} label="Dân tộc" value={form.ethnicity} onChange={v => setForm(p => ({ ...p, ethnicity: v }))} />
+        <Field editing={editing} label="Nghề nghiệp" value={form.occupation} onChange={v => setForm(p => ({ ...p, occupation: v }))} />
       </div>
 
       {/* Sức khỏe */}
@@ -134,22 +153,22 @@ export function PersonalInfoWithHealthForm({ citizen, healthProfile, editing, on
           ) : <Input className="h-12 text-lg" readOnly value={bloodType} />}
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <Field label="Chiều cao (cm)" value={heightCm} onChange={setHeightCm} type="number" />
-          <Field label="Cân nặng (kg)" value={weightKg} onChange={setWeightKg} type="number" />
+          <Field editing={editing} label="Chiều cao (cm)" value={heightCm} onChange={setHeightCm} type="number" />
+          <Field editing={editing} label="Cân nặng (kg)" value={weightKg} onChange={setWeightKg} type="number" />
         </div>
         {bmi && <p className="text-lg font-medium">BMI: <span className="text-primary">{bmi}</span></p>}
-        <TagField label="Bệnh bẩm sinh" field="congenital" items={congenital} setter={setCongenital} />
-        <TagField label="Bệnh mãn tính" field="conditions" items={conditions} setter={setConditions} />
-        <TagField label="Dị ứng" field="allergies" items={allergies} setter={setAllergies} />
-        <TagField label="Thuốc đang dùng" field="medications" items={medications} setter={setMedications} />
+        <TagField editing={editing} tagInput={tagInput} setTagInput={setTagInput} onAdd={addTag} label="Bệnh bẩm sinh" field="congenital" items={congenital} setter={setCongenital} />
+        <TagField editing={editing} tagInput={tagInput} setTagInput={setTagInput} onAdd={addTag} label="Bệnh mãn tính" field="conditions" items={conditions} setter={setConditions} />
+        <TagField editing={editing} tagInput={tagInput} setTagInput={setTagInput} onAdd={addTag} label="Dị ứng" field="allergies" items={allergies} setter={setAllergies} />
+        <TagField editing={editing} tagInput={tagInput} setTagInput={setTagInput} onAdd={addTag} label="Thuốc đang dùng" field="medications" items={medications} setter={setMedications} />
       </div>
 
       {/* Liên hệ khẩn cấp */}
       <div className="border-t pt-4 space-y-4">
         <h3 className="text-lg font-semibold flex items-center gap-2"><ShieldAlert className="size-5 text-red-500" /> Liên hệ khẩn cấp</h3>
-        <Field label="Họ tên người liên hệ" value={emergencyName} onChange={setEmergencyName} />
-        <Field label="Số điện thoại" value={emergencyPhone} onChange={setEmergencyPhone} />
-        <Field label="Quan hệ" value={emergencyRelation} onChange={setEmergencyRelation} />
+        <Field editing={editing} label="Họ tên người liên hệ" value={emergencyName} onChange={setEmergencyName} />
+        <Field editing={editing} label="Số điện thoại" value={emergencyPhone} onChange={setEmergencyPhone} />
+        <Field editing={editing} label="Quan hệ" value={emergencyRelation} onChange={setEmergencyRelation} />
         {!editing && emergencyPhone && (
           <a href={`tel:${emergencyPhone}`} className="flex items-center gap-2 text-red-600 font-semibold text-lg">
             <Phone className="size-5" /> Gọi {emergencyName || 'liên hệ khẩn cấp'}
