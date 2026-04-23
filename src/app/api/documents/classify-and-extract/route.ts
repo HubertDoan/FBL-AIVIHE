@@ -112,27 +112,59 @@ function generateMockExtraction(category: Category, filename: string, customerNa
 }
 
 export async function POST(request: NextRequest) {
-  if (!isDemoMode()) {
-    return NextResponse.json(
-      { error: 'AI classify chưa khả dụng ở production (cần Claude API key).' },
-      { status: 503 }
-    )
-  }
-
-  const user = await getDemoUser(request)
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
   try {
+    let customerName = 'Khách hàng'
+
+    if (isDemoMode()) {
+      const user = await getDemoUser(request)
+      if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      customerName = user.fullName || customerName
+    } else {
+      // Production: auth via Supabase session
+      const { createClient } = await import('@/lib/supabase/server')
+      const supabase = await createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      const { data: citizen } = await supabase
+        .from('citizens')
+        .select('full_name')
+        .eq('id', user.id)
+        .single()
+      if (citizen?.full_name) customerName = citizen.full_name
+    }
+
     const body = await request.json()
     const filename: string = body.filename || 'unnamed'
-    const customerName: string = body.customer_name || user.fullName || 'Khách hàng'
+    const overrideName: string = body.customer_name || customerName
 
     const category = classifyByFilename(filename)
-    const result = generateMockExtraction(category, filename, customerName)
+    const result = isDemoMode()
+      ? generateMockExtraction(category, filename, overrideName)
+      : generateProductionExtraction(category, filename, overrideName)
 
     return NextResponse.json({ ok: true, result })
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Unknown'
     return NextResponse.json({ error: msg }, { status: 500 })
+  }
+}
+
+/** Production extraction — rule-based filename classification, fields left for user to review/edit */
+function generateProductionExtraction(category: Category, filename: string, customerName: string): ClassifyResult {
+  return {
+    category,
+    category_label: CATEGORY_LABELS[category],
+    confidence: 0.6,
+    extracted_patient_name: customerName,
+    extracted_date: null,
+    extracted_facility: null,
+    extracted_doctor: null,
+    extracted_diagnosis: null,
+    extracted_specialty: null,
+    extracted_reason: null,
+    extracted_tests: [],
+    extracted_medications: [],
+    extracted_recommendations: [],
+    raw_text_preview: `Phân loại tự động dựa trên tên file "${filename}". Vui lòng kiểm tra và điều chỉnh thông tin.`,
   }
 }
