@@ -69,71 +69,78 @@ interface NavSection {
   items: NavItem[]
 }
 
-// Sidebar đơn giản — mỗi mục ẩn/hiện theo permission
-// Admin phân quyền: KH chỉ thấy mục đã đăng ký
-// KH hồ sơ y tế ít → thấy ít mục. KH hồ sơ nhiều → thấy nhiều mục.
+// Sidebar sắp xếp theo HÀNH TRÌNH KHÁCH HÀNG — không theo tính năng
+// Thứ tự: Theo dõi hằng ngày → Nhập dữ liệu → Xem hồ sơ → Chăm sóc y tế → Báo cáo → Tài khoản
 const NAV_SECTIONS: NavSection[] = [
+
+  // ── 1. SỨC KHỎE HÔM NAY — mở app, xem ngay điều quan trọng ──────────────
   {
-    title: '',  // Không header — Dashboard luôn hiện
+    title: 'SỨC KHỎE HÔM NAY',
     items: [
-      { href: '/dashboard', label: 'Dashboard tổng hợp', icon: LayoutDashboard, requiredPermission: PERMISSIONS.MODULE_DASHBOARD },
-    ],
-  },
-  {
-    title: 'THÔNG TIN SỨC KHỎE CÁ NHÂN',  // customerOnly — ẩn hoàn toàn cho staff
-    items: [
-      { href: '/dashboard/medical-record', label: 'Thông tin sức khỏe của tôi', icon: FileText, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD, customerOnly: true },
       { href: '/dashboard/vitals', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE, customerOnly: true },
-      { href: '/dashboard/upload', label: 'Upload tài liệu', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD, customerOnly: true },
-      { href: '/dashboard/ai-summary', label: 'AI tổng hợp', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true, customerOnly: true },
-      { href: '/dashboard/health-report', label: 'Báo cáo sức khỏe', icon: FileText, requiredPermission: PERMISSIONS.MODULE_SUMMARY, customerOnly: true },
-    ],
-  },
-  {
-    title: 'DAYCARE',  // customerOnly — KH đăng ký Daycare mới thấy
-    items: [
       { href: '/dashboard/health-record?tab=daycare', label: 'Hoạt động Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE, customerOnly: true },
+      { href: '/dashboard/notifications', label: 'Thông báo & cảnh báo', icon: Bell, requiredPermission: PERMISSIONS.MODULE_NOTIFICATIONS },
     ],
   },
+
+  // ── 2. NHẬP THÔNG TIN — có dữ liệu mới → ghi vào hệ thống ───────────────
   {
-    title: 'BÁC SĨ GIA ĐÌNH',  // customerOnly — KH đăng ký BSGĐ mới thấy
+    title: 'NHẬP THÔNG TIN',
     items: [
-      { href: '/dashboard/health-record?tab=family-doctor', label: 'Thông tin BSGĐ', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR, customerOnly: true },
-      { href: '/dashboard/consultation', label: 'Hỏi Bác sĩ', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_CONSULTATION, customerOnly: true },
-      { href: '/dashboard/choose-doctor', label: 'Chọn BS gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_CHOOSE_DOCTOR, customerOnly: true },
+      { href: '/dashboard/upload', label: 'Upload tài liệu y tế', icon: Upload, requiredPermission: PERMISSIONS.MODULE_UPLOAD, customerOnly: true },
+      { href: '/dashboard/treatment', label: 'Ghi nhận đang điều trị', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TREATMENT, customerOnly: true },
     ],
   },
+
+  // ── 3. HỒ SƠ SỨC KHỎE — xem lại, tra cứu dữ liệu đã lưu ─────────────────
   {
-    title: 'PHỤC HỒI CHỨC NĂNG',  // customerOnly — KH đăng ký PHCN mới thấy
+    title: 'HỒ SƠ SỨC KHỎE',
     items: [
-      { href: '/dashboard/health-record?tab=rehab', label: 'Nhật ký trị liệu', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB, customerOnly: true },
-    ],
-  },
-  {
-    title: 'KHÁM CHỮA BỆNH',  // customerOnly — KH đăng ký chuyên khoa mới thấy
-    items: [
+      { href: '/dashboard/health-record', label: 'Thông tin sức khỏe của tôi', icon: ClipboardList, requiredPermission: PERMISSIONS.MODULE_MEDICAL_RECORD, customerOnly: true },
       { href: '/dashboard/health-record?tab=clinic', label: 'Bệnh đã khám & điều trị', icon: Hospital, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC, customerOnly: true },
-      { href: '/dashboard/visit-prep', label: 'Đi khám bệnh', icon: CalendarCheck, requiredPermission: PERMISSIONS.MODULE_VISIT_PREP, customerOnly: true },
-      { href: '/dashboard/treatment', label: 'Đang điều trị', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TREATMENT, customerOnly: true },
-    ],
-  },
-  {
-    title: 'TÀI LIỆU',
-    items: [
+      { href: '/dashboard/health-record?tab=rehab', label: 'Nhật ký trị liệu PHCN', icon: Activity, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_REHAB, customerOnly: true },
       { href: '/dashboard/documents/health', label: 'Tài liệu sức khỏe', icon: FolderHeart, requiredPermission: PERMISSIONS.MODULE_HEALTH_DOCUMENTS, customerOnly: true },
       { href: '/dashboard/documents/personal', label: 'Tài liệu cá nhân', icon: Bookmark, requiredPermission: PERMISSIONS.MODULE_PERSONAL_DOCUMENTS, customerOnly: true },
     ],
   },
+
+  // ── 4. CHĂM SÓC Y TẾ — tương tác với đội ngũ y tế ───────────────────────
   {
-    title: 'GIAO TIẾP',
+    title: 'CHĂM SÓC Y TẾ',
     items: [
-      { href: '/dashboard/notifications', label: 'Thông báo', icon: Bell, requiredPermission: PERMISSIONS.MODULE_NOTIFICATIONS },
-      { href: '/dashboard/messages', label: 'Tin nhắn', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_MESSAGES },
-      { href: '/dashboard/family', label: 'Gia đình', icon: Users, requiredPermission: PERMISSIONS.MODULE_FAMILY, customerOnly: true },
+      { href: '/dashboard/health-record?tab=family-doctor', label: 'Bác sĩ gia đình', icon: Stethoscope, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR, customerOnly: true },
+      { href: '/dashboard/visit-prep', label: 'Chuẩn bị đi khám', icon: CalendarCheck, requiredPermission: PERMISSIONS.MODULE_VISIT_PREP, customerOnly: true },
+      { href: '/dashboard/consultation', label: 'Hỏi Bác sĩ', icon: MessageCircle, requiredPermission: PERMISSIONS.MODULE_CONSULTATION, customerOnly: true },
+      { href: '/dashboard/choose-doctor', label: 'Chọn BS gia đình', icon: UserCheck, requiredPermission: PERMISSIONS.MODULE_CHOOSE_DOCTOR, customerOnly: true },
     ],
   },
+
+  // ── 5. BÁO CÁO & TỔNG HỢP — xem tổng thể, chia sẻ với BS / người thân ──
   {
-    title: 'BÁC SĨ',  // Chỉ hiện cho role doctor/specialist
+    title: 'BÁO CÁO & TỔNG HỢP',
+    items: [
+      { href: '/dashboard/ai-summary', label: 'AI tổng hợp sức khỏe', icon: Sparkles, requiredPermission: PERMISSIONS.MODULE_AI_SUMMARY, highlight: true, customerOnly: true },
+      { href: '/dashboard/health-report', label: 'Báo cáo sức khỏe', icon: BarChart3, requiredPermission: PERMISSIONS.MODULE_SUMMARY, customerOnly: true },
+      { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard, requiredPermission: PERMISSIONS.MODULE_DASHBOARD },
+    ],
+  },
+
+  // ── 6. GIA ĐÌNH & TÀI KHOẢN — admin cá nhân, ít dùng ────────────────────
+  {
+    title: 'GIA ĐÌNH & TÀI KHOẢN',
+    items: [
+      { href: '/dashboard/family', label: 'Gia đình', icon: Users, requiredPermission: PERMISSIONS.MODULE_FAMILY, customerOnly: true },
+      { href: '/dashboard/messages', label: 'Tin nhắn', icon: MessageSquare, requiredPermission: PERMISSIONS.MODULE_MESSAGES },
+      { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE, customerOnly: true },
+      { href: '/dashboard/staff-profile', label: 'Hồ sơ nhân viên', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE, staffOnly: true },
+      { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings, requiredPermission: PERMISSIONS.MODULE_SETTINGS },
+      { href: '/dashboard/guide', label: 'Hướng dẫn', icon: BookOpen, requiredPermission: PERMISSIONS.MODULE_GUIDE },
+    ],
+  },
+
+  // ── Staff sections (không thay đổi) ──────────────────────────────────────
+  {
+    title: 'BÁC SĨ',
     items: [
       { href: '/dashboard/doctor-register', label: 'Đăng ký BS', icon: UserPlus, requiredPermission: PERMISSIONS.MODULE_DOCTOR_REGISTER, doctorNotRegistered: true },
       { href: '/dashboard/doctor-profile', label: 'Thông tin chuyên môn', icon: Award, requiredPermission: PERMISSIONS.MODULE_DOCTOR_PROFILE, doctorApproved: true },
@@ -142,7 +149,7 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: 'VẬN HÀNH',  // Chỉ hiện cho staff
+    title: 'VẬN HÀNH',
     items: [
       { href: '/dashboard/reception', label: 'Hành chính', icon: ClipboardList, requiredPermission: PERMISSIONS.MODULE_RECEPTION },
       { href: '/dashboard/exam-schedule', label: 'Lịch khám BN', icon: Calendar, requiredPermission: PERMISSIONS.MODULE_EXAM_SCHEDULE },
@@ -150,22 +157,12 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: 'QUẢN TRỊ',  // Chỉ hiện cho admin/director
+    title: 'QUẢN TRỊ',
     items: [
       { href: '/dashboard/admin', label: 'Quản trị', icon: Shield, requiredPermission: PERMISSIONS.MODULE_ADMIN },
       { href: '/dashboard/director', label: 'Truyền thông', icon: Megaphone, requiredPermission: PERMISSIONS.MODULE_DIRECTOR },
       { href: '/dashboard/permissions', label: 'Phân quyền', icon: ShieldCheck, requiredPermission: PERMISSIONS.MODULE_PERMISSIONS },
       { href: '/dashboard/system', label: 'Hệ thống', icon: Server, requiredPermission: PERMISSIONS.MODULE_SYSTEM },
-    ],
-  },
-  {
-    title: 'TÀI KHOẢN',
-    items: [
-      // Khách hàng → hồ sơ y tế; staff → hồ sơ công việc
-      { href: '/dashboard/profile', label: 'Hồ sơ cá nhân', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE, customerOnly: true },
-      { href: '/dashboard/staff-profile', label: 'Hồ sơ nhân viên', icon: User, requiredPermission: PERMISSIONS.MODULE_PROFILE, staffOnly: true },
-      { href: '/dashboard/guide', label: 'Hướng dẫn', icon: BookOpen, requiredPermission: PERMISSIONS.MODULE_GUIDE },
-      { href: '/dashboard/settings', label: 'Cài đặt', icon: Settings, requiredPermission: PERMISSIONS.MODULE_SETTINGS },
     ],
   },
 ]
