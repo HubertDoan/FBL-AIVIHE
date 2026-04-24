@@ -36,14 +36,34 @@ export function HealthRecordClinicVisitsTab({ items }: { items: ClinicVisit[] })
   )
 }
 
-// Parse "NAME: VALUE UNIT (REF) ⚠️" hoặc "NAME::VALUE::UNIT::REF"
+// Parse "NAME::VALUE::UNIT::REF" hoặc legacy "NAME: VALUE UNIT (REF) ⚠️"
+// Auto-detect abnormal từ value vs reference range (hỗ trợ cả dữ liệu không có ⚠️)
 function parseTestRow(raw: string) {
-  const clean = raw.replace(' ⚠️', '').replace('⚠️', '').trim()
-  const abnormal = raw.includes('⚠️')
+  const clean = raw.replace(/ ?⚠️/g, '').trim()
+  let abnormal = raw.includes('⚠️')
+
+  function detectAbnormal(value: string, ref: string): boolean {
+    if (!value || !ref) return false
+    const v = parseFloat(value.replace(',', '.'))
+    if (isNaN(v)) return false
+    const m = ref.match(/([\d.,]+)\s*[-–]\s*([\d.,]+)/)
+    if (!m) return false
+    const lo = parseFloat(m[1].replace(',', '.')), hi = parseFloat(m[2].replace(',', '.'))
+    return v < lo || v > hi
+  }
+
   const p = clean.split('::').map(s => s.trim())
-  if (p.length >= 2) return { name: p[0], value: p[1], unit: p[2] || '', ref: p[3] || '', abnormal }
+  if (p.length >= 2) {
+    const ref = p[3] || ''
+    if (!abnormal) abnormal = detectAbnormal(p[1], ref)
+    return { name: p[0], value: p[1], unit: p[2] || '', ref, abnormal }
+  }
   const m = clean.match(/^(.+?):\s*([\d.,]+)\s*([^\s(]+)?\s*(?:\(([^)]+)\))?$/)
-  if (m) return { name: m[1].trim(), value: m[2], unit: m[3] || '', ref: m[4] || '', abnormal }
+  if (m) {
+    const ref = m[4] || ''
+    if (!abnormal) abnormal = detectAbnormal(m[2], ref)
+    return { name: m[1].trim(), value: m[2], unit: m[3] || '', ref, abnormal }
+  }
   return { name: clean, value: '', unit: '', ref: '', abnormal }
 }
 

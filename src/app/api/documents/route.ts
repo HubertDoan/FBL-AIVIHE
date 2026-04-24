@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     if (!demoUser) return demoUnauthorized()
     const { searchParams } = new URL(request.url)
     const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10))
-    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') ?? '20', 10)))
+    const limit = Math.min(200, Math.max(1, parseInt(searchParams.get('limit') ?? '20', 10)))
     const allDocs = getDemoDocuments(demoUser.id)
     const total = allDocs.length
     const start = (page - 1) * limit
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10))
-    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') ?? '20', 10)))
+    const limit = Math.min(200, Math.max(1, parseInt(searchParams.get('limit') ?? '20', 10)))
     const offset = (page - 1) * limit
 
     const { count } = await supabase

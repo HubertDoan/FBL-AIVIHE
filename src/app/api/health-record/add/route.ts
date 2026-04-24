@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
         document_date: visitDate,
         facility_name: data.facility || null,
         is_classified: true,
-        ai_classification: JSON.stringify({ category, doctor: data.doctor_name, specialty: data.specialty, reason: data.reason, diagnosis: data.diagnosis, tests, medications: data.medications, recommendations: data.recommendations, confirmed_by: user.id, confirmed_at: new Date().toISOString() }),
+        ai_classification: JSON.stringify({ category, facility: data.facility || null, doctor: data.doctor_name, specialty: data.specialty, reason: data.reason, diagnosis: data.diagnosis, tests, medications: data.medications, recommendations: data.recommendations, follow_up: data.follow_up || null, confirmed_by: user.id, confirmed_at: new Date().toISOString() }),
         metadata: { category, specialty: data.specialty || null, reason: data.reason || null, diagnosis: data.diagnosis || null, doctor: data.doctor_name || null, tests_count: tests.length },
       }).eq('id', documentId)
       if (docErr) console.error('[health-record/add] source_documents update error:', docErr.message)

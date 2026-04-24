@@ -96,7 +96,9 @@ export function HealthRecordRehabSessionsTab({ items }: { items: RehabSession[] 
               {s.next_session && (
                 <div className="bg-amber-50 rounded-md p-3 border border-amber-200">
                   <p className="text-xs font-semibold text-amber-800 mb-1">Buổi tới</p>
-                  <p className="text-sm font-medium text-amber-900">{new Date(s.next_session).toLocaleDateString('vi-VN')}</p>
+                  <p className="text-sm font-medium text-amber-900">
+                    {(() => { const d = new Date(s.next_session!); return isNaN(d.getTime()) ? s.next_session : d.toLocaleDateString('vi-VN') })()}
+                  </p>
                 </div>
               )}
             </div>

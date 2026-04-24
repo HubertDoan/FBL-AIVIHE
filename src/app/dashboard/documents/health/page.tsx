@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import {
   ArrowLeft, Loader2, Upload, FolderHeart, FileText,
   FlaskConical, Image as ImageIcon, Pill, Hospital, FileCheck, ExternalLink,
@@ -22,7 +21,6 @@ interface HealthDoc {
   document_type: string
   document_date: string | null
   facility_name: string | null
-  file_url: string
   file_size_bytes: number | null
   created_at: string
 }
@@ -36,6 +34,34 @@ const DOC_TYPE_META: Record<string, { label: string; icon: React.ComponentType<{
   medical_certificate: { label: 'Giấy chứng nhận y tế', icon: FileText,     color: 'bg-teal-100 text-teal-700' },
   referral:            { label: 'Giấy chuyển viện',    icon: FileText,      color: 'bg-cyan-100 text-cyan-700' },
   other:               { label: 'Tài liệu khác',       icon: FileText,      color: 'bg-slate-100 text-slate-700' },
+}
+
+function DocViewButton({ docId }: { docId: string }) {
+  const [loading, setLoading] = useState(false)
+
+  async function handleView() {
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/documents/${docId}/view-url`)
+      const data = await res.json()
+      if (data.url) {
+        window.open(data.url, '_blank')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleView}
+      disabled={loading}
+      className="text-xs text-teal-600 hover:text-teal-700 font-medium inline-flex items-center gap-1 shrink-0 disabled:opacity-50"
+    >
+      {loading ? <Loader2 className="size-3 animate-spin" /> : <ExternalLink className="size-3" />}
+      Xem
+    </button>
+  )
 }
 
 export default function HealthDocumentsPage() {
@@ -143,14 +169,7 @@ export default function HealthDocumentsPage() {
                         {sizeKb && <span>· {sizeKb}</span>}
                       </div>
                     </div>
-                    <a
-                      href={doc.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-teal-600 hover:text-teal-700 font-medium inline-flex items-center gap-1 shrink-0"
-                    >
-                      Xem <ExternalLink className="size-3" />
-                    </a>
+                    <DocViewButton docId={doc.id} />
                   </li>
                 )
               })}

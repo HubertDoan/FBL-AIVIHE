@@ -116,6 +116,7 @@ export function DocumentClassificationReviewDialog({
   const [tests, setTests] = useState((classifyResult.extracted_tests ?? []).join('\n'))
   const [meds, setMeds] = useState((classifyResult.extracted_medications ?? []).join('\n'))
   const [recs, setRecs] = useState((classifyResult.extracted_recommendations ?? []).join('\n'))
+  const [followUp, setFollowUp] = useState('')
   const [saving, setSaving] = useState(false)
 
   const nameMismatch = useMemo(() => {
@@ -139,6 +140,7 @@ export function DocumentClassificationReviewDialog({
         tests: tests.split('\n').map(s => s.trim()).filter(Boolean),
         medications: meds.split('\n').map(s => s.trim()).filter(Boolean),
         recommendations: recs.split('\n').map(s => s.trim()).filter(Boolean),
+        follow_up: followUp.trim() || null,
         document_ids: documentId ? [documentId] : [],
       }
 
@@ -284,6 +286,11 @@ export function DocumentClassificationReviewDialog({
               <Label className="text-sm">Khuyến nghị</Label>
               <Textarea value={recs} onChange={e => setRecs(e.target.value)} rows={3} className="text-xs" />
             </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-sm">Tái khám / Ghi chú theo dõi</Label>
+            <Input value={followUp} onChange={e => setFollowUp(e.target.value)} placeholder="VD: Tái khám sau 1 tháng" />
           </div>
 
           <div className="border-t pt-3 flex gap-2 flex-wrap">

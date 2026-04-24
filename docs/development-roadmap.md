@@ -1,6 +1,6 @@
 # Development Roadmap — AIVIHE
 
-**Cập nhật:** 21/04/2026 | **Chu Kỳ:** 6 tháng (Q2-Q4 2026)
+**Cập nhật:** 24/04/2026 | **Chu Kỳ:** 6 tháng (Q2-Q4 2026)
 
 ---
 
@@ -80,16 +80,20 @@ AIVIHE đang ở giai đoạn **MVP Foundation → Production Ready**. Roadmap d
 - Rehab sessions
 - Clinic visits
 
-✅ AI-powered OCR pipeline
-- Upload image of health device
-- Claude Vision extracts vital signs
-- 3-layer traceability: source → extracted → confirmed
-- User reviews & confirms before saving
-- Save measurement image to Storage + audit trail
+✅ AI-powered document OCR pipeline (full end-to-end — 24/04/2026)
+- Multi-file upload (image/PDF) → Claude Vision real OCR extraction
+- 4-field structured test table: NAME::VALUE::UNIT::REFERENCE_RANGE
+- Auto-detect abnormal values from reference range comparison
+- User review dialog with editable fields (diagnosis, medications, tests, follow_up)
+- 3-layer save: source_documents → extracted_records → health_visits + lab_tests
+- Health record tabs populated from source_documents.ai_classification (resilient source)
+- "Xem tài liệu gốc" signed URL button in each clinic visit card
+- Migration 00040: RLS policies for health_visits + lab_tests tables
 
 ✅ Document management
 - Upload health documents (PDF, images)
-- AI classification (coming)
+- AI classification via Claude Vision (production-grade)
+- Documents list with signed-URL "Xem" button (fixed broken href)
 - Personal document bookmarking
 - Sidebar: "TÀI LIỆU" section (health + personal)
 
@@ -129,9 +133,9 @@ AIVIHE đang ở giai đoạn **MVP Foundation → Production Ready**. Roadmap d
 - Daycare staff, doctor, nurse roles
 
 ### Database State
-- 8 migrations applied (00031 → 00037)
-- 26 tables created
-- RLS policies on all tables
+- 40 migrations (00001 → 00040)
+- 26+ tables; RLS on all
+- Migration 00040 pending apply to production (RLS for health_visits + lab_tests)
 - Seed data: 13 demo accounts + 5 doctors + 6 PDF samples + 2 vitals records
 
 ### Deployment

@@ -52,7 +52,7 @@ export function HealthRecordFamilyDoctorEncountersTab({ items }: { items: Family
               </div>
               {e.next_visit && (
                 <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded border border-amber-200">
-                  Tái khám: {new Date(e.next_visit).toLocaleDateString('vi-VN')}
+                  Tái khám: {(() => { const d = new Date(e.next_visit!); return isNaN(d.getTime()) ? e.next_visit : d.toLocaleDateString('vi-VN') })()}
                 </span>
               )}
             </div>
@@ -104,7 +104,8 @@ export function HealthRecordFamilyDoctorEncountersTab({ items }: { items: Family
   )
 }
 
-function Section({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+function Section({ label, value, mono }: { label: string; value: string | null | undefined; mono?: boolean }) {
+  if (!value) return null
   return (
     <div>
       <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</p>
