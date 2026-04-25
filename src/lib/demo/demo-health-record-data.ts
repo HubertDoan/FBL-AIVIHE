@@ -18,6 +18,7 @@ export interface DaycareActivity {
   vitals_snapshot: {
     blood_pressure?: string
     heart_rate?: number
+    blood_glucose?: number
     spo2?: number
     weight?: number
   }
@@ -104,7 +105,7 @@ function seedData(): {
         meal_status: 'Ăn đầy đủ, hấp thu tốt',
         nap_duration_minutes: 60, mood_rating: 5,
         staff_notes: 'Ông Minh tham gia tích cực, vui vẻ, không có dấu hiệu bất thường.',
-        vitals_snapshot: { blood_pressure: '125/82', heart_rate: 76, spo2: 97, weight: 65.5 },
+        vitals_snapshot: { blood_pressure: '125/82', heart_rate: 76, blood_glucose: 105, spo2: 97, weight: 65.5 },
         incidents: [], source: 'daycare_webhook' as const,
       },
       {
@@ -113,7 +114,7 @@ function seedData(): {
         activities: ['Đi bộ sân vườn', 'Âm nhạc trị liệu', 'Ăn trưa', 'Nghỉ trưa'],
         meal_status: 'Ăn vừa phải', nap_duration_minutes: 75, mood_rating: 4,
         staff_notes: 'Hơi mệt buổi chiều, cần theo dõi huyết áp.',
-        vitals_snapshot: { blood_pressure: '138/88', heart_rate: 82, spo2: 96 },
+        vitals_snapshot: { blood_pressure: '148/92', heart_rate: 95, blood_glucose: 155, spo2: 96 },
         incidents: [], source: 'daycare_webhook' as const,
       },
       {
@@ -122,7 +123,7 @@ function seedData(): {
         activities: ['Yoga', 'Trà đạo', 'Ăn trưa'],
         meal_status: 'Ăn đầy đủ', nap_duration_minutes: 50, mood_rating: 5,
         staff_notes: 'Tinh thần rất tốt.',
-        vitals_snapshot: { blood_pressure: '122/80', heart_rate: 74, spo2: 98 },
+        vitals_snapshot: { blood_pressure: '122/80', heart_rate: 74, blood_glucose: 92, spo2: 98 },
         incidents: [], source: 'daycare_webhook' as const,
       },
     ],

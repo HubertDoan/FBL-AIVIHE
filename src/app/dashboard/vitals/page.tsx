@@ -1,66 +1,131 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Loader2, Plus, Ruler, Scale, HeartPulse, Droplets, Sparkles } from 'lucide-react'
-import { useAuth } from '@/hooks/use-auth'
-import { VitalsAddMeasurementDialogWithIndicatorSelectorAndImageOcr } from '@/components/vitals/vitals-add-measurement-dialog-with-indicator-selector-and-image-ocr'
-
 /**
- * Chỉ số sức khỏe — 4 basic indicators (theo yêu cầu thầy):
- * Chiều cao, Cân nặng, Huyết áp, Đường huyết
- * Healthcare palette (teal/emerald). "Thêm đo" mở dialog với manual + image OCR.
+ * Chỉ số sức khỏe — Layout mới theo tần suất sử dụng:
+ * TOP:    Huyết áp · Đường huyết · Nhịp tim (theo dõi hàng ngày)
+ * BOTTOM: Chiều cao · Cân nặng · BMI (ít thay đổi, ẩn mặc định)
+ * Alert:  Khi vượt ngưỡng → dialog hỏi bối cảnh (thuốc, ăn uống, vận động, tinh thần)
  */
 
-interface VitalRecord {
-  id: string
-  indicator_type: string
-  value: Record<string, number>
-  unit: string | null
-  measured_at: string
-  source: 'manual' | 'image_ocr' | 'device'
-  notes: string | null
-}
-
-const BASIC_INDICATORS = [
-  { key: 'height',          icon: Ruler,      label: 'Chiều cao',  unit: 'cm',     color: 'from-purple-500 to-indigo-500', text: 'text-purple-700' },
-  { key: 'weight',          icon: Scale,      label: 'Cân nặng',   unit: 'kg',     color: 'from-blue-500 to-cyan-500',     text: 'text-blue-700' },
-  { key: 'blood_pressure',  icon: HeartPulse, label: 'Huyết áp',   unit: 'mmHg',   color: 'from-rose-500 to-pink-500',     text: 'text-rose-700' },
-  { key: 'blood_glucose',   icon: Droplets,   label: 'Đường huyết', unit: 'mg/dL', color: 'from-amber-500 to-orange-500',  text: 'text-amber-700' },
-]
+import { useEffect, useState, useCallback } from 'react'
+import Link from 'next/link'
+import { ArrowLeft, Loader2, Sparkles } from 'lucide-react'
+import { useAuth } from '@/hooks/use-auth'
+import { VitalsAddMeasurementDialogWithIndicatorSelectorAndImageOcr } from '@/components/vitals/vitals-add-measurement-dialog-with-indicator-selector-and-image-ocr'
+import { VitalsFrequentIndicatorsSectionBloodPressureGlucoseHeartRate, type VitalRecord } from '@/components/vitals/vitals-frequent-indicators-section-blood-pressure-glucose-heart-rate'
+import { VitalsStaticIndicatorsSectionHeightAndWeight } from '@/components/vitals/vitals-static-indicators-section-height-and-weight'
+import { VitalsThresholdExceededContextFormDialog } from '@/components/vitals/vitals-threshold-exceeded-context-form-dialog'
+import { Card, CardContent } from '@/components/ui/card'
+import {
+  detectBloodPressureAlert,
+  detectGlucoseAlert,
+  detectHeartRateAlert,
+  type VitalThreshold,
+  type AlertLevel,
+} from '@/lib/vitals/vital-threshold-alert-detector'
 
 const SOURCE_LABEL: Record<string, string> = {
-  manual: 'Nhập tay',
-  image_ocr: '📸 Ảnh máy đo (AI)',
-  device: 'Thiết bị IoT',
+  manual:    'Nhập tay',
+  image_ocr: '📸 AI đọc ảnh',
+  device:    'Thiết bị',
+}
+
+const INDICATOR_LABELS: Record<string, string> = {
+  blood_pressure: 'Huyết áp',
+  blood_glucose:  'Đường huyết',
+  heart_rate:     'Nhịp tim',
+  height:         'Chiều cao',
+  weight:         'Cân nặng',
+}
+
+interface AlertState {
+  vitalId: string
+  indicatorLabel: string
+  valueDisplay: string
+  level: AlertLevel
 }
 
 export default function VitalsPage() {
   const { user, loading: authLoading } = useAuth()
-  const [vitals, setVitals] = useState<VitalRecord[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showDialog, setShowDialog] = useState(false)
+  const [vitals, setVitals]               = useState<VitalRecord[]>([])
+  const [thresholds, setThresholds]       = useState<VitalThreshold[]>([])
+  const [loading, setLoading]             = useState(true)
+  const [showDialog, setShowDialog]       = useState(false)
+  const [defaultType, setDefaultType]     = useState<string | undefined>()
+  const [alertState, setAlertState]       = useState<AlertState | null>(null)
+  // Track timestamp before save so we can find the new record after refresh
+  const [saveMoment, setSaveMoment]       = useState<number>(0)
+  const [pendingCheckType, setPendingCheckType] = useState<string | undefined>()
 
-  async function fetchVitals() {
+  const fetchVitals = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/vitals')
-      const data = await res.json()
-      setVitals(data.vitals ?? [])
-    } catch {
-      // silent
+      const [vitalsRes, thrRes] = await Promise.all([
+        fetch('/api/vitals'),
+        fetch('/api/vitals/thresholds'),
+      ])
+      const vitalsData = await vitalsRes.json()
+      const thrData    = await thrRes.json()
+      const fresh: VitalRecord[] = vitalsData.vitals ?? []
+      setVitals(fresh)
+      setThresholds(thrData.thresholds ?? [])
+      return fresh
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     if (!authLoading && user) fetchVitals()
-  }, [authLoading, user])
+  }, [authLoading, user, fetchVitals])
 
-  if (authLoading) {
+  /** Sau khi save → refresh → tìm bản ghi mới nhất → check threshold */
+  async function handleVitalSaved() {
+    const fresh = await fetchVitals() ?? []
+    if (!pendingCheckType) return
+
+    // Tìm vital mới nhất của loại vừa lưu (sau thời điểm mở dialog)
+    const newVital = fresh.find(
+      v => v.indicator_type === pendingCheckType &&
+           new Date(v.measured_at).getTime() >= saveMoment - 5000
+    )
+    if (!newVital) return
+
+    let level: AlertLevel = null
+    let valueDisplay = ''
+
+    if (newVital.indicator_type === 'blood_pressure' && 'sys' in newVital.value) {
+      level        = detectBloodPressureAlert(newVital.value.sys, newVital.value.dia, thresholds)
+      const pulse  = newVital.value.pulse ? ` · ${newVital.value.pulse} bpm` : ''
+      valueDisplay = `${newVital.value.sys}/${newVital.value.dia}${pulse} mmHg`
+    } else if (newVital.indicator_type === 'blood_glucose') {
+      const v = newVital.value.value ?? 0
+      level        = detectGlucoseAlert(v, thresholds)
+      valueDisplay = `${v} mg/dL`
+    } else if (newVital.indicator_type === 'heart_rate') {
+      const v = newVital.value.value ?? 0
+      level        = detectHeartRateAlert(v, thresholds)
+      valueDisplay = `${v} bpm`
+    }
+
+    if (level) {
+      setAlertState({
+        vitalId:        newVital.id,
+        indicatorLabel: INDICATOR_LABELS[newVital.indicator_type] ?? newVital.indicator_type,
+        valueDisplay,
+        level,
+      })
+    }
+  }
+
+  function openAddDialog(type?: string) {
+    setDefaultType(type)
+    setPendingCheckType(type ?? 'blood_pressure') // default check BP nếu không chỉ định
+    setSaveMoment(Date.now())
+    setShowDialog(true)
+  }
+
+  if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center py-20 text-gray-500">
         <Loader2 className="size-5 animate-spin mr-2" /> Đang tải...
@@ -68,116 +133,76 @@ export default function VitalsPage() {
     )
   }
 
-  // Latest reading per indicator
-  const latestByIndicator: Record<string, VitalRecord | null> = {}
-  for (const ind of BASIC_INDICATORS) {
-    latestByIndicator[ind.key] = vitals.find((v) => v.indicator_type === ind.key) || null
-  }
+  const frequentVitals = vitals.filter(v =>
+    ['blood_pressure', 'blood_glucose', 'heart_rate'].includes(v.indicator_type)
+  )
+  const staticVitals = vitals.filter(v =>
+    ['height', 'weight'].includes(v.indicator_type)
+  )
 
   return (
-    <div className="space-y-5 max-w-5xl">
+    <div className="space-y-5 max-w-3xl">
       <Link href="/dashboard" className="text-sm text-gray-500 hover:text-gray-800 flex items-center gap-1">
         <ArrowLeft className="size-4" /> Về tổng quan
       </Link>
 
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 text-slate-900">
-            <span className="text-2xl">📊</span> Chỉ số sức khỏe
-          </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            4 chỉ số cơ bản · {vitals.length} lần đo · Hỗ trợ AI đọc ảnh máy đo
-          </p>
-        </div>
-        <Button
-          onClick={() => setShowDialog(true)}
-          className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 gap-1.5 shadow-md shadow-teal-500/20"
-        >
-          <Plus className="size-4" /> Thêm đo
-        </Button>
+      <div>
+        <h1 className="text-2xl font-bold flex items-center gap-2 text-slate-900">
+          📊 Chỉ số sức khỏe
+        </h1>
+        <p className="text-xs text-slate-500 mt-0.5">
+          {vitals.length} lần đo · Cập nhật hàng ngày · Hỗ trợ AI đọc ảnh máy đo
+        </p>
       </div>
 
-      {/* 4 indicator cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {BASIC_INDICATORS.map((ind) => {
-          const Icon = ind.icon
-          const latest = latestByIndicator[ind.key]
-          return (
-            <div
-              key={ind.key}
-              className="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <div className={`size-8 rounded-lg bg-gradient-to-br ${ind.color} text-white flex items-center justify-center`}>
-                  <Icon className="size-4" />
-                </div>
-                <span className="text-sm font-semibold text-slate-700">{ind.label}</span>
-              </div>
-              {latest ? (
-                <>
-                  <div className={`text-2xl font-extrabold ${ind.text}`}>
-                    {formatVitalValue(latest)}
-                    <span className="text-xs font-normal text-slate-400 ml-1">{latest.unit || ind.unit}</span>
-                  </div>
-                  <p className="text-[11px] text-slate-400 mt-1">
-                    {new Date(latest.measured_at).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
-                    {' · '}{SOURCE_LABEL[latest.source]}
-                  </p>
-                </>
-              ) : (
-                <p className="text-xs text-slate-400 italic">Chưa đo</p>
-              )}
-            </div>
-          )
-        })}
-      </div>
+      {/* TOP: Huyết áp, Đường huyết, Nhịp tim */}
+      <VitalsFrequentIndicatorsSectionBloodPressureGlucoseHeartRate
+        vitals={frequentVitals}
+        onAddClick={openAddDialog}
+      />
 
-      {/* History */}
+      {/* BOTTOM: Chiều cao, Cân nặng, BMI — ẩn mặc định */}
+      <VitalsStaticIndicatorsSectionHeightAndWeight
+        vitals={staticVitals}
+        onAddClick={openAddDialog}
+      />
+
+      {/* Lịch sử */}
       <Card>
         <CardContent className="pt-4 pb-4">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-bold text-slate-900">Lịch sử đo</h2>
-            {vitals.length > 0 && (
-              <span className="text-xs text-slate-500">{vitals.length} bản ghi</span>
-            )}
-          </div>
+          <h2 className="text-base font-bold text-slate-900 mb-3 flex items-center justify-between">
+            Lịch sử đo
+            {vitals.length > 0 && <span className="text-xs font-normal text-slate-400">{vitals.length} bản ghi</span>}
+          </h2>
 
-          {loading ? (
-            <p className="text-center text-slate-400 py-6 text-sm">Đang tải...</p>
-          ) : vitals.length === 0 ? (
+          {vitals.length === 0 ? (
             <div className="text-center py-8">
               <Sparkles className="size-10 mx-auto text-teal-300 mb-2" />
-              <p className="text-sm text-slate-500 mb-3">Chưa có chỉ số nào được ghi nhận.</p>
-              <Button
-                onClick={() => setShowDialog(true)}
-                className="bg-teal-600 hover:bg-teal-700"
-              >
-                <Plus className="size-4 mr-1" /> Thêm chỉ số đầu tiên
-              </Button>
+              <p className="text-sm text-slate-500 mb-3">Chưa có chỉ số nào.</p>
             </div>
           ) : (
             <ul className="divide-y divide-slate-100">
-              {vitals.map((v) => {
-                const def = BASIC_INDICATORS.find((i) => i.key === v.indicator_type)
-                const Icon = def?.icon || HeartPulse
+              {vitals.slice(0, 30).map(v => {
+                const label = INDICATOR_LABELS[v.indicator_type] ?? v.indicator_type
                 return (
-                  <li key={v.id} className="py-3 flex items-center gap-3">
-                    <div className={`size-9 rounded-lg bg-gradient-to-br ${def?.color || 'from-slate-400 to-slate-500'} text-white flex items-center justify-center shrink-0`}>
-                      <Icon className="size-4" />
-                    </div>
+                  <li key={v.id} className="py-2.5 flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-semibold text-slate-900">{def?.label || v.indicator_type}</span>
-                        <span className={`text-base font-bold ${def?.text || 'text-slate-700'}`}>
-                          {formatVitalValue(v)}
+                        <span className="text-sm font-medium text-slate-700">{label}</span>
+                        <span className="text-sm font-bold text-slate-900">
+                          {v.indicator_type === 'blood_pressure' && 'sys' in v.value
+                            ? `${v.value.sys}/${v.value.dia}${v.value.pulse ? ` · ${v.value.pulse}` : ''}`
+                            : String(v.value.value ?? Object.values(v.value)[0] ?? '—')}
                         </span>
-                        <span className="text-xs text-slate-400">{v.unit || def?.unit}</span>
+                        <span className="text-xs text-slate-400">{v.unit}</span>
+                        {v.alert_level === 'critical' && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-100 text-red-700 font-bold">⚠ Nguy hiểm</span>}
+                        {v.alert_level === 'warning'  && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 font-bold">△ Chú ý</span>}
                       </div>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-[11px] text-slate-400">
                         {new Date(v.measured_at).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                        {' · '}{SOURCE_LABEL[v.source]}
-                        {v.notes && ` · ${v.notes}`}
+                        {' · '}{SOURCE_LABEL[v.source] ?? v.source}
+                        {v.context_notes ? ' · Có bối cảnh' : ''}
                       </p>
                     </div>
                   </li>
@@ -188,22 +213,25 @@ export default function VitalsPage() {
         </CardContent>
       </Card>
 
-      {/* Dialog */}
+      {/* Dialog nhập chỉ số */}
       {showDialog && (
         <VitalsAddMeasurementDialogWithIndicatorSelectorAndImageOcr
-          onClose={() => setShowDialog(false)}
-          onSaved={() => fetchVitals()}
+          onClose={() => { setShowDialog(false); setDefaultType(undefined) }}
+          onSaved={handleVitalSaved}
+        />
+      )}
+
+      {/* Dialog bối cảnh khi vượt ngưỡng */}
+      {alertState && (
+        <VitalsThresholdExceededContextFormDialog
+          open={!!alertState}
+          onClose={() => setAlertState(null)}
+          vitalId={alertState.vitalId}
+          indicatorLabel={alertState.indicatorLabel}
+          valueDisplay={alertState.valueDisplay}
+          alertLevel={alertState.level}
         />
       )}
     </div>
   )
-}
-
-/** Format value JSON theo từng indicator */
-function formatVitalValue(v: VitalRecord): string {
-  if (v.indicator_type === 'blood_pressure' && 'sys' in v.value) {
-    const pulse = v.value.pulse ? ` · ${v.value.pulse} bpm` : ''
-    return `${v.value.sys}/${v.value.dia}${pulse}`
-  }
-  return String(v.value.value ?? Object.values(v.value)[0] ?? '—')
 }
