@@ -11,6 +11,7 @@ import { SmartUploadDocumentTypeChips } from '@/components/documents/smart-uploa
 import type { DocumentTypeValue } from '@/components/documents/smart-upload-document-type-chips'
 import { SmartUploadPatientCheckBanner } from '@/components/documents/smart-upload-patient-check-banner'
 import { useAuth } from '@/hooks/use-auth'
+import { OcrUsageMeter } from '@/components/subscriptions/ocr-usage-meter-with-upgrade-prompt'
 
 /**
  * Nhập hồ sơ y tế bằng AI (port từ SSK-VNeID)
@@ -54,6 +55,9 @@ export default function UploadPage() {
       <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard')} className="gap-1">
         <ArrowLeft className="size-4" /> Về tổng quan
       </Button>
+
+      {/* OCR quota meter — hiện khi free tier */}
+      <OcrUsageMeter />
 
       {/* 3-step progress stepper */}
       <UploadProgressStepper currentStep={step} />

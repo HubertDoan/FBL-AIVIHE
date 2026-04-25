@@ -7,6 +7,7 @@ import { isDemoMode, getDemoUser } from '@/lib/demo/demo-api-helper'
 import { callClaudeVision } from '@/lib/ai/claude-client'
 import { createServiceClient, createClient } from '@/lib/supabase/server'
 import { getDocumentUrl } from '@/lib/supabase/storage'
+import { checkOcrLimit, incrementOcrUsage } from '@/lib/subscriptions/ocr-limit-checker-and-usage-tracker'
 
 type Category = 'family-doctor' | 'rehab' | 'clinic' | 'daycare'
 
@@ -173,11 +174,28 @@ export async function POST(request: NextRequest) {
     const { data: citizen } = await supabase.from('citizens').select('full_name').eq('id', user.id).single()
     customerName = body.customer_name || citizen?.full_name || customerName
 
+    // Kiểm tra OCR quota (freemium: 2000 trang/tháng)
+    const svc = await createServiceClient()
+    const limitStatus = await checkOcrLimit(svc, user.id)
+    if (limitStatus.exceeded) {
+      return NextResponse.json(
+        {
+          error: `Bạn đã dùng hết ${limitStatus.pages_limit} trang OCR miễn phí tháng này. Nâng cấp lên gói Premium để tiếp tục.`,
+          code: 'OCR_LIMIT_EXCEEDED',
+          pages_used: limitStatus.pages_used,
+          pages_limit: limitStatus.pages_limit,
+        },
+        { status: 402 }
+      )
+    }
+
     // Thử OCR với Claude Vision nếu có documentId + API key
     if (documentId && process.env.ANTHROPIC_API_KEY) {
       const visionResult = await classifyWithVision(documentId, customerName)
       if (visionResult) {
-        return NextResponse.json({ ok: true, result: visionResult })
+        // Tăng counter sau khi OCR thành công
+        await incrementOcrUsage(svc, user.id, 1)
+        return NextResponse.json({ ok: true, result: visionResult, quota: limitStatus })
       }
     }
 

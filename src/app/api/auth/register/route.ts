@@ -161,7 +161,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // Create citizen record
+    // Create citizen record (self_registered = open platform)
     const { error: citizenError } = await supabase
       .from('citizens')
       .insert({
@@ -169,7 +169,8 @@ export async function POST(request: Request) {
         full_name: fullName,
         phone,
         username,
-        role: 'guest',
+        role: 'member',
+        signup_source: 'self_registered',
       })
 
     if (citizenError) {
@@ -180,6 +181,13 @@ export async function POST(request: Request) {
         { status: 500 }
       )
     }
+
+    // Auto-create free subscription
+    await supabase.from('user_subscriptions').insert({
+      citizen_id: authData.user.id,
+      plan: 'free',
+      status: 'active',
+    })
 
     return NextResponse.json({
       username,
