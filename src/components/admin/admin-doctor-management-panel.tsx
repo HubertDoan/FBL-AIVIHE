@@ -23,7 +23,9 @@ import {
   Plus,
   Stethoscope,
   UserCheck,
+  Upload,
 } from 'lucide-react'
+import { AdminDoctorBulkImportDialogWithCsvPreviewAndValidation } from './admin-doctor-bulk-import-dialog-with-csv-preview-and-validation'
 
 interface DoctorCitizenInfo {
   id: string
@@ -80,6 +82,7 @@ export function AdminDoctorManagementPanel() {
   const [form, setForm] = useState<AddDoctorForm>(EMPTY_FORM)
   const [submitting, setSubmitting] = useState(false)
   const [verifyingId, setVerifyingId] = useState<string | null>(null)
+  const [showBulkImport, setShowBulkImport] = useState(false)
 
   const fetchDoctors = useCallback(async () => {
     setLoading(true)
@@ -157,13 +160,23 @@ export function AdminDoctorManagementPanel() {
         <p className="text-base text-muted-foreground">
           {doctors.length} bác sĩ trong hệ thống
         </p>
-        <Button
-          className="h-10 text-base gap-2 bg-teal-600 hover:bg-teal-700"
-          onClick={() => setShowAddDialog(true)}
-        >
-          <Plus className="size-4" />
-          Thêm bác sĩ mới
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="h-10 text-base gap-2"
+            onClick={() => setShowBulkImport(true)}
+          >
+            <Upload className="size-4" />
+            Nhập danh sách
+          </Button>
+          <Button
+            className="h-10 text-base gap-2 bg-teal-600 hover:bg-teal-700"
+            onClick={() => setShowAddDialog(true)}
+          >
+            <Plus className="size-4" />
+            Thêm bác sĩ mới
+          </Button>
+        </div>
       </div>
 
       {doctors.length === 0 ? (
@@ -216,6 +229,13 @@ export function AdminDoctorManagementPanel() {
           ))}
         </div>
       )}
+
+      {/* Bulk Import Dialog */}
+      <AdminDoctorBulkImportDialogWithCsvPreviewAndValidation
+        open={showBulkImport}
+        onClose={() => setShowBulkImport(false)}
+        onImported={fetchDoctors}
+      />
 
       {/* Add Doctor Dialog */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>

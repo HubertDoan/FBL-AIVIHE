@@ -1,0 +1,4 @@
+ho_ten,ngay_sinh,so_dien_thoai,email,van_bang,pham_vi_chuyen_mon,so_gphn,ngay_cap_gphn,co_quan_cong_tac,loai_hop_dong,cham_soc_tai_nha
+Nguyễn Văn An,15/03/1975,0912345678,bsan@example.com,Bác sỹ,Chuyên khoa Nội,0001/HN-CCHN,01/06/2010,Trung tâm Thong Dong Care,toan_thoi_gian,co
+Trần Thị Bình,22/07/1980,0912345679,bsbinh@example.com,Bác sỹ,Chuyên khoa Tim mạch,0002/HCM-CCHN,15/08/2008,Bệnh viện Bạch Mai,ban_thoi_gian,khong
+Lê Văn Cường,01/01/1970,0912345680,,Bác sỹ,Y học cổ truyền,0003/HN-CCHN,20/01/2005,Trung tâm Thong Dong Care,toan_thoi_gian,co
