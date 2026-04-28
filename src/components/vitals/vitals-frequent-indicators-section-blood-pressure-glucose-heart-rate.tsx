@@ -101,8 +101,22 @@ export function VitalsFrequentIndicatorsSectionBloodPressureGlucoseHeartRate({ v
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {FREQUENT.map(ind => {
           const records = vitals.filter(v => v.indicator_type === ind.key)
-          const latest = records[0] ?? null
-          const prev   = records[1] ?? null
+          let latest = records[0] ?? null
+          let prev   = records[1] ?? null
+          let pulseFromBP = false
+
+          // Nhịp tim: nếu chưa đo riêng, lấy PULSE từ bản ghi huyết áp gần nhất
+          if (ind.key === 'heart_rate' && !latest) {
+            const bpRecords = vitals.filter(v => v.indicator_type === 'blood_pressure' && v.value.pulse)
+            if (bpRecords[0]) {
+              latest = { ...bpRecords[0], indicator_type: 'heart_rate', value: { value: bpRecords[0].value.pulse } }
+              pulseFromBP = true
+            }
+            if (bpRecords[1]) {
+              prev = { ...bpRecords[1], indicator_type: 'heart_rate', value: { value: bpRecords[1].value.pulse } }
+            }
+          }
+
           const Icon   = ind.icon
           const ac     = ACCENT_CLASSES[ind.accent]
 
@@ -132,7 +146,7 @@ export function VitalsFrequentIndicatorsSectionBloodPressureGlucoseHeartRate({ v
                   </div>
                   <p className="text-[11px] text-gray-400">
                     {new Date(latest.measured_at).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
-                    {latest.context_notes ? ' · Có bối cảnh' : ''}
+                    {pulseFromBP ? ' · từ huyết áp' : latest.context_notes ? ' · Có bối cảnh' : ''}
                   </p>
                 </>
               ) : (
