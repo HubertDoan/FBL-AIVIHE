@@ -109,8 +109,8 @@ export async function POST(request: NextRequest) {
         document_date: visitDate,
         facility_name: data.facility || null,
         is_classified: true,
-        ai_classification: JSON.stringify({ category, facility: data.facility || null, doctor: data.doctor_name, specialty: data.specialty, reason: data.reason, diagnosis: data.diagnosis, tests, medications: data.medications, recommendations: data.recommendations, follow_up: data.follow_up || null, confirmed_by: user.id, confirmed_at: new Date().toISOString() }),
-        metadata: { category, specialty: data.specialty || null, reason: data.reason || null, diagnosis: data.diagnosis || null, doctor: data.doctor_name || null, tests_count: tests.length },
+        ai_classification: JSON.stringify({ category, facility: data.facility || null, doctor: data.doctor_name, specialty: data.specialty, reason: data.reason, diagnosis: data.diagnosis, conclusion: data.conclusion || null, tests, medications: data.medications, recommendations: data.recommendations, follow_up: data.follow_up || null, confirmed_by: user.id, confirmed_at: new Date().toISOString() }),
+        metadata: { category, specialty: data.specialty || null, reason: data.reason || null, diagnosis: data.diagnosis || null, conclusion: data.conclusion || null, doctor: data.doctor_name || null, tests_count: tests.length },
       }).eq('id', documentId)
       if (docErr) console.error('[health-record/add] source_documents update error:', docErr.message)
 
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
         visit_type: visitType,
         reason: data.reason || data.diagnosis || null,
         visit_date: visitDate,
-        notes: data.diagnosis || null,
+        notes: [data.diagnosis, data.conclusion].filter(Boolean).join('\n\nKết luận: ') || null,
         source_document_id: documentId,
       }).select('id').single()
       if (visitErr) console.error('[health-record/add] health_visits error:', visitErr.message)

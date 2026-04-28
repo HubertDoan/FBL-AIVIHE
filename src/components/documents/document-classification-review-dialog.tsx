@@ -32,6 +32,7 @@ export interface AiClassifyResult {
   extracted_tests: string[]
   extracted_medications: string[]
   extracted_recommendations: string[]
+  extracted_conclusion: string | null  // Kết luận / nhận xét của BS ký kết quả
   raw_text_preview: string
 }
 
@@ -116,6 +117,7 @@ export function DocumentClassificationReviewDialog({
   const [tests, setTests] = useState((classifyResult.extracted_tests ?? []).join('\n'))
   const [meds, setMeds] = useState((classifyResult.extracted_medications ?? []).join('\n'))
   const [recs, setRecs] = useState((classifyResult.extracted_recommendations ?? []).join('\n'))
+  const [conclusion, setConclusion] = useState(classifyResult.extracted_conclusion || '')
   const [followUp, setFollowUp] = useState('')
   const [saving, setSaving] = useState(false)
 
@@ -140,6 +142,7 @@ export function DocumentClassificationReviewDialog({
         tests: tests.split('\n').map(s => s.trim()).filter(Boolean),
         medications: meds.split('\n').map(s => s.trim()).filter(Boolean),
         recommendations: recs.split('\n').map(s => s.trim()).filter(Boolean),
+        conclusion: conclusion.trim() || null,
         follow_up: followUp.trim() || null,
         document_ids: documentId ? [documentId] : [],
       }
@@ -275,6 +278,20 @@ export function DocumentClassificationReviewDialog({
           <div className="space-y-1.5">
             <Label className="text-sm font-semibold">Xét nghiệm</Label>
             <TestsTable value={tests} onChange={setTests} />
+          </div>
+
+          {/* Kết luận BS xét nghiệm / Chẩn đoán hình ảnh */}
+          <div className="space-y-1.5">
+            <Label className="text-sm font-semibold text-teal-700">
+              🔬 Kết luận BS xét nghiệm / Chẩn đoán hình ảnh
+            </Label>
+            <Textarea
+              value={conclusion}
+              onChange={e => setConclusion(e.target.value)}
+              rows={3}
+              placeholder="VD: HÌNH ẢNH NHÂN VÚ TRÁI (BIRADS 4A). NANG VÚ HAI BÊN. — Nhập kết luận của bác sĩ ký kết quả"
+              className="text-sm"
+            />
           </div>
 
           <div className="grid sm:grid-cols-2 gap-3">

@@ -25,6 +25,7 @@ interface ClassifyResult {
   extracted_tests: string[]
   extracted_medications: string[]
   extracted_recommendations: string[]
+  extracted_conclusion: string | null  // Kết luận / nhận xét của BS ký kết quả
   raw_text_preview: string
 }
 
@@ -66,6 +67,7 @@ function buildOcrPrompt(customerName: string) {
   "extracted_tests": ["TÊN XÉT NGHIỆM::KẾT QUẢ::ĐƠN VỊ::THAM CHIẾU", ...],
   "extracted_medications": ["thuốc: liều dùng", ...],
   "extracted_recommendations": ["hướng dẫn 1", ...],
+  "extracted_conclusion": "kết luận / nhận xét của bác sĩ ký kết quả (mục KẾT LUẬN hoặc NHẬN XÉT trong tài liệu) hoặc null",
   "raw_text_preview": "tóm tắt nội dung chính tối đa 200 ký tự"
 }
 
@@ -135,6 +137,7 @@ function generateMockExtraction(category: Category, filename: string, customerNa
     extracted_tests: [],
     extracted_medications: [],
     extracted_recommendations: [],
+    extracted_conclusion: null,
     raw_text_preview: `[Demo] AI đã trích xuất nội dung từ "${filename}".`,
   }
   if (category === 'clinic') {
@@ -215,6 +218,7 @@ export async function POST(request: NextRequest) {
       extracted_tests: [],
       extracted_medications: [],
       extracted_recommendations: [],
+      extracted_conclusion: null,
       raw_text_preview: `Phân loại theo tên file "${filename}". Vui lòng kiểm tra và điều chỉnh.`,
     }
     return NextResponse.json({ ok: true, result })
