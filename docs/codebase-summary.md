@@ -1,6 +1,6 @@
 # Codebase Summary — AIVIHE
 
-**Cập nhật:** 21/04/2026 | **Framework:** Next.js 16 App Router | **Language:** TypeScript
+**Cập nhật:** 28/04/2026 | **Framework:** Next.js 16 App Router | **Language:** TypeScript
 
 ---
 
@@ -8,9 +8,9 @@
 
 | Metric | Value |
 |--------|-------|
-| **Source files** | 409 (.ts/.tsx) |
-| **API routes** | 72+ REST endpoints |
-| **DB migrations** | 26 SQL files |
+| **Source files** | 430 (.ts/.tsx) |
+| **API routes** | 120 REST endpoints |
+| **DB migrations** | 44 SQL files |
 | **Component modules** | 20+ feature folders |
 | **RBAC roles** | 12 |
 | **Permissions** | 34 |
@@ -448,6 +448,37 @@ export async function processWebhookEvent(event: DaycareEvent) {
 
 ---
 
+## Recent Changes (28/04/2026)
+
+### Document Review Dialog — Restructure + New Fields
+**Files:** `src/components/documents/document-classification-review-dialog.tsx`, `src/app/api/documents/classify-and-extract/route.ts`, `src/app/api/health-record/add/route.ts`
+
+- Form split into 6 labeled sections with visual dividers
+- **§2 Thông tin bệnh nhân**: Họ tên + Ngày sinh + Số thẻ BHYT with amber mismatch alerts
+- **§4 Chỉ định**: AI reads this section to route extracted items to correct group
+- **§5 Kết quả**: Xét nghiệm (quantitative lab table) + Thăm dò chức năng (ECG/siêu âm/X-quang) + Kết luận BS
+- `AiClassifyResult` interface extended: `extracted_date_of_birth`, `extracted_bhyt`, `extracted_indication`, `extracted_functional_tests`, `extracted_conclusion`
+- Claude Vision OCR prompt updated to extract all new fields
+
+### Doctor Bulk Import
+**Files:** `src/components/admin/admin-doctor-bulk-import-dialog-with-csv-preview-and-validation.tsx`, `src/app/api/admin/doctors/bulk-upload/route.ts`, `src/lib/doctors/doctor-gphn-import-row-validator-and-column-normalizer.ts`
+
+- Upload XLSX (Sở Y tế GPHN format) or CSV with client-side SheetJS parsing
+- Vietnamese header normalization via ALIASES map
+- Validation preview table: valid rows (green) / invalid rows (red) with error tooltip
+- API creates citizen auth accounts (phone-based) + upserts doctor_profiles
+- Migration 00044: adds `license_number`, `license_issued_date`, `workplace`, `employment_type`, `home_care` to `doctor_profiles`
+- CSV template: `public/templates/bac-si-import-mau-gphn-ho-ten-chuyen-khoa-hop-dong-tai-nha.csv`
+
+### Vitals — Heart Rate Fallback from BP Pulse
+**File:** `src/components/vitals/vitals-frequent-indicators-section-blood-pressure-glucose-heart-rate.tsx`
+
+- Nhịp tim card auto-populates from `blood_pressure.value.pulse` when no standalone `heart_rate` record exists
+- Displays `· từ huyết áp` label to indicate data source
+- Trend comparison uses PULSE from consecutive BP readings
+
+---
+
 ## Hot Spots & Technical Debt
 
 | Issue | Priority | Action |
@@ -480,6 +511,7 @@ export async function processWebhookEvent(event: DaycareEvent) {
 ### Charts & Export
 - `recharts` 3.8+ — Charts
 - `@react-pdf/renderer` 4.3+ — PDF export
+- `xlsx` (SheetJS) — Client-side XLSX/CSV parsing for doctor bulk import
 
 ### Validation
 - `zod` 4.3+ — Schema validation

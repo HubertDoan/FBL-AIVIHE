@@ -80,11 +80,15 @@ AIVIHE đang ở giai đoạn **MVP Foundation → Production Ready**. Roadmap d
 - Rehab sessions
 - Clinic visits
 
-✅ AI-powered document OCR pipeline (full end-to-end — 24/04/2026)
+✅ AI-powered document OCR pipeline (full end-to-end — 24/04/2026, updated 28/04/2026)
 - Multi-file upload (image/PDF) → Claude Vision real OCR extraction
 - 4-field structured test table: NAME::VALUE::UNIT::REFERENCE_RANGE
 - Auto-detect abnormal values from reference range comparison
-- User review dialog with editable fields (diagnosis, medications, tests, follow_up)
+- Review dialog restructured into 6 labeled sections (Phân loại / BN / Khám / Chỉ định / Kết quả / Điều trị)
+- BHYT card + DOB verification with amber mismatch alerts vs account data
+- Split test results: Xét nghiệm (quantitative) vs Thăm dò chức năng (ECG, siêu âm, X-quang, MRI)
+- Kết luận BS field: captures KẾT LUẬN/NHẬN XÉT from lab/imaging reports
+- Claude Vision now extracts: date_of_birth, bhyt, indication, functional_tests, conclusion
 - 3-layer save: source_documents → extracted_records → health_visits + lab_tests
 - Health record tabs populated from source_documents.ai_classification (resilient source)
 - "Xem tài liệu gốc" signed URL button in each clinic visit card
@@ -116,6 +120,13 @@ AIVIHE đang ở giai đoạn **MVP Foundation → Production Ready**. Roadmap d
 - Customers select family doctor
 - Director approval workflow
 
+✅ Doctor bulk import (28/04/2026)
+- Admin uploads XLSX (Sở Y tế GPHN format) or CSV
+- Auto-normalizes Vietnamese column headers (Họ và tên, Phạm vi chuyên môn, Số GPHN...)
+- Client-side SheetJS XLSX parsing + validation preview with error highlighting
+- Creates citizen accounts (phone-based) + upserts doctor_profiles in one operation
+- Migration 00044: license_number, license_issued_date, workplace, employment_type, home_care columns
+
 ✅ Notifications & messaging
 - System notifications
 - Messaging between users
@@ -133,9 +144,11 @@ AIVIHE đang ở giai đoạn **MVP Foundation → Production Ready**. Roadmap d
 - Daycare staff, doctor, nurse roles
 
 ### Database State
-- 40 migrations (00001 → 00040)
+- 44 migrations (00001 → 00044)
 - 26+ tables; RLS on all
-- Migration 00040 pending apply to production (RLS for health_visits + lab_tests)
+- Migration 00040: RLS for health_visits + lab_tests (pending production apply)
+- Migration 00043: vital_thresholds table + alert_level/context_notes columns on vital_records
+- Migration 00044: doctor_profiles — license_number, workplace, employment_type, home_care columns
 - Seed data: 13 demo accounts + 5 doctors + 6 PDF samples + 2 vitals records
 
 ### Deployment
