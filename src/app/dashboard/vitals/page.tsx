@@ -18,6 +18,8 @@ import { VitalsStaticIndicatorsSectionHeightAndWeight } from '@/components/vital
 import { VitalsThresholdExceededContextFormDialog } from '@/components/vitals/vitals-threshold-exceeded-context-form-dialog'
 import { VitalsWeeklyMonthlyStatisticsAndTrendTable } from '@/components/vitals/vitals-weekly-monthly-statistics-and-trend-table'
 import { VitalsMeasurementHistoryListWithContextChips } from '@/components/vitals/vitals-measurement-history-list-with-context-chips'
+import { VitalsPersonalThresholdSettingsPanel } from '@/components/vitals/vitals-personal-threshold-settings-panel'
+import { VitalsAiFactorAnalysisPanel } from '@/components/vitals/vitals-ai-factor-analysis-panel'
 import {
   detectBloodPressureAlert,
   detectGlucoseAlert,
@@ -170,6 +172,12 @@ export default function VitalsPage() {
         vitals={staticVitals}
         onAddClick={openAddDialog}
       />
+
+      {/* Ngưỡng cảnh báo cá nhân — chỉ khi vượt ngưỡng mới hỏi bối cảnh */}
+      <VitalsPersonalThresholdSettingsPanel />
+
+      {/* Phân tích AI — tương quan bối cảnh với chỉ số (hiện khi có ≥3 bối cảnh) */}
+      <VitalsAiFactorAnalysisPanel vitals={vitals} />
 
       {/* Lịch sử đo với context chips */}
       <VitalsMeasurementHistoryListWithContextChips vitals={vitals} />

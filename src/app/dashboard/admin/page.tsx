@@ -13,6 +13,7 @@ import { ProgramManager } from '@/components/admin/program-manager'
 import { DoctorApprovalList } from '@/components/admin/doctor-approval-list'
 import { DoctorReferralList } from '@/components/admin/doctor-referral-list'
 import { AdminDoctorManagementPanel } from '@/components/admin/admin-doctor-management-panel'
+import { AdminSystemVitalThresholdsManagementPanel } from '@/components/admin/admin-system-vital-thresholds-management-panel'
 import { useAuth } from '@/hooks/use-auth'
 
 interface Stats {
@@ -288,17 +289,22 @@ export default function AdminPage() {
                   Cài đặt hệ thống
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-sm">
-                  Truy cập trang cài đặt hệ thống đầy đủ để cấu hình các thông số vận hành.
-                </p>
-                <Link
-                  href="/dashboard/system"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
-                >
-                  <ExternalLink className="size-4" />
-                  Mở trang Cài đặt hệ thống
-                </Link>
+              <CardContent className="space-y-6">
+                {/* Vital thresholds — MOH standards editable by admin */}
+                <AdminSystemVitalThresholdsManagementPanel />
+
+                <div className="border-t pt-4">
+                  <p className="text-muted-foreground text-sm mb-3">
+                    Cấu hình thêm các thông số vận hành khác:
+                  </p>
+                  <Link
+                    href="/dashboard/system"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
+                    <ExternalLink className="size-4" />
+                    Mở trang Cài đặt hệ thống
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

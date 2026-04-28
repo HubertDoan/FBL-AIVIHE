@@ -142,9 +142,10 @@ export function VitalsWeeklyMonthlyStatisticsAndTrendTable({ vitals }: Props) {
                 <YAxis tick={{ fontSize: 9 }} />
                 <Tooltip
                   contentStyle={{ fontSize: 11, padding: '4px 8px' }}
-                  formatter={(val: number | null, name: string) =>
-                    [val ?? '—', name === 'HA' ? 'Huyết áp' : name === 'ĐH' ? 'Đường huyết' : 'Cân nặng']
-                  }
+                  formatter={(val, name) => {
+                    const label = name === 'HA' ? 'Huyết áp' : name === 'ĐH' ? 'Đường huyết' : 'Cân nặng'
+                    return [val != null ? val : '—', label]
+                  }}
                 />
                 <Line type="monotone" dataKey="HA" stroke="#f43f5e" strokeWidth={2} dot={false} connectNulls />
                 <Line type="monotone" dataKey="ĐH" stroke="#f59e0b" strokeWidth={2} dot={false} connectNulls />
