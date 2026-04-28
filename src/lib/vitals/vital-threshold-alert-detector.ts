@@ -65,6 +65,14 @@ export function detectHeartRateAlert(value: number, thresholds: VitalThreshold[]
   return thr ? detectAlertLevel(value, thr) : null
 }
 
+/**
+ * Kiểm tra weight record
+ */
+export function detectWeightAlert(value: number, thresholds: VitalThreshold[]): AlertLevel {
+  const thr = thresholds.find(t => t.indicator_type === 'weight')
+  return thr ? detectAlertLevel(value, thr) : null
+}
+
 /** Label tiếng Việt cho alert level */
 export function alertLevelLabel(level: AlertLevel): string {
   if (level === 'critical') return 'Nguy hiểm'

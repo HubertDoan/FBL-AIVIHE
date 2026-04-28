@@ -6,7 +6,7 @@
  * Hiển thị ở TOP của trang chỉ số sức khỏe
  */
 
-import { HeartPulse, Droplets, Activity, Plus, TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { HeartPulse, Droplets, Activity, Scale, Plus, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { AlertLevel } from '@/lib/vitals/vital-threshold-alert-detector'
 
@@ -51,12 +51,21 @@ const FREQUENT = [
     accent: 'pink',
     hint: 'Đo lúc nghỉ ngơi',
   },
+  {
+    key: 'weight',
+    label: 'Cân nặng',
+    unit: 'kg',
+    icon: Scale,
+    accent: 'emerald',
+    hint: 'Đo buổi sáng, lúc đói',
+  },
 ]
 
 const ACCENT_CLASSES: Record<string, { bg: string; text: string; border: string; badge: string }> = {
-  rose:  { bg: 'bg-rose-50',  text: 'text-rose-700',  border: 'border-rose-200', badge: 'bg-rose-100 text-rose-700' },
-  amber: { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', badge: 'bg-amber-100 text-amber-700' },
-  pink:  { bg: 'bg-pink-50',  text: 'text-pink-700',  border: 'border-pink-200', badge: 'bg-pink-100 text-pink-700' },
+  rose:    { bg: 'bg-rose-50',    text: 'text-rose-700',    border: 'border-rose-200',    badge: 'bg-rose-100 text-rose-700' },
+  amber:   { bg: 'bg-amber-50',   text: 'text-amber-700',   border: 'border-amber-200',   badge: 'bg-amber-100 text-amber-700' },
+  pink:    { bg: 'bg-pink-50',    text: 'text-pink-700',    border: 'border-pink-200',    badge: 'bg-pink-100 text-pink-700' },
+  emerald: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', badge: 'bg-emerald-100 text-emerald-700' },
 }
 
 function formatBP(v: VitalRecord): string {
@@ -98,7 +107,7 @@ export function VitalsFrequentIndicatorsSectionBloodPressureGlucoseHeartRate({ v
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {FREQUENT.map(ind => {
           const records = vitals.filter(v => v.indicator_type === ind.key)
           let latest = records[0] ?? null

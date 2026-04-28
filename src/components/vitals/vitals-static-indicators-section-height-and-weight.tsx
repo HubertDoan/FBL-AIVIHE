@@ -5,7 +5,7 @@
  * Hiển thị ở DƯỚI trang chỉ số sức khỏe — compact, không nổi bật
  */
 
-import { Ruler, Scale, ChevronDown, ChevronUp } from 'lucide-react'
+import { Ruler, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import type { VitalRecord } from './vitals-frequent-indicators-section-blood-pressure-glucose-heart-rate'
 
@@ -75,41 +75,36 @@ export function VitalsStaticIndicatorsSectionHeightAndWeight({ vitals, onAddClic
         }
       </button>
 
-      {/* Expanded detail */}
+      {/* Expanded detail — chiều cao only; cân nặng đã chuyển sang theo dõi hàng ngày */}
       {expanded && (
-        <div className="border-t border-gray-200 px-4 py-4 grid sm:grid-cols-2 gap-3">
-          {[
-            { key: 'height', label: 'Chiều cao', unit: 'cm', icon: Ruler, latest: latestHeight, color: 'text-purple-700' },
-            { key: 'weight', label: 'Cân nặng',  unit: 'kg', icon: Scale,  latest: latestWeight, color: 'text-blue-700' },
-          ].map(({ key, label, unit, icon: Icon, latest, color }) => (
-            <div key={key} className="bg-white rounded-lg border border-gray-200 p-3 space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <Icon className={`size-4 ${color}`} />
-                  <span className="text-sm font-semibold text-gray-700">{label}</span>
-                </div>
-                <button
-                  onClick={() => onAddClick(key)}
-                  className="text-xs text-gray-400 hover:text-gray-700 underline"
-                >
-                  Cập nhật
-                </button>
+        <div className="border-t border-gray-200 px-4 py-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-3 space-y-2 max-w-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <Ruler className="size-4 text-purple-700" />
+                <span className="text-sm font-semibold text-gray-700">Chiều cao</span>
               </div>
-              {latest ? (
-                <>
-                  <div className={`text-2xl font-bold ${color}`}>
-                    {latest.value.value}
-                    <span className="text-xs font-normal text-gray-400 ml-1">{unit}</span>
-                  </div>
-                  <p className="text-[11px] text-gray-400">
-                    {new Date(latest.measured_at).toLocaleDateString('vi-VN')}
-                  </p>
-                </>
-              ) : (
-                <p className="text-sm text-gray-400 italic">Chưa có</p>
-              )}
+              <button
+                onClick={() => onAddClick('height')}
+                className="text-xs text-gray-400 hover:text-gray-700 underline"
+              >
+                Cập nhật
+              </button>
             </div>
-          ))}
+            {latestHeight ? (
+              <>
+                <div className="text-2xl font-bold text-purple-700">
+                  {latestHeight.value.value}
+                  <span className="text-xs font-normal text-gray-400 ml-1">cm</span>
+                </div>
+                <p className="text-[11px] text-gray-400">
+                  {new Date(latestHeight.measured_at).toLocaleDateString('vi-VN')}
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-gray-400 italic">Chưa có</p>
+            )}
+          </div>
         </div>
       )}
     </div>
