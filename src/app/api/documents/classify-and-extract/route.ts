@@ -16,16 +16,20 @@ interface ClassifyResult {
   category_label: string
   confidence: number
   extracted_patient_name: string
+  extracted_date_of_birth: string | null   // Ngày sinh từ tài liệu
+  extracted_bhyt: string | null            // Số thẻ BHYT
   extracted_date: string | null
   extracted_facility: string | null
   extracted_doctor: string | null
   extracted_diagnosis: string | null
   extracted_specialty: string | null
   extracted_reason: string | null
-  extracted_tests: string[]
+  extracted_indication: string | null      // Chỉ định của bác sĩ
+  extracted_tests: string[]                // Xét nghiệm: máu, nước tiểu, sinh hóa
+  extracted_functional_tests: string[]     // Thăm dò chức năng: ECG, siêu âm, X-quang, MRI
   extracted_medications: string[]
   extracted_recommendations: string[]
-  extracted_conclusion: string | null  // Kết luận / nhận xét của BS ký kết quả
+  extracted_conclusion: string | null      // Kết luận / nhận xét của BS ký kết quả
   raw_text_preview: string
 }
 
@@ -51,25 +55,34 @@ function classifyByFilename(filename: string): Category {
 function buildOcrPrompt(customerName: string) {
   const system = `Bạn là AI chuyên đọc tài liệu y tế tiếng Việt. Nhiệm vụ: trích xuất thông tin từ ảnh tài liệu y tế và trả về JSON thuần túy (không có markdown, không có code block).`
 
-  const user = `Đọc tài liệu y tế trong ảnh và trả về JSON với cấu trúc sau (tất cả giá trị đều là string hoặc array of string, null nếu không tìm thấy):
+  const user = `Đọc tài liệu y tế trong ảnh và trả về JSON với cấu trúc sau (string hoặc array of string, null nếu không tìm thấy):
 
 {
   "category": "clinic" | "family-doctor" | "rehab" | "daycare",
   "category_label": "tên loại tài liệu tiếng Việt",
   "confidence": 0.0-1.0,
   "extracted_patient_name": "họ tên bệnh nhân",
-  "extracted_date": "YYYY-MM-DD hoặc null",
+  "extracted_date_of_birth": "YYYY-MM-DD hoặc null — ngày sinh bệnh nhân",
+  "extracted_bhyt": "số thẻ BHYT hoặc null",
+  "extracted_date": "YYYY-MM-DD hoặc null — ngày làm xét nghiệm / khám",
   "extracted_facility": "tên cơ sở y tế",
   "extracted_doctor": "tên bác sĩ/kỹ thuật viên",
-  "extracted_diagnosis": "chẩn đoán hoặc mục đích khám",
+  "extracted_diagnosis": "chẩn đoán",
   "extracted_specialty": "chuyên khoa",
-  "extracted_reason": "lý do khám",
+  "extracted_reason": "lý do khám / triệu chứng",
+  "extracted_indication": "phần CHỈ ĐỊNH trong tài liệu — danh sách xét nghiệm/thăm dò được yêu cầu hoặc null",
   "extracted_tests": ["TÊN XÉT NGHIỆM::KẾT QUẢ::ĐƠN VỊ::THAM CHIẾU", ...],
+  "extracted_functional_tests": ["mô tả kết quả ECG / siêu âm / X-quang / MRI / nội soi", ...],
   "extracted_medications": ["thuốc: liều dùng", ...],
   "extracted_recommendations": ["hướng dẫn 1", ...],
-  "extracted_conclusion": "kết luận / nhận xét của bác sĩ ký kết quả (mục KẾT LUẬN hoặc NHẬN XÉT trong tài liệu) hoặc null",
+  "extracted_conclusion": "mục KẾT LUẬN hoặc NHẬN XÉT của bác sĩ ký kết quả hoặc null",
   "raw_text_preview": "tóm tắt nội dung chính tối đa 200 ký tự"
 }
+
+Hướng dẫn phân loại:
+- extracted_tests: CHỈ cho xét nghiệm định lượng (máu, nước tiểu, sinh hóa, vi sinh) với kết quả số
+- extracted_functional_tests: kết quả định tính/mô tả (ECG, siêu âm, X-quang, CT, MRI, nội soi, thăm dò chức năng hô hấp...)
+- Đọc mục "Chỉ định" để xác định loại tài liệu và điền extracted_indication
 
 Phân loại category:
 - "clinic": xét nghiệm, X-quang, siêu âm, MRI, CT, kết quả, bệnh viện, phòng khám chuyên khoa
@@ -128,13 +141,17 @@ function generateMockExtraction(category: Category, filename: string, customerNa
     category_label: CATEGORY_LABELS[category],
     confidence: 0.75 + Math.random() * 0.2,
     extracted_patient_name: customerName,
+    extracted_date_of_birth: null,
+    extracted_bhyt: null,
     extracted_date: today,
     extracted_facility: null,
     extracted_doctor: null,
     extracted_diagnosis: null,
     extracted_specialty: null,
     extracted_reason: null,
+    extracted_indication: null,
     extracted_tests: [],
+    extracted_functional_tests: [],
     extracted_medications: [],
     extracted_recommendations: [],
     extracted_conclusion: null,
@@ -209,13 +226,17 @@ export async function POST(request: NextRequest) {
       category_label: CATEGORY_LABELS[category],
       confidence: 0.5,
       extracted_patient_name: customerName,
+      extracted_date_of_birth: null,
+      extracted_bhyt: null,
       extracted_date: null,
       extracted_facility: null,
       extracted_doctor: null,
       extracted_diagnosis: null,
       extracted_specialty: null,
       extracted_reason: null,
+      extracted_indication: null,
       extracted_tests: [],
+      extracted_functional_tests: [],
       extracted_medications: [],
       extracted_recommendations: [],
       extracted_conclusion: null,
