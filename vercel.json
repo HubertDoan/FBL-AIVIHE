@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/sleepcare/generate-ai-report",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

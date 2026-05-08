@@ -19,6 +19,7 @@ import { LandingPainPointsCentralSection } from '@/components/landing/landing-pa
 import { LandingBenefitsByUserGroupTabs } from '@/components/landing/landing-benefits-by-user-group-tabs'
 import { LandingInformationJourneyFlowDiagram } from '@/components/landing/landing-information-journey-flow-diagram'
 import { LandingCollapsibleSection } from '@/components/landing/landing-click-to-expand-collapsible-section-wrapper'
+import { SmartBedWellnessSleepSection } from '@/components/landing/landing-smartbed-wellness-and-sleep-role-section'
 
 /**
  * Landing aivihe.vn — Progressive Disclosure Layout (theo ý kiến chuyên gia 21/04/2026).
@@ -235,15 +236,18 @@ export default function LandingPage() {
       {/* ===== 9. THIẾT BỊ & ĐỐI TÁC ĐO LƯỜNG — MediExpress + IoT gộp ===== */}
       <IotHealthDevicesSection />
 
-      {/* ===== 10. GÓI DỊCH VỤ ===== */}
+      {/* ===== 10. SMARTBED WELLNESS + VAI TRÒ GIẤC NGỦ ===== */}
+      <SmartBedWellnessSleepSection />
+
+      {/* ===== 11. GÓI DỊCH VỤ ===== */}
       <div id="goi-dich-vu" className="scroll-mt-6">
         <ServicePackagesSection />
       </div>
 
-      {/* ===== 11. KÊNH TIẾP CẬN ===== */}
+      {/* ===== 12. KÊNH TIẾP CẬN ===== */}
       <LandingAccessChannelsSection />
 
-      {/* ===== 12. ĐỘI NGŨ & ĐỐI TÁC (collapse — trust builder, không là decision driver) ===== */}
+      {/* ===== 13. ĐỘI NGŨ & ĐỐI TÁC (collapse — trust builder, không là decision driver) ===== */}
       <LandingCollapsibleSection
         id="doi-ngu"
         label="Xem đội ngũ chuyên gia & đối tác"
@@ -253,12 +257,12 @@ export default function LandingPage() {
         <PartnersAndAdvisorsSection />
       </LandingCollapsibleSection>
 
-      {/* ===== 13. FORM ĐĂNG KÝ BS (B2B funnel riêng, không cạnh tranh hero) ===== */}
+      {/* ===== 14. FORM ĐĂNG KÝ BS (B2B funnel riêng, không cạnh tranh hero) ===== */}
       <div id="dang-ky-bac-si">
         <LandingDoctorApplicationSection />
       </div>
 
-      {/* ===== 14. CTA CUỐI + FORM TƯ VẤN KH ===== */}
+      {/* ===== 15. CTA CUỐI + FORM TƯ VẤN KH ===== */}
       <section id="dang-ky-tu-van" className="py-8 bg-gradient-to-br from-teal-900 via-emerald-900 to-teal-800 text-white scroll-mt-6">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-6">

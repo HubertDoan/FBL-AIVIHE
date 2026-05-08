@@ -32,6 +32,9 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/sleepcare': 'Giấc ngủ',
   '/dashboard/sleepcare/sessions': 'Phiên ngủ',
   '/dashboard/sleepcare/devices': 'Thiết bị giường thông minh',
+  '/dashboard/sleepcare/ai-report': 'Báo cáo AI giấc ngủ',
+  '/dashboard/sleepcare/share': 'Chia sẻ dữ liệu giấc ngủ',
+  '/dashboard/sleepcare/doctor-patients': 'Bệnh nhân giấc ngủ',
 }
 
 export default function DashboardLayout({
