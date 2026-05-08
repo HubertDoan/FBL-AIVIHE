@@ -37,6 +37,7 @@ import {
   Bookmark,
   BarChart3,
   UserCheck,
+  Moon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PERMISSIONS, type Permission } from '@/lib/permissions/permission-definitions'
@@ -78,6 +79,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: 'SỨC KHỎE HÔM NAY',
     items: [
       { href: '/dashboard/vitals', label: 'Chỉ số sức khỏe', icon: HeartPulse, requiredPermission: PERMISSIONS.MODULE_TIMELINE, customerOnly: true },
+      { href: '/dashboard/sleepcare', label: 'Giấc ngủ', icon: Moon, requiredPermission: PERMISSIONS.MODULE_SLEEP_TRACKING, customerOnly: true },
       { href: '/dashboard/health-record?tab=daycare', label: 'Hoạt động Daycare', icon: Home, requiredPermission: PERMISSIONS.MODULE_HEALTH_RECORD_DAYCARE, customerOnly: true },
       { href: '/dashboard/notifications', label: 'Thông báo & cảnh báo', icon: Bell, requiredPermission: PERMISSIONS.MODULE_NOTIFICATIONS },
     ],

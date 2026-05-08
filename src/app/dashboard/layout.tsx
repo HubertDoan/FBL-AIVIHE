@@ -29,6 +29,9 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/choose-doctor': 'Bác sĩ gia đình',
   '/dashboard/director': 'Truyền thông nội bộ',
   '/dashboard/messages': 'Tin nhắn',
+  '/dashboard/sleepcare': 'Giấc ngủ',
+  '/dashboard/sleepcare/sessions': 'Phiên ngủ',
+  '/dashboard/sleepcare/devices': 'Thiết bị giường thông minh',
 }
 
 export default function DashboardLayout({
