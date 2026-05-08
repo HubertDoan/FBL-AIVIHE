@@ -17,6 +17,7 @@ const PACKAGE_LABELS: Record<number, string> = {
   1: 'Bác sĩ gia đình',
   2: 'Phục hồi chức năng',
   3: 'Chuyên khoa sâu',
+  4: 'Chăm sóc giấc ngủ',
 }
 
 const STATUS_LABELS: Record<string, { text: string; color: string }> = {

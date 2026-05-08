@@ -13,7 +13,7 @@ import { PERMISSIONS, type Permission } from '@/lib/permissions/permission-defin
 /**
  * Compute extra permissions based on active service registrations.
  * Khi KH có active registration cho package_type=1 (BSGĐ) → grant MODULE_HEALTH_RECORD_FAMILY_DOCTOR
- * Tương tự cho PHCN (2), Chuyên khoa (3)
+ * Tương tự cho PHCN (2), Chuyên khoa (3), SleepCare (4)
  */
 function computeExtraPermissionsFromRegistrations(citizenId: string): Permission[] {
   const regs = getServiceRegistrations(citizenId)
@@ -22,6 +22,11 @@ function computeExtraPermissionsFromRegistrations(citizenId: string): Permission
   if (activeTypes.has(1)) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR)
   if (activeTypes.has(2)) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_REHAB)
   if (activeTypes.has(3)) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC)
+  // SleepCare — gói "Chăm sóc giấc ngủ" (package_type=4, service_type='SC')
+  if (activeTypes.has(4)) {
+    extras.push(PERMISSIONS.MODULE_SLEEP_TRACKING)
+    extras.push(PERMISSIONS.MODULE_SLEEP_ALERTS)
+  }
   return extras
 }
 
@@ -89,6 +94,11 @@ export async function GET(request: Request) {
       if (activeTypes.has('FD')) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_FAMILY_DOCTOR)
       if (activeTypes.has('RH')) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_REHAB)
       if (activeTypes.has('SP')) extras.push(PERMISSIONS.MODULE_HEALTH_RECORD_CLINIC)
+      // SleepCare — service_type='SC' trong service_enrollments
+      if (activeTypes.has('SC')) {
+        extras.push(PERMISSIONS.MODULE_SLEEP_TRACKING)
+        extras.push(PERMISSIONS.MODULE_SLEEP_ALERTS)
+      }
     } catch {
       // bảng service_enrollments chưa migrate — bỏ qua
     }

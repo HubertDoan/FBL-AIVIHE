@@ -43,6 +43,10 @@ const CITIZEN_MODULES: Permission[] = [
   PERMISSIONS.MODULE_AI_SUMMARY,      // AI phân tích — luôn mở cho citizen
   PERMISSIONS.MODULE_HEALTH_DOCUMENTS, // Tài liệu sức khỏe đã upload
   PERMISSIONS.MODULE_PERSONAL_DOCUMENTS, // Tài liệu cá nhân KH tự lưu
+  // SleepCare — tab hiển thị cho citizen, nội dung đầy đủ khi có gói active (package_type=4)
+  // computeExtraPermissionsFromRegistrations grant thêm khi service_enrollments active
+  PERMISSIONS.MODULE_SLEEP_TRACKING,
+  PERMISSIONS.MODULE_SLEEP_ALERTS,
   // Modules hỗ trợ
   PERMISSIONS.MODULE_MEMBERSHIP,
   PERMISSIONS.MODULE_FAMILY,
@@ -66,6 +70,9 @@ const DOCTOR_MODULES: Permission[] = [
   PERMISSIONS.MODULE_DOCTOR_REVIEW,
   PERMISSIONS.MODULE_DOCTOR_SCHEDULE,
   PERMISSIONS.MODULE_MESSAGES,
+  // SleepCare — bác sĩ xem dữ liệu giấc ngủ của bệnh nhân được gán
+  PERMISSIONS.MODULE_SLEEP_TRACKING,
+  PERMISSIONS.MODULE_SLEEP_ALERTS,
 ]
 
 // Modules dành cho BS chuyên khoa
@@ -99,6 +106,9 @@ const ADMIN_MODULES: Permission[] = [
   ...HEALTH_RECORD_AREAS_FULL,
   PERMISSIONS.MODULE_ADMIN,
   PERMISSIONS.MODULE_MESSAGES,
+  // SleepCare — admin quản lý toàn bộ dữ liệu giấc ngủ
+  PERMISSIONS.MODULE_SLEEP_TRACKING,
+  PERMISSIONS.MODULE_SLEEP_ALERTS,
 ]
 
 // Modules dành cho giám đốc

@@ -53,6 +53,7 @@ const PACKAGE_PRICES: Record<number, number> = {
   1: 500000,   // BSGĐ — 500k/tháng (thuê bao + 4 lần tư vấn)
   2: 300000,   // PHCN — 300k/buổi (gói 10 buổi = 3M)
   3: 800000,   // Chuyên khoa sâu — 800k/lần
+  4: 300000,   // Chăm sóc giấc ngủ (SleepCare) — 300k/tháng (subscription SmartBed pod)
 }
 
 const PACKAGE_VISITS: Record<number, number> = {
@@ -60,6 +61,7 @@ const PACKAGE_VISITS: Record<number, number> = {
   1: 4,   // 4 lần tư vấn BSGĐ
   2: 10,  // 10 buổi PHCN
   3: 1,   // 1 lần chuyên khoa
+  4: 0,   // SleepCare — unlimited (subscription theo tháng, không trừ lượt)
 }
 
 function seedStore(): ServiceRegistration[] {

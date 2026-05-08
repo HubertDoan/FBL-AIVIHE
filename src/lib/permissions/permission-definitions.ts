@@ -93,6 +93,10 @@ export const PERMISSIONS = {
   MODULE_AI_SUMMARY: 'module.ai_summary',
   MODULE_HEALTH_DOCUMENTS: 'module.health_documents',     // Tài liệu sức khỏe (đã upload)
   MODULE_PERSONAL_DOCUMENTS: 'module.personal_documents', // Tài liệu cá nhân (KH lưu)
+
+  // SleepCare — SmartBed Wellness module (gói package_type=4, service_type='SC')
+  MODULE_SLEEP_TRACKING: 'module.sleep_tracking',         // Theo dõi giấc ngủ (sidebar tab SleepCare)
+  MODULE_SLEEP_ALERTS: 'module.sleep_alerts',             // Cảnh báo giấc ngủ vượt ngưỡng
 } as const
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
@@ -216,6 +220,13 @@ export const PERMISSION_GROUPS: Record<string, { label: string; permissions: Per
       PERMISSIONS.MODULE_GUIDE,
     ],
   },
+  sleepcare: {
+    label: 'SleepCare — Giấc ngủ (gói 4)',
+    permissions: [
+      PERMISSIONS.MODULE_SLEEP_TRACKING,
+      PERMISSIONS.MODULE_SLEEP_ALERTS,
+    ],
+  },
 }
 
 // Nhãn hiển thị cho từng quyền
@@ -292,6 +303,8 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   'module.ai_summary': 'AI Phân tích',
   'module.health_documents': 'Tài liệu sức khỏe',
   'module.personal_documents': 'Tài liệu cá nhân',
+  'module.sleep_tracking': 'Theo dõi giấc ngủ',
+  'module.sleep_alerts': 'Cảnh báo giấc ngủ',
 }
 
 export const ALL_PERMISSIONS: Permission[] = Object.values(PERMISSIONS)

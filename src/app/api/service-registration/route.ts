@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     if (package_type === undefined || package_type === null) {
       return demoResponse({ error: 'Thiếu thông tin gói dịch vụ.' }, 400)
     }
-    if (typeof package_type !== 'number' || package_type < 0 || package_type > 3) {
+    if (typeof package_type !== 'number' || package_type < 0 || package_type > 4) {
       return demoResponse({ error: 'Gói dịch vụ không hợp lệ.' }, 400)
     }
 
