@@ -11,7 +11,8 @@ import { PersonalInfoWithHealthForm } from '@/components/profile/personal-info-w
 import { AnnualCheckupRecordsTab } from '@/components/profile/annual-checkup-records-tab'
 import { HealthExamHistoryList } from '@/components/profile/health-exam-history-list'
 import { useAuth } from '@/hooks/use-auth'
-import { Pencil, X, User, CalendarHeart, Stethoscope } from 'lucide-react'
+import { Pencil, X, User, CalendarHeart, Stethoscope, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import type { Citizen, HealthProfile } from '@/types/database'
 
 // Roles được coi là nhân viên quản lý — không có hồ sơ SK cá nhân
@@ -27,8 +28,9 @@ export default function ProfilePage() {
   const router = useRouter()
   const [citizen, setCitizen] = useState<Citizen | null>(null)
   const [healthProfile, setHealthProfile] = useState<HealthProfile | null>(null)
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState(true)   // start in edit mode
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
 
   const fetchData = useCallback(async () => {
     try {
@@ -55,12 +57,30 @@ export default function ProfilePage() {
 
   const handleSave = async (citizenData: Partial<Citizen>, healthData: Partial<HealthProfile>) => {
     if (!citizen) return
-    await Promise.all([
-      fetch('/api/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(citizenData) }),
-      fetch('/api/profile/health', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(healthData) }),
-    ])
-    await fetchData()
-    setEditing(false)
+    setSaving(true)
+    try {
+      const [r1, r2] = await Promise.all([
+        fetch('/api/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(citizenData) }),
+        fetch('/api/profile/health', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(healthData) }),
+      ])
+      if (!r1.ok) {
+        const err = await r1.json().catch(() => ({}))
+        toast.error(err.error ?? 'Lỗi lưu thông tin cá nhân')
+        return
+      }
+      if (!r2.ok) {
+        const err = await r2.json().catch(() => ({}))
+        toast.error(err.error ?? 'Lỗi lưu thông tin sức khỏe')
+        return
+      }
+      await fetchData()
+      setEditing(false)
+      toast.success('Đã lưu thông tin thành công')
+    } catch {
+      toast.error('Lỗi kết nối — không thể lưu thông tin')
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (authLoading || loading) {
@@ -81,8 +101,18 @@ export default function ProfilePage() {
     <div className="max-w-2xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Hồ sơ cá nhân</h1>
-        <Button variant={editing ? 'destructive' : 'outline'} className="h-12 text-base" onClick={() => setEditing(!editing)}>
-          {editing ? <><X className="size-4 mr-1" /> Hủy</> : <><Pencil className="size-4 mr-1" /> Chỉnh sửa</>}
+        <Button
+          variant={editing ? 'destructive' : 'outline'}
+          className="h-12 text-base"
+          onClick={() => setEditing(!editing)}
+          disabled={saving}
+        >
+          {saving
+            ? <><Loader2 className="size-4 mr-1 animate-spin" /> Đang lưu...</>
+            : editing
+              ? <><X className="size-4 mr-1" /> Hủy</>
+              : <><Pencil className="size-4 mr-1" /> Chỉnh sửa</>
+          }
         </Button>
       </div>
 

@@ -25,14 +25,19 @@ interface Props {
 }
 
 // Module-level stable component — tránh remount Input mỗi render (bug "chỉ nhập 1 ký tự")
+// Tách hoàn toàn view-mode (div) vs edit-mode (Input) để tránh vấn đề readOnly trên Base UI
 function Field({ label, value, onChange, type = 'text', readOnly = false, editing }: {
   label: string; value: string; onChange: (v: string) => void
   type?: string; readOnly?: boolean; editing: boolean
 }) {
+  const isEditable = editing && !readOnly
   return (
     <div className="space-y-1">
       <Label className="text-base font-medium">{label}</Label>
-      <Input className="h-12 text-lg" type={type} value={value} readOnly={!editing || readOnly} onChange={e => onChange(e.target.value)} />
+      {isEditable
+        ? <Input className="h-12 text-lg" type={type} value={value} onChange={e => onChange(e.target.value)} />
+        : <div className="h-12 flex items-center rounded-lg border border-input bg-muted/30 px-3 text-base text-foreground">{value || <span className="text-muted-foreground">—</span>}</div>
+      }
     </div>
   )
 }
@@ -131,7 +136,7 @@ export function PersonalInfoWithHealthForm({ citizen, healthProfile, editing, on
               <SelectTrigger className="h-12 text-lg w-full"><SelectValue placeholder="Chọn" /></SelectTrigger>
               <SelectContent>{GENDERS.map(g => <SelectItem key={g.value} value={g.value}>{g.label}</SelectItem>)}</SelectContent>
             </Select>
-          ) : <Input className="h-12 text-lg" readOnly value={GENDERS.find(g => g.value === form.gender)?.label ?? ''} />}
+          ) : <div className="h-12 flex items-center rounded-lg border border-input bg-muted/30 px-3 text-base text-foreground">{GENDERS.find(g => g.value === form.gender)?.label ?? <span className="text-muted-foreground">—</span>}</div>}
         </div>
         <Field editing={editing} label="Số điện thoại" value={citizen?.phone ?? ''} onChange={() => {}} readOnly />
         <Field editing={editing} label="Địa chỉ" value={form.address} onChange={v => setForm(p => ({ ...p, address: v }))} />
@@ -150,7 +155,7 @@ export function PersonalInfoWithHealthForm({ citizen, healthProfile, editing, on
               <SelectTrigger className="h-12 text-lg w-full"><SelectValue placeholder="Chọn nhóm máu" /></SelectTrigger>
               <SelectContent>{BLOOD_TYPES.map(bt => <SelectItem key={bt} value={bt}>{bt}</SelectItem>)}</SelectContent>
             </Select>
-          ) : <Input className="h-12 text-lg" readOnly value={bloodType} />}
+          ) : <div className="h-12 flex items-center rounded-lg border border-input bg-muted/30 px-3 text-base text-foreground">{bloodType || <span className="text-muted-foreground">—</span>}</div>}
         </div>
         <div className="grid grid-cols-2 gap-4">
           <Field editing={editing} label="Chiều cao (cm)" value={heightCm} onChange={setHeightCm} type="number" />
