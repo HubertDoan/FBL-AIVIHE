@@ -44,14 +44,27 @@ interface SepayWebhookPayload {
 const processedTransactions = new Set<number>()
 
 export async function POST(request: NextRequest) {
-  // Verify SePay API key
+  // Verify SePay API key.
+  //
+  // QUAN TRỌNG — đóng khi thiếu cấu hình (fail-closed):
+  // Bản trước bỏ qua kiểm tra khi SEPAY_API_KEY chưa đặt, khiến webhook thanh
+  // toán mở cho mọi người gọi. Nay thiếu khoá thì TỪ CHỐI.
+  //
+  // ⚠️ TRƯỚC KHI PHÁT HÀNH: phải đặt SEPAY_API_KEY trên môi trường production,
+  // nếu không webhook thật của SePay sẽ bị từ chối và thanh toán ngừng ghi nhận.
   const authHeader = request.headers.get('authorization') ?? ''
   const apiKey = authHeader.replace('Apikey ', '')
   const expectedKey = process.env.SEPAY_API_KEY
 
-  // In demo mode, skip API key verification
-  if (!isDemoMode() && expectedKey && apiKey !== expectedKey) {
-    return NextResponse.json({ success: false }, { status: 401 })
+  // Demo mode bỏ qua kiểm tra khoá (chỉ dùng cho môi trường trình diễn).
+  if (!isDemoMode()) {
+    if (!expectedKey) {
+      console.error('[sepay] SEPAY_API_KEY chưa được cấu hình — từ chối webhook')
+      return NextResponse.json({ success: false }, { status: 401 })
+    }
+    if (apiKey !== expectedKey) {
+      return NextResponse.json({ success: false }, { status: 401 })
+    }
   }
 
   try {
